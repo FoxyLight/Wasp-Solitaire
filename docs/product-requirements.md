@@ -1,6 +1,6 @@
 # Product requirements and MVP scope
 
-**Status:** Version 1.0 MVP scope (MVP-DEC-01–08) **approved** by project owner on 2026-10-29; RULE-01–06 also approved. Technical architecture, branding, monetization and publishing decisions remain proposed  
+**Status:** RULE-01–06, Version 1.0 MVP scope (MVP-DEC-01–08) and technical architecture (ARCH-DEC-01–08) **approved** by project owner on 2026-10-29. Branding, monetization, specific UX design and publishing decisions remain proposed  
 **Last reviewed:** 2026-10-29  
 **Working product name:** Wasp Solitaire for Android
 
@@ -53,7 +53,7 @@ A polished, trustworthy, offline-first implementation of Classic Wasp Solitaire 
 
 ## Approved MVP decisions and implementation-level acceptance criteria
 
-**Approval date:** 2026-10-29. The project owner explicitly accepted **MVP-DEC-01 through MVP-DEC-08** as proposed for Version 1.0. These feature decisions complement [RULE-01 through RULE-06](game-rules.md). They do **not** authorize implementation or approve the proposed Android stack, art direction, monetization, publishing, minimum API or repository package ID.
+**Approval date:** 2026-10-29. The project owner explicitly accepted **MVP-DEC-01 through MVP-DEC-08** as proposed for Version 1.0. These feature decisions complement [RULE-01 through RULE-06](game-rules.md). They do **not** authorize implementation or approve art direction, monetization, publishing or repository package ID. The Android technology stack and minimum API were subsequently approved as **ARCH-DEC-01–08**; see [architecture.md](architecture.md).
 
 | ID | Approved decision | Acceptance boundary |
 | --- | --- | --- |
@@ -88,7 +88,7 @@ A polished, trustworthy, offline-first implementation of Classic Wasp Solitaire 
 
 ### Still pending outside MVP approval
 
-- Exact Android technology/architecture and minimum API decisions.
+- Android technology/architecture and minimum API are approved under ARCH-DEC-01–08; exact dependency versions, persistence schemas, and implementation details remain to be selected during development.
 - Visual design and asset/licensing choices beyond the approval to provide one theme.
 - Pricing, ads, analytics SDKs, future monetization, Play Console account and release preparations.
 - Fine UX details such as first-action timing and which dialogs pause the clock.
@@ -105,4 +105,4 @@ A polished, trustworthy, offline-first implementation of Classic Wasp Solitaire 
 
 ## Open questions
 
-Primary player persona, initial language, exact device test matrix, eventual monetization, application/package ID, and menu-specific timer details remain open. The Version 1.0 statistics set, unlimited Undo policy, and same-deal restart semantics have been accepted as above. Unresolved decisions belong in [decisions.md](decisions.md).
+Primary player persona, initial language, exact device test matrix, eventual monetization, application/package ID, and menu-specific timer details remain open. Approved technology: Kotlin, Compose, `:app` + `:game-engine`, ViewModel/StateFlow, Room game persistence/Undo/history/stats, DataStore settings (ARCH-DEC-01–08). The Version 1.0 statistics set, unlimited Undo policy, and same-deal restart semantics have been accepted as above. Unresolved decisions belong in [decisions.md](decisions.md).

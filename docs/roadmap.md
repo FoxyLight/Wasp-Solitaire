@@ -10,15 +10,15 @@ Build a reliable engine first, then an accessible card board, then polish and pu
 | Phase | Goal and deliverable | Dependencies | Principal risk | Exit criterion |
 | --- | --- | --- | --- | --- |
 | 1. Research and approval | Approved rules, requirements, architecture and UX criteria | None | Ambiguous conventions | Owner records explicit approvals |
-| 2. Environment/setup | Buildable native Android app shell, Git/CI and unit test setup | Phase 1 | Toolchain/SDK incompatibility | Clean local+CI build on device/emulator |
-| 3. Pure game engine | Deterministic deals, rule validation, reserve, **unlimited Undo**, win detection and legal Hint enumeration | Phase 2 + approved rules and MVP | Invalid moves/card duplication | Unit/invariant suites pass, including reserve Undo and zero-move states |
+| 2. Environment/setup | Kotlin/Compose `:app`, pure Kotlin `:game-engine`, Gradle and GitHub Actions setup | Entire Phase 1 and explicit implementation authorization | Toolchain/SDK compatibility | Clean builds, JVM tests and CI; minimum API 26, target API 36+ verified at setup |
+| 3. Pure game engine | Deterministic deals, move validation, reserve, completed tableau runs, legal Hint enumeration and snapshot-compatible state | Phase 2 + approved rules/MVP/architecture | Invalid moves/card duplication | JUnit/invariant suites pass, including reserve Undo and zero-move states |
 | 4. Board/input | Adaptive tableau, tap and drag group moves, reserve controls | Phase 3 interface | Tiny hit targets/gesture errors | Entire game playable on representative screens |
-| 5. Polish/state | Offline autosave/resume, basic legal Hint, four agreed statistics, menus, one theme, audio/haptics/reduced-motion toggles | Phase 4 | Lifecycle/animation state drift | End-to-end MVP acceptance scenarios pass, including persisted Undo history |
+| 5. Polish/state | Room-backed atomic autosave + unlimited Undo snapshots + four stats, DataStore settings, menu polish, one theme and optional audio/haptics/reduced motion | Phase 4 | Lifecycle/animation state drift | Offline resume survives process death, including persisted Undo history; MVP acceptance tests pass |
 | 6. QA/optimization | Regression tests, performance, TalkBack, device coverage | Phase 5 | Device-specific bugs | No known release blockers |
 | 7. Store preparation | Package, signing, policy declarations, listing, tester rollout | Phase 6, Play account | Account/test/review delay | Submission approved for appropriate release track |
 | 8. Launch/maintenance | Monitoring, bug fixes, feedback-led backlog | Phase 7 | Retention/compatibility | Post-release issue process in place |
 
-All six rules decisions and eight Version 1.0 MVP decisions are approved. **Development cannot commence without approval of the remaining Phase 1 technical architecture, UX design details and publishing decisions**.
+Six rules decisions, eight MVP decisions and eight architecture decisions are approved. **Development cannot commence until the remaining Phase 1 UI/UX and publishing decisions are approved and the project owner explicitly authorizes Phase 2**.
 
 ## Top risks
 
@@ -27,7 +27,7 @@ All six rules decisions and eight Version 1.0 MVP decisions are approved. **Deve
 | Wasp rule misunderstanding | High | Formally approve [game-rules.md](game-rules.md); deterministic example and property tests, including no-move states (RULE-06) |
 | Unordered group-movement bug | High | Unit tests for attached tails of mixed cards |
 | Card input on small screens | High | Prototype early; explicit tap selection and accessible alternative |
-| Save corruption after interruptions | High | Versioned snapshots, integrity invariants, restore/Undo tests |
+| Save corruption after interruptions | High | Room transactions coupling saved states and prior-state Undo snapshots, integrity invariants and restore/Undo tests |
 | Play Console account/testing issues | High | Confirm account category early; recruit testers during development |
 | IP/license uncertainty | Medium | Document each asset's origin/license and keep inventory |
 | Slow animation/frame drops | Medium | Profile on midrange devices; separate animations from engine |
@@ -39,8 +39,9 @@ All six rules decisions and eight Version 1.0 MVP decisions are approved. **Deve
 - [x] Approve RULE-01–06: reserve timing, completed runs, timer, Undo wins, Classic Wasp v1.0 scope, and no automatic defeat on zero tableau moves (owner-approved 2026-10-29).
 - [ ] Complete broader Phase 1 approvals before authorizing implementation.
 - [x] Approve Version 1.0 MVP and explicit exclusions (MVP-DEC-01–08 accepted 2026-10-29).
-- [ ] Approve native Kotlin + Compose and engine separation.
-- [ ] Confirm minimum Android version and physical test-device plan.
+- [x] Approve ARCH-DEC-01–08: Kotlin/Compose; two modules; ViewModel/StateFlow; Room + DataStore; durable snapshot Undo; adaptive board; API 26 minimum/36+ target; testing and GitHub Actions (owner-approved 2026-10-29).
+- [x] Confirm minimum Android version: API 26 (ARCH-DEC-07).
+- [ ] Confirm physical/emulator test-device lineup for small and large layouts; target SDK policy to be reverified at development/release.
 - [ ] Approve initial visual direction, cards, accessibility goals.
 - [ ] Decide revenue model and Play account type.
 - [ ] Choose application ID/package name and confirm ownership.

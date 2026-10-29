@@ -1,102 +1,141 @@
-# Technical architecture proposal
+# Technical architecture: approved baseline for Version 1.0
 
-**Status:** Technical architecture proposed and app coding not authorized; RULE-01–06 and MVP-DEC-01–08 accepted as feature constraints.  
-**Last reviewed:** 2026-10-29
+**Status:** ARCH-DEC-01 through ARCH-DEC-08 **Accepted** by the project owner on 2026-10-29. RULE-01–06 and MVP-DEC-01–08 are also accepted. **No app development has been authorized.**  
+**Last reviewed:** 2026-10-29  
+**Approvals:** See [decisions.md](decisions.md). Any detail labeled *proposed* below is not an additional approved product decision.
 
-## Stack recommendation
+## Approved architecture decisions
 
-- **Language:** Kotlin.
-- **UI:** Jetpack Compose + Material 3 for menus/controls; custom Compose layout/gestures for the overlapping tableau.
-- **Architecture:** MVVM / unidirectional action and state flow.
-- **Game logic:** Pure Kotlin model and rules engine, with no Android UI dependencies.
-- **Reactive UI:** StateFlow exposed by a view model.
-- **Local persistence:** DataStore for compact state/settings, with schema versioning. Consider Room only if replay history or relational queries warrant it.
-- **Testing:** Unit tests for engine; Android instrumentation and Compose UI tests for interactions, responsiveness and lifecycle.
-- **Build:** Gradle Kotlin DSL, Android Studio, Git.
-- **SDK:** minimum API 26 is provisional; target API at least 36 for standard new Play apps as of 2026-10-29. Recheck at publication.
+| ID | Decision | Accepted approach |
+| --- | --- | --- |
+| **ARCH-DEC-01** | Platform and UI | Native Android application written in **Kotlin**, using **Jetpack Compose**. |
+| **ARCH-DEC-02** | Project modules | Two Gradle modules: `:app` and independent pure Kotlin `:game-engine`. |
+| **ARCH-DEC-03** | State management | **ViewModel + StateFlow** with unidirectional data flow: user intent → rules-validated transition → published state → UI. |
+| **ARCH-DEC-04** | Persistence | **Room** for saved game state, Undo history and four MVP statistics; **DataStore** for small settings. |
+| **ARCH-DEC-05** | Undo | Save durable **previous-state snapshots**, updated atomically with each successful action, with no arbitrary fixed history cap within a deal. |
+| **ARCH-DEC-06** | Board rendering | **Custom adaptive Compose layout** with gesture handling and accessible tap-to-move alternative. |
+| **ARCH-DEC-07** | SDK compatibility | **Minimum API 26**; **target API 36 or higher**, rechecked when development and release occur. |
+| **ARCH-DEC-08** | Tooling and verification | **Gradle**, **JUnit**, **Compose UI tests**, representative device/lifecycle tests, and **GitHub Actions** for automated build/test checks. |
 
-## Why Compose over libGDX?
+### Why these choices
 
-Compose integrates native menus, accessibility APIs, app lifecycle, responsive layouts, and Android-specific behaviors. A specialized rendering engine is not necessary for a turn-based card game. Compose's custom board layout and overlapping-card input handling are real engineering risks, so prototype them early. libGDX remains a fallback if measured performance or gesture requirements are not achievable.
+Compose gives us Android-native navigation, accessibility, lifecycle integration and adaptable interfaces. A two-module layout allows the rules engine to run JVM unit tests without Android dependencies. Room is preferred over DataStore for durable action-history transactions and growing Undo history; DataStore remains appropriate for settings. This is an intentional refinement of the earlier single-module/DataStore-only proposal. A full game framework such as libGDX is not part of the accepted Version 1.0 architecture.
 
-## Logical architecture
-
-```text
-Player action -> Compose UI -> GameViewModel -> RulesEngine
-                       ^             |              |
-                       |         StateFlow       New immutable state
-                       +-------------+--------------+
-                                     |
-                               Save repository
-                                     |
-                              Local persistence
-```
-
-- **Model:** immutable `Card`, `TableauColumn`, `GameState`, `GameAction`, `GameResult`. Use stable card IDs and explicit ordering.
-- **Rules engine:** validate a requested move; transition state atomically; detect exposures and completed **tableau** runs without extracting them; allow the single reserve deal at any time during play; enumerate legal moves for **basic legal Hints** (MVP-DEC-03). **Never interpret zero available tableau moves as an automatic loss** (RULE-06).
-- **Deal generator:** deterministic shuffle from a seed for replay and debugging.
-- **ViewModel:** receives user intents, exposes display state, coordinates animation requests and saves. It does **not** decide move legality.
-- **UI:** renders state, performs drag hit-testing, shows errors/feedback, and honors accessibility preferences.
-- **Repository:** saves current game, resume state, settings and compact stats with migration/version handling.
-
-## Proposed packages
+## Approved module boundaries (ARCH-DEC-02)
 
 ```text
-app/
-game/model/
-game/engine/
-game/analysis/
-ui/board/
-ui/components/
-ui/screens/
-ui/theme/
-data/
-test/
+:app                           depends on :game-engine
+  Compose screens and board
+  GameViewModel / StateFlow
+  Room repository (game + Undo + MVP stats)
+  DataStore repository (settings)
+  Android lifecycle, navigation, audio/haptics, tests and app entry
+
+:game-engine                   Android-independent, no dependency on :app
+  Card, Suit, Rank, Tableau, Reserve, GameState
+  DealGenerator and deterministic deal identity
+  Move/deal action validation and state transitions
+  Face-down reveal, completed tableau-run recognition, win detection
+  Legal-move enumeration for Hint
+  JVM unit tests
 ```
 
-Start as one Gradle application module with separate packages; extract an engine module when it adds measurable test or reuse value.
+Do not add separate feature or layer Gradle modules without a documented reason. Exact package names and file structure can be decided at project initialization.
 
-## State and persistence
+## State flow and responsibilities (ARCH-DEC-03)
 
-- Do not let animation state be the source of truth for cards.
-- Represent a move, reserve deal and automatic reveal as reversible command transactions with **unlimited Undo history during the current deal**, including reserve dealing (MVP-DEC-02). **Do not implement automatic completed-run transfer or a completed-suits card pile** (RULE-02).
-- **MVP-DEC-07:** Automatically and durably save each committed action, including Undo history, in offline local storage. Restore exact tableau/reserve cards, face states, seed, history, statistics and elapsed active gameplay time after process death/rotation. Derive completed-suit progress from the tableau. (Exact persistence technology remains proposed.)
-- Restore logical state before rendering. On an unsupported save schema, recover safely without claiming success.
-- Validate card count/identity after load and in engine tests.
-- Count active gameplay time only (RULE-03); pause during backgrounding and on win. Details of pauses for modal menus and clock-start timing remain UX-level implementation choices.
-- Wins after Undo count normally (RULE-04), without a separate win classification.
-- Only Classic Wasp is included in v1.0 (RULE-05); do not introduce a parallel Scorpion ruleset as part of core engine scope.
-- **RULE-06:** Model the absence of tableau moves as an observable board condition, **not** an automatic terminal/defeat state. If reserve cards remain, dealing the reserve is still a possible action; after reserve exhaustion, Undo/Restart/New Game must remain possible per UX scope. Only the four-run win condition produces a terminal game outcome in the approved rules. Do not infer deal unsolvability from legal-move enumeration alone.
+```text
+Touch / tap / accessibility action
+          |
+          v
+  Compose UI (intent only)
+          |
+          v
+  GameViewModel (coordinates)
+          |
+          v
+:game-engine validates and returns the next state
+          |
+          v
+Room repository persists action + Undo snapshot atomically
+          |
+          v
+StateFlow publishes authoritative state
+          |
+          v
+Compose rerenders; UI animations do not own the rules state
+```
 
-## Touch and layout
+The diagram specifies logical ownership, not a mandated implementation sequence or API. The UI must not edit a tableau list or bypass rules validation. Invalid actions produce no committed state change or history entry. The ViewModel and repository coordinate effects and persistence, while the pure Kotlin engine owns game legality.
 
-- Seven columns must remain usable on narrow portrait screens.
-- Derive geometry from actual available window area and avoid hardcoded pixel assumptions.
-- **MVP-DEC-01:** Support both drag/drop and two-step tap selection for every legal destination, without silently choosing among ambiguous targets.
-- During dragging, render moving group in a top layer with the original state unchanged until a validated drop.
-- Expose meaningful semantics for cards/columns and alternative non-drag accessibility controls.
-- Test edge-to-edge system inset behavior and Android 16 navigation.
+### Rules and MVP invariants carried forward
 
-## Testing strategy
+- **RULE-01:** The reserve can be dealt once at any time while playing, independent of available moves.
+- **RULE-02:** Completed K→A suited runs stay on the tableau; do not store or animate them into a separate completed-card pile.
+- **RULE-03:** Track **active** play time; pause while backgrounded and after a win.
+- **RULE-04:** Undo-assisted wins are ordinary wins.
+- **RULE-05:** Only Classic Wasp is included in Version 1.0.
+- **RULE-06:** Zero currently legal tableau moves is a board observation, **not** an automatic loss or proof of unsolvability.
+- **MVP-DEC-01:** Both drag/drop and explicit tap-select/tap-destination must execute every legal card-group movement.
+- **MVP-DEC-03:** Basic Hint returns legal moves or the still-available reserve, with no solver guarantee.
+- **MVP-DEC-04:** The only Version 1.0 displayed statistics are unique games started, games won, best active-play winning time and fewest successful actions in a winning game.
+- **MVP-DEC-07:** Saving and exact resume work offline, including retained Undo history.
 
-1. Deterministic example-based rules tests.
-2. Randomized action sequence invariants and saved-state roundtrips; include zero-tableau-move states with reserve available and exhausted, without an auto-loss transition.
-3. Compose gesture and semantics tests.
-4. Rotation/process death/background-resume tests.
-5. Performance profiling on smaller/midrange portrait and landscape phones and an adaptive tablet layout (MVP-DEC-05).
-6. Save/restore and infinite-depth-in-principle Undo test sequences, including Undo of reserve and exposure (MVP-DEC-02, 07). Do not impose a fixed move-history cap.
-7. Four-statistics regression tests: unique deals started, wins after Undo, best active-play time and fewest successful committed moves (MVP-DEC-04).
+## Persistence boundaries (ARCH-DEC-04 and ARCH-DEC-05)
 
-**Scope note:** Acceptance of these requirements does **not** approve Kotlin, Compose, DataStore, Gradle module structure, API minimum or SDK choices. Those technical choices remain subject to architecture approval.
+**Room** is the accepted authoritative local store for a versioned current-game state, saved Undo history and the four Version 1.0 statistics. The game state must carry the full card identity/order and face-up states, reserve status, deterministic deal identity/seed, move count and active-time metadata needed to resume correctly. Never rely solely on an assumed unchanged shuffle algorithm; restore the saved dealt card configuration.
 
-## Dependencies and governance
+**DataStore** stores small settings such as sound, haptics and reduced motion. Settings do not need to be part of a game transaction.
 
-Choose exact, compatible stable dependencies at project initialization; do not freeze versions during research. Maintain a dependency and license register. No analytics, ad SDK, cloud, or sign-in libraries in MVP without explicit approval.
+**Undo approach:** For each successful player action, preserve a durable snapshot of the complete **preceding logical game state**. Perform the new-state and Undo-history write as one atomic database operation. A reserve deal and any card flips it triggers count as a single reversible action. Failed moves and Hint requests create no history record. Unlimited Undo means no arbitrary fixed per-game maximum; it remains subject to finite device storage, and storage failures must be handled visibly/safely rather than silently discarding older undo entries.
 
-## Reference documents
+**Restore behavior:** After process death, screen rotation or app backgrounding, load the saved board and history without inflating game-start/win statistics. Validate card-count and identity invariants after restoration. Use explicit schema versions and safe migration/recovery paths as implementation-level guidance, not as permission to erase prior states silently.
 
-- [Official Android architecture](https://developer.android.com/topic/architecture)
+The specific Room entity schema, snapshot encoding, compression, serialization framework and transaction API are **implementation details to be documented in Phase 2**, not independently approved here.
+
+## Board rendering (ARCH-DEC-06)
+
+The board is a custom Compose layout with seven columns, position/overlap derived from available window dimensions, and hit-testing that selects the intended face-up card plus every attached card below it. The drag preview is drawn above the tableau, with the underlying rules state unchanged until a valid drop is committed. Invalid drops visually return cards without altering the state.
+
+The supported tap path selects a card group, highlights valid destinations, and requires an explicit destination selection; gameplay must be possible without dragging. Use Android accessibility semantics, reduced-motion preference, and window-inset awareness. Portrait and landscape phone layouts plus an adaptive tablet layout are MVP requirements. **The actual palette, typography, card art and detailed screen layouts remain subject to the UI/UX milestone.**
+
+## SDK and build baseline (ARCH-DEC-07 and ARCH-DEC-08)
+
+- **minSdk:** Android 8.0 / API 26.
+- **targetSdk:** API 36 **or a higher level mandated by current Google Play rules when submitting**. Recheck the policy and Android behavioral changes before initializing and publishing.
+- **Compile SDK and dependency versions:** select current mutually compatible stable versions during implementation; not frozen by this review.
+- **Build:** Gradle, preferably Kotlin DSL; the approved module layout is `:app` + `:game-engine`.
+- **CI:** GitHub Actions runs at least a reproducible build and JVM unit tests on relevant pull requests. Android UI/instrumented tests run on a suitable emulator/device test environment.
+- **No backend:** offline-first gameplay is an approved MVP property; a future online service would require a separate scope/architecture decision.
+
+## Test plan and release evidence (ARCH-DEC-08)
+
+| Layer | Required coverage |
+| --- | --- |
+| Game-engine JUnit tests | Deal identity, 52-card invariants, legal/illegal moves, unordered attached tails, empty columns, reserve, face-down reveals, nonremoving completed runs, win detection |
+| Randomized/property-style engine checks | Valid state and card identity preserved over long sequences; reproducible seeds |
+| Room persistence tests | Atomic current-state/Undo writes, unlimited-depth-in-principle history, Undo after reserve and flip, restart boundaries, load/restore consistency, nonduplicated statistics |
+| Compose UI tests | Drag/drop, explicit tap destination, accessibility controls, legal highlighting, Hint without mutation, responsive layout |
+| Device/lifecycle tests | Narrow portrait, landscape, tablet, rotation, background/process death, edge-to-edge/window insets and performance |
+
+**No legal tableau moves**, with or without reserve, must never transition to an automatic loss. A won game requires four complete suited runs remaining on the tableau. The tests for these requirements are specified further in [game-rules.md](game-rules.md) and [product-requirements.md](product-requirements.md).
+
+## Still open and explicitly not approved by ARCH-DEC-01–08
+
+- Card art, green-table palette and exact visual style; layout details and animation timing; accessibility UI microinteractions.
+- App name/package ID, branding and assets/licenses.
+- Pricing, advertisements, purchases, analytics SDKs and publication account details.
+- Specific Android/Compose/Room/JUnit/Gradle versions, Room tables/serialization and dependency-injection frameworks.
+- Starting/pausing the active timer for non-background UI overlays.
+- Authorization to create the Android project, execute code or start Phase 2.
+
+## Supporting references
+
+- [Android architecture](https://developer.android.com/topic/architecture)
 - [Jetpack Compose](https://developer.android.com/compose)
+- [Room](https://developer.android.com/training/data-storage/room)
 - [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
 - [Compose testing](https://developer.android.com/develop/ui/compose/testing)
-- [Google Play target API](https://support.google.com/googleplay/android-developer/answer/11926878)
+- [Google Play target API levels](https://support.google.com/googleplay/android-developer/answer/11926878)
+
+Time-sensitive Google Play requirements must be revalidated ahead of release. The documentation repository remains the source of truth, and implementation remains on hold pending the remaining Phase 1 approvals.
