@@ -1,6 +1,6 @@
 # Technical architecture proposal
 
-**Status:** Architecture proposed, no app code authorized; RULE-01–06 accepted in rules specification  
+**Status:** Technical architecture proposed and app coding not authorized; RULE-01–06 and MVP-DEC-01–08 accepted as feature constraints.  
 **Last reviewed:** 2026-10-29
 
 ## Stack recommendation
@@ -33,7 +33,7 @@ Player action -> Compose UI -> GameViewModel -> RulesEngine
 ```
 
 - **Model:** immutable `Card`, `TableauColumn`, `GameState`, `GameAction`, `GameResult`. Use stable card IDs and explicit ordering.
-- **Rules engine:** validate a requested move; transition state atomically; detect exposures and completed **tableau** runs without extracting them; allow the single reserve deal at any time during play; enumerate legal moves for hints. **Never interpret zero available tableau moves as an automatic loss** (RULE-06).
+- **Rules engine:** validate a requested move; transition state atomically; detect exposures and completed **tableau** runs without extracting them; allow the single reserve deal at any time during play; enumerate legal moves for **basic legal Hints** (MVP-DEC-03). **Never interpret zero available tableau moves as an automatic loss** (RULE-06).
 - **Deal generator:** deterministic shuffle from a seed for replay and debugging.
 - **ViewModel:** receives user intents, exposes display state, coordinates animation requests and saves. It does **not** decide move legality.
 - **UI:** renders state, performs drag hit-testing, shows errors/feedback, and honors accessibility preferences.
@@ -59,8 +59,8 @@ Start as one Gradle application module with separate packages; extract an engine
 ## State and persistence
 
 - Do not let animation state be the source of truth for cards.
-- Represent a move, reserve deal and automatic reveal as reversible command transactions. **Do not implement automatic completed-run transfer or a completed-suits card pile** (RULE-02).
-- Save a versioned snapshot with the shuffle seed and all tableau/reserve cards, face states, move history and elapsed active gameplay time. Derive completed-suit progress from the tableau rather than storing/removing completed cards.
+- Represent a move, reserve deal and automatic reveal as reversible command transactions with **unlimited Undo history during the current deal**, including reserve dealing (MVP-DEC-02). **Do not implement automatic completed-run transfer or a completed-suits card pile** (RULE-02).
+- **MVP-DEC-07:** Automatically and durably save each committed action, including Undo history, in offline local storage. Restore exact tableau/reserve cards, face states, seed, history, statistics and elapsed active gameplay time after process death/rotation. Derive completed-suit progress from the tableau. (Exact persistence technology remains proposed.)
 - Restore logical state before rendering. On an unsupported save schema, recover safely without claiming success.
 - Validate card count/identity after load and in engine tests.
 - Count active gameplay time only (RULE-03); pause during backgrounding and on win. Details of pauses for modal menus and clock-start timing remain UX-level implementation choices.
@@ -72,7 +72,7 @@ Start as one Gradle application module with separate packages; extract an engine
 
 - Seven columns must remain usable on narrow portrait screens.
 - Derive geometry from actual available window area and avoid hardcoded pixel assumptions.
-- Support both drag/drop and two-step tap selection for legal destinations.
+- **MVP-DEC-01:** Support both drag/drop and two-step tap selection for every legal destination, without silently choosing among ambiguous targets.
 - During dragging, render moving group in a top layer with the original state unchanged until a validated drop.
 - Expose meaningful semantics for cards/columns and alternative non-drag accessibility controls.
 - Test edge-to-edge system inset behavior and Android 16 navigation.
@@ -83,7 +83,11 @@ Start as one Gradle application module with separate packages; extract an engine
 2. Randomized action sequence invariants and saved-state roundtrips; include zero-tableau-move states with reserve available and exhausted, without an auto-loss transition.
 3. Compose gesture and semantics tests.
 4. Rotation/process death/background-resume tests.
-5. Performance profiling on smaller/midrange phones and at least one large-screen layout.
+5. Performance profiling on smaller/midrange portrait and landscape phones and an adaptive tablet layout (MVP-DEC-05).
+6. Save/restore and infinite-depth-in-principle Undo test sequences, including Undo of reserve and exposure (MVP-DEC-02, 07). Do not impose a fixed move-history cap.
+7. Four-statistics regression tests: unique deals started, wins after Undo, best active-play time and fewest successful committed moves (MVP-DEC-04).
+
+**Scope note:** Acceptance of these requirements does **not** approve Kotlin, Compose, DataStore, Gradle module structure, API minimum or SDK choices. Those technical choices remain subject to architecture approval.
 
 ## Dependencies and governance
 
