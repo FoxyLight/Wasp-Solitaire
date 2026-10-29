@@ -1,19 +1,19 @@
 # Project documentation
 
-**Status:** Draft documentation set, prepared 2026-10-29. RULE-01–06 were explicitly approved by the project owner on 2026-10-29; other recommendations remain proposed until separately approved.
+**Status:** Mixed approvals. RULE-01–06 and MVP-DEC-01–08 were explicitly approved by the project owner on 2026-10-29; technical architecture, visual design details, monetization, publishing and other recommendations remain proposed.
 
 This directory is intended to become the canonical home of the project specifications. Once a document or decision is approved, update its status in a reviewed commit. The `main` branch represents the accepted project record; proposed changes belong in pull requests.
 
 | File | Purpose | Status |
 | --- | --- | --- |
-| [product-requirements.md](product-requirements.md) | Product vision, MVP scope, acceptance criteria | Proposed |
+| [product-requirements.md](product-requirements.md) | Product vision, MVP scope, acceptance criteria | MVP-DEC-01–08 accepted; unrelated business/technical choices pending |
 | [game-rules.md](game-rules.md) | Gameplay mechanics and rule decisions | RULE-01–06 accepted; remaining project scope pending |
 | [architecture.md](architecture.md) | Android stack, system boundaries, persistence and testing | Proposed |
 | [ux-design.md](ux-design.md) | Interaction and responsive design principles | Proposed |
 | [market-research.md](market-research.md) | Competitors and differentiation hypotheses | Research draft |
 | [google-play.md](google-play.md) | Publishing requirements and verification checkpoints | Research draft |
 | [roadmap.md](roadmap.md) | Phases, dependencies, risks, quality gates | Proposed |
-| [decisions.md](decisions.md) | Decisions, alternatives, approval status | Mixed: five rules decisions accepted; other ADRs proposed |
+| [decisions.md](decisions.md) | Decisions, alternatives, approval status | Six rules and eight MVP decisions accepted; remaining ADRs proposed |
 | [sources.md](sources.md) | Source register and verification dates | Research draft |
 
 ## Working agreements
