@@ -1,6 +1,6 @@
 # Product requirements and MVP scope
 
-**Status:** MVP and architecture proposed; RULE-01–05 approved by owner on 2026-10-29  
+**Status:** MVP and architecture proposed; RULE-01–06 approved by owner on 2026-10-29  
 **Last reviewed:** 2026-10-29  
 **Working product name:** Wasp Solitaire for Android
 
@@ -41,6 +41,7 @@ A polished, trustworthy, offline-first implementation of Classic Wasp Solitaire 
 | MVP-12 | Tutorial and controls | Clear How to Play, New Game, Restart, Undo, Hint, Settings, and completed-game flow |
 | MVP-13 | Offline | All game and settings flows work in airplane mode; no required account |
 | MVP-14 | Preferences | Simple visual theme with sound and haptics toggles; sensible defaults |
+| MVP-15 | No automatic defeat | Zero currently available tableau moves does not auto-declare a loss; player can deal remaining reserve or use Undo/Restart/New Game (RULE-06) |
 
 ## Deferred until user feedback or a new scope approval
 
@@ -51,7 +52,7 @@ A polished, trustworthy, offline-first implementation of Classic Wasp Solitaire 
 
 ## Approved rules decisions and remaining product proposals
 
-**Accepted rules scope (2026-10-29):** Classic Wasp only for v1.0 (RULE-05); reserve available once at any time (RULE-01); completed sequences stay on the tableau (RULE-02); active gameplay time only (RULE-03); Undo-assisted wins count normally (RULE-04). See [game-rules.md](game-rules.md) and [decisions.md](decisions.md).
+**Accepted rules scope (2026-10-29):** Classic Wasp only for v1.0 (RULE-05); reserve available once at any time (RULE-01); completed sequences stay on the tableau (RULE-02); active gameplay time only (RULE-03); Undo-assisted wins count normally (RULE-04); never automatically declare defeat solely on no available tableau moves (RULE-06). See [game-rules.md](game-rules.md) and [decisions.md](decisions.md).
 
 **Still proposed, not approved:**
 
@@ -69,7 +70,7 @@ A polished, trustworthy, offline-first implementation of Classic Wasp Solitaire 
 - **Win rate:** games won / (games won + abandoned), excluding active in-progress games.
 - **Best time:** active gameplay duration for a completed board (RULE-03); exact menu/first-action edge-case handling remains for UX specification.
 - **Fewest moves:** proposed: player actions for a completed board, with dealing the reserve counted as an action; Undo should not inflate the count. This move-count convention is **not yet approved**.
-- Do not imply in-progress deals are losses.
+- Do not imply in-progress deals are losses. **RULE-06:** absence of immediately available tableau moves does not justify marking a game as lost, even after the reserve is spent. The player can choose another action according to normal controls.
 
 ## Quality/release gates
 
