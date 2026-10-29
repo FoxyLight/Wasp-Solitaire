@@ -1,6 +1,6 @@
 # Product requirements and MVP scope
 
-**Status:** RULE-01–06, Version 1.0 MVP scope (MVP-DEC-01–08) and technical architecture (ARCH-DEC-01–08) **approved** by project owner on 2026-10-29. Branding, monetization, specific UX design and publishing decisions remain proposed  
+**Status:** RULE-01–06, Version 1.0 MVP scope (MVP-DEC-01–08), architecture (ARCH-DEC-01–08) and UI/UX (UX-DEC-01–08) **approved** by project owner on 2026-10-29. Final branded assets/licensing, monetization and publishing decisions remain proposed  
 **Last reviewed:** 2026-10-29  
 **Working product name:** Wasp Solitaire for Android
 
@@ -40,7 +40,7 @@ A polished, trustworthy, offline-first implementation of Classic Wasp Solitaire 
 | MVP-11 | Accessibility | All essential actions possible without dragging; readable cards, labeled controls, accessible alternatives to small overlapping card targets, contrast and reduced-motion checks (MVP-DEC-01, 05, 06) |
 | MVP-12 | Tutorial and controls | Clear How to Play, New Game, Restart, Undo, Hint, Settings, and completed-game flow |
 | MVP-13 | Offline | All core gameplay, saves, statistics, and settings work without network access; no account required for play (MVP-DEC-07). This does not settle advertising or monetization strategy |
-| MVP-14 | Preferences | One visual theme at launch, with optional sound, haptic feedback, and reduced-motion controls (MVP-DEC-06). Specific colors/art assets remain subject to design approval |
+| MVP-14 | Preferences | One green-table visual direction with ivory faces/blue card backs and optional sound/haptic/reduced-motion controls (MVP-DEC-06, UX-DEC-01, 02, 07); exact art asset/license remains unselected |
 | MVP-15 | No automatic defeat | Zero currently available tableau moves does not auto-declare a loss; player can deal remaining reserve or use Undo/Restart/New Game (RULE-06) |
 
 ## Deferred from v1.0 (MVP-DEC-08)
@@ -53,7 +53,7 @@ A polished, trustworthy, offline-first implementation of Classic Wasp Solitaire 
 
 ## Approved MVP decisions and implementation-level acceptance criteria
 
-**Approval date:** 2026-10-29. The project owner explicitly accepted **MVP-DEC-01 through MVP-DEC-08** as proposed for Version 1.0. These feature decisions complement [RULE-01 through RULE-06](game-rules.md). They do **not** authorize implementation or approve art direction, monetization, publishing or repository package ID. The Android technology stack and minimum API were subsequently approved as **ARCH-DEC-01–08**; see [architecture.md](architecture.md).
+**Approval date:** 2026-10-29. The project owner explicitly accepted **MVP-DEC-01 through MVP-DEC-08** as proposed for Version 1.0. These feature decisions complement [RULE-01 through RULE-06](game-rules.md). They do **not** authorize implementation, monetization, publishing or repository package ID. The Android stack/minimum API and the UI/UX direction were subsequently approved as **ARCH-DEC-01–08** and **UX-DEC-01–08**; see [architecture.md](architecture.md) and [ux-design.md](ux-design.md).
 
 | ID | Approved decision | Acceptance boundary |
 | --- | --- | --- |
@@ -70,7 +70,7 @@ A polished, trustworthy, offline-first implementation of Classic Wasp Solitaire 
 
 - **Games started:** increment once for each newly generated deal; reopening, Undo or restarting the **same** deal does not increment it.
 - **Games won:** increment once per completed deal; Undo-assisted wins count normally (RULE-04). A replay or restart must not double-count a previously recorded win for the same deal session.
-- **Best time:** shortest active gameplay duration among won games; background time excluded (RULE-03). Specific timing for modal UI remains a UX detail to be decided.
+- **Best time:** shortest active gameplay duration among won games (RULE-03). Under UX-DEC-08, start on first successfully committed tableau move/reserve deal, pause while backgrounded or blocked by menus/dialogs/screens and stop on victory.
 - **Fewest moves:** minimum count of successfully committed tableau moves and reserve-deal actions in a win; Undo removes undone actions from the current attempt's net move count. Hints, taps that merely select a card, and invalid moves do not count.
 - **No v1.0 loss/abandon metric:** no automatic defeat or loss increment when tableau moves disappear (RULE-06). Win rate, abandonment categorization, streaks and other aggregates are deferred.
 
@@ -89,9 +89,9 @@ A polished, trustworthy, offline-first implementation of Classic Wasp Solitaire 
 ### Still pending outside MVP approval
 
 - Android technology/architecture and minimum API are approved under ARCH-DEC-01–08; exact dependency versions, persistence schemas, and implementation details remain to be selected during development.
-- Visual design and asset/licensing choices beyond the approval to provide one theme.
+- Visual direction and interaction model are approved by UX-DEC-01–08; the final original/third-party artwork choice, provenance and licenses remain pending.
 - Pricing, ads, analytics SDKs, future monetization, Play Console account and release preparations.
-- Fine UX details such as first-action timing and which dialogs pause the clock.
+- Detailed performance/contrast verification, asset-specific licensing and final device testing remain outstanding; first-action and blocking-screen timer semantics are approved under UX-DEC-08.
 
 ## Quality/release gates
 
@@ -105,4 +105,4 @@ A polished, trustworthy, offline-first implementation of Classic Wasp Solitaire 
 
 ## Open questions
 
-Primary player persona, initial language, exact device test matrix, eventual monetization, application/package ID, and menu-specific timer details remain open. Approved technology: Kotlin, Compose, `:app` + `:game-engine`, ViewModel/StateFlow, Room game persistence/Undo/history/stats, DataStore settings (ARCH-DEC-01–08). The Version 1.0 statistics set, unlimited Undo policy, and same-deal restart semantics have been accepted as above. Unresolved decisions belong in [decisions.md](decisions.md).
+Primary player persona, initial language, exact device test matrix, final card asset/license, branding, eventual monetization and application/package ID remain open. The first committed action and blocking-screen timer behavior are settled by UX-DEC-08. Approved technology: Kotlin, Compose, `:app` + `:game-engine`, ViewModel/StateFlow, Room game persistence/Undo/history/stats, DataStore settings (ARCH-DEC-01–08). The Version 1.0 statistics set, unlimited Undo policy, and same-deal restart semantics have been accepted as above. Unresolved decisions belong in [decisions.md](decisions.md).
