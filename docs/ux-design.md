@@ -1,86 +1,158 @@
-# UX and visual design direction
+# UI/UX specification: approved Version 1.0 baseline
 
-**Status:** Specific UI/visual design proposed; RULE-01–06, MVP-DEC-01–08 and ARCH-DEC-01–08 accepted as constraints. No final visual direction or layout measurements approved.  
-**Last reviewed:** 2026-10-29
+**Status:** **UX-DEC-01 through UX-DEC-08 Accepted** by the project owner on 2026-10-29. RULE-01–06, MVP-DEC-01–08, and ARCH-DEC-01–08 remain accepted. Publication, branding/package identity and business decisions are not yet approved. **No app implementation is authorized.**  
+**Last reviewed:** 2026-10-29  
+**Approval record:** [decisions.md](decisions.md)
 
 ## Experience goals
 
-The player should understand the current board at a glance, move cards confidently, and recover from mistakes without friction. Keep the play field uncluttered and reserve prominent screen space for cards rather than decorative UI.
+Wasp Solitaire should feel like a clear, traditional patience game with restrained native Android polish. Prioritize accurate card information, easy movement, reliable control feedback and low-friction recovery. On small screens, do not make every card illegible just to avoid providing an inspection aid.
 
-## Starting visual language
+## Approved UX decisions
 
-- **Proposed, not yet approved:** classic deep green table, light/high-contrast card faces, restrained blue card backs. **Approved MVP-DEC-06:** ship one readable initial theme; palette and exact assets are pending.
-- Large corner rank and suit; preserve enough of each overlapped card to identify it.
-- Simple native controls for Undo, Hint, Reserve, New Game, and Settings.
-- Minimal, purposeful animation: lift on drag, snap to valid target, rebound on invalid drop, flip on reveal, celebration on win.
-- **Approved MVP-DEC-06:** expose optional sound and haptics toggles and a reduced-motion preference; default intensities remain to be specified.
-- Keep a reduce-motion setting; respect system accessibility preferences when feasible.
+| ID | Area | Accepted Version 1.0 direction |
+| --- | --- | --- |
+| **UX-DEC-01** | Visual direction | Classic green felt-inspired table, warm ivory faces, restrained blue backs and accessible suit/selection accents. Specific first-pass palette tokens are design starting points, subject to contrast testing. |
+| **UX-DEC-02** | Card artwork | Readable traditional rank and suit symbols, prominent corner indices and correct card proportions. Create original scalable assets or use explicitly licensed alternatives; verify rights before incorporating artwork. |
+| **UX-DEC-03** | Responsive board | Seven-column overview on phones, plus accessible expanded column inspection when card strips are too narrow. Portrait/landscape phones and adaptive tablets/foldables. |
+| **UX-DEC-04** | Movement interactions | Explicit tap selection and destination highlighting; complete attached-group dragging; obvious cancel/switch-selection behavior and unchanged state after invalid drops. |
+| **UX-DEC-05** | Navigation and controls | Discoverable compact primary controls and six main screen types; confirm destructive restart/new-game actions while a deal is in progress. |
+| **UX-DEC-06** | Accessibility | TalkBack-readable cards, non-drag group movement, adequate toolbar targets, high contrast, non-color cues, card inspection and reduced-motion support. |
+| **UX-DEC-07** | Motion and feedback | Restrained, short animations; optional sound/haptics; respect system accessibility and haptics preferences. |
+| **UX-DEC-08** | Timer experience | Start on the first successfully committed gameplay action; pause on app background and while blocking screens/dialogs interrupt play; stop after victory. |
 
-## Layout by available space
+These UX choices specify presentation and interaction, **not new game rules**. Engine-owned legality and approved stats remain unchanged.
 
-| Environment | Proposed handling |
+## Visual system (UX-DEC-01 and UX-DEC-02)
+
+- **Table:** Felt-inspired deep green with uncluttered, subtle texture (if any). Use a clear visual separation between cards and table.
+- **Card faces:** Warm ivory/light neutral, high-contrast traditional black/red suit symbols, clear ranks in prominent corners, and consistent geometry.
+- **Backs:** Restrained medium/dark blue pattern; recognizably different from faces.
+- **Selection, legal destinations and hints:** Distinct but understated outlines or elevation, accompanied by shape/position/labels so feedback is never color-only.
+- **Completed run:** Mark a complete suited K→A run **in place** without moving cards to a completed pile (RULE-02).
+- **One Version 1.0 theme** per MVP-DEC-06; avoid additional customizations until later scope approval.
+
+### Initial palette reference (not immutable hex requirements)
+
+| Role | First-pass reference |
 | --- | --- |
-| Narrow portrait phone | Seven fitted columns; readable top indices; constrained horizontal gutters; additional magnification/selection assistance |
-| Wide portrait phone | Larger cards and more visible fanned cards |
-| Landscape phone | Compress toolbar while using wider tableau |
-| Tablet and foldable | Adapt to window dimensions, not hardcoded device names; roomier card layout |
+| Table green | `#165443` |
+| Light card face | `#F7F4EB` |
+| Card-back blue | `#263B62` |
+| Red suit | `#B4232C` |
 
-Allow scrolling or inspection if the screen genuinely cannot display all cards readably; never conceal interactable cards without a discovery mechanism. Handle system bars and edge-to-edge insets for target API 36+.
+These are approved as a **visual direction/reference**, not prevalidated WCAG color pairings. The final palette may be tuned to satisfy actual contrast and accessibility results, keeping the same visual language. No specific third-party card pack is licensed or approved merely by accepting UX-DEC-02.
 
-## Interaction contract
+## Responsive board (UX-DEC-03)
 
-1. Tap a face-up card to select the entire attached tail; show valid destinations.
-2. Tap a destination to execute. Never silently choose between multiple viable columns without informing the player.
-3. Drag the selected group with a visible elevated preview; release on a valid destination to commit; invalid drops restore without changing game state.
-4. For tiny overlapping card regions, provide inspection/selection controls and accessibility actions rather than relying exclusively on precise gestures.
-5. Keep Undo and New Game discoverable. Confirm actions that discard in-progress work.
-6. For reserve dealing, show remaining count and clarify that the one three-card deal is available **at any time during active play**, even if other moves exist (RULE-01).
-7. Indicate completed same-suit K→A runs **in place on the tableau**. Do not animate their removal to a separate pile (RULE-02).
-8. Show elapsed **active gameplay** time (RULE-03) and do not mark a win as assisted or disqualified because Undo was used (RULE-04).
-9. **RULE-06:** When no tableau moves are currently available, do not display a loss/game-over verdict. If the reserve is undealt, keep its deal action accessible. If exhausted, keep Undo/Restart/New Game accessible as applicable. A proposed informational message is "No available tableau moves," without any claim that the deal is unwinnable.
+| Window / device | Accepted behavior |
+| --- | --- |
+| Narrow portrait phone | Present a seven-column overview with compact gutters and readable indices as far as practical. If overlapping strips become too narrow for reliable individual selection, offer **expanded column inspection/selection**, rather than making card selection impossible. |
+| Wide portrait phone | Enlarge cards and exposed card portions with available width. |
+| Landscape phone | Use wider cards and a compact toolbar; if height is constrained, support safe vertical inspection/scrolling without obscuring selectable cards. |
+| Tablet / foldable / resized app window | Adapt to available window dimensions, expanding columns/cards appropriately and supporting resize/orientation transitions. |
 
-## Initial screen inventory
+The overview must communicate the whole board, and expanded inspection must let users read/select otherwise tiny card strips. Inspecting a column is only a **second way to select from the same underlying game state**, never an independent rules variant. Use Compose adaptive layout, window insets and size-aware card overlap under ARCH-DEC-06; no hardcoded screen dimensions.
 
-- **Home/resume:** Continue, New Game, How to Play, Settings.
-- **Game board:** Reserve, tableau columns, completed-suits **progress indicator only** (no card-storage area), moves and active-play time, controls.
-- **How to Play:** Short illustrations and examples of group movement, same-suit builds, empty columns, reserve, and winning.
-- **Settings:** Theme (if options are available), sound, haptics, reduced motion, privacy link.
-- **Statistics:** Four approved Version 1.0 records: unique games started, games won, best winning active-play time and fewest successful actions in a win (MVP-DEC-04). No win-rate, abandon counter, or streak dashboard.
-- **Win summary:** Win feedback, completed time/moves, another game.
+## Movement contract (UX-DEC-04)
 
-## Approved technical constraints and pending visual decisions
+### Tap-to-move
 
-- **ARCH-DEC-01, ARCH-DEC-06:** Compose and a custom adaptive Compose board layout/gesture system are approved, with the existing tap-select/tap-destination accessibility path (MVP-DEC-01).
-- **ARCH-DEC-03:** A ViewModel exposes StateFlow; the UI displays engine-validated state, not independently computed legality.
-- **ARCH-DEC-07:** Minimum API 26; target at least API 36 with current-policy recheck, including edge-to-edge layout considerations.
-- **Still proposed:** actual colors, card designs/assets, component measurements, animations, precise timer/menu behavior and branded screen treatments. Approval of the rendering technology is not approval of the visual design.
+1. Tapping any **face-up** tableau card selects that card **plus all attached cards beneath it** (even when the internal tail is unordered).
+2. Raise/outline the selected tail and show **all currently legal destination columns**. Empty columns are legal for any face-up group per [game-rules.md](game-rules.md).
+3. Tap an explicitly indicated destination to commit. Do **not** silently choose between several valid targets.
+4. Tap a different face-up card to switch selection; tap the already-selected card again, or use a cancel/back action, to clear selection without a move.
+5. Invalid actions and selection changes do not mutate the logical game state or Undo history.
 
-## MVP-approved interaction and accessibility boundaries
+### Drag/drop
 
-- **MVP-DEC-01:** All legal group moves work with both drag/drop and tap-select/tap-destination. Tap destinations must be explicit rather than silently guessed.
-- **MVP-DEC-02:** Unlimited Undo within the current deal, including reserve-deal actions and flips; Undo must remain usable after saving/resuming.
-- **MVP-DEC-03:** Hint identifies at least one legal tableau move where possible or suggests undealt reserve when no tableau move is available; it does not assert that a deal is lost or solvable.
-- **MVP-DEC-05:** Portrait/landscape phones and adaptive tablet layouts are required, not optional stretch goals.
-- **MVP-DEC-06:** One visual theme; optional sound/haptics and reduce-motion controls; additional themes deferred.
-- **MVP-DEC-07:** Resume an offline in-progress game after process death/rotation with Undo history intact.
-- **MVP-DEC-08:** No advanced strategic hint system, variants, daily challenges, cloud/account flows or theme catalogs for initial release.
+- Visually lift the complete selected tail into a top rendering layer; move the group as one unit.
+- Validate the candidate drop via the game engine; accept only legal destinations, then snap/settle into place.
+- An invalid drop returns to its original position with brief nonessential feedback and **no saved board change**.
+- Avoid dependence on pixel-perfect card-strip precision: column inspection and accessible actions remain supported.
 
-## Accessibility requirements
+### Reserve, completed runs and no available moves
 
-- An alternative to drag-and-drop must support complete gameplay.
-- Clear semantics for card rank/suit/face state, selected group and valid destinations.
-- Large enough toolbar tap targets; accessible alternatives for overlapped card regions.
-- Contrast, large-text preferences, color-independent suit information, reduced motion and screen reader testing.
-- Do not rely on color alone to communicate legal/illegal moves.
+- Show the three-card reserve as a clear **Deal 3** action. It is available **at any time during active play before being dealt**, even when legal moves or empty columns exist (RULE-01).
+- Completed K→A suited runs stay visible and normally selectable until the game is won (RULE-02).
+- When no tableau moves are currently enumerated, show at most a neutral informational message (e.g. “No available tableau moves”). **Never label it Lost, Game Over, or Unwinnable** based on move enumeration alone (RULE-06). Keep available reserve and recovery controls usable.
+- Hint may indicate one legal tableau move or suggest an undealt reserve when none exists, but it never claims a winning strategy or auto-declares defeat (MVP-DEC-03).
 
-## Asset strategy
+## Navigation and control hierarchy (UX-DEC-05)
 
-Prefer original assets or assets with an explicit, commercially usable license. Candidate reference: [Kenney Playing Cards Pack](https://kenney.nl/assets/playing-cards-pack) (confirm exact license and attribution requirements before incorporation). Maintain an asset manifest with author, source URL, license, edits, and release suitability. Do not reuse competitor screenshots or copyrighted designs.
+The game board gets priority over surrounding menus. Keep primary **Undo**, **Hint**, and **Deal 3** controls easy to find on compact phones. New Game, Restart, Statistics, How to Play and Settings may be reached via an obvious overflow/navigation menu without crowding the tableau.
 
-## Validation tasks
+| Screen | Purpose |
+| --- | --- |
+| Home / Resume | Continue current saved game, New Game, How to Play; reach Settings. |
+| Game board | Seven tableau columns, reserve, primary controls, elapsed active time, move count and suited-run progress **indicator only** (no card storage). |
+| How to Play | Clear illustrated examples of selected tails, same-suit one-rank moves, empty columns, reserve, Undo, hints and winning. |
+| Statistics | Exactly the four approved MVP statistics: unique games started, games won, best winning active time, fewest successful actions in a win. |
+| Settings | Sound, haptics, reduced motion and accessible privacy information. One default theme, not a theme catalog. |
+| Win summary | Recognize completed four-run win, show elapsed active time/moves and a New Game action; don't disqualify Undo-assisted wins (RULE-04). |
 
-- Wireframe 7-column layout in narrow portrait and landscape.
-- Prototype dragging unordered groups with collision/hit testing.
-- Test tap selection and TalkBack access on a real device.
-- Verify card readability under actual overlapping/scrolling conditions.
-- Agree an animation budget on a representative midrange phone.
+Confirm **Restart** and **New Game** when they would discard meaningful in-progress play; Restart preserves the original seeded deal, while New Game creates a new deal. Undo remains quickly discoverable and unlimited within the current deal (MVP-DEC-02). No screen or navigation action should cause automatic loss or an unrequested game reset.
+
+## Accessibility contract (UX-DEC-06)
+
+- All legal gameplay must be fully achievable **without dragging**, including selection of otherwise cramped/hidden card strips through expanded inspection and accessible actions.
+- Expose each selectable card's rank, suit, column, face state, selection state and attached-tail context through accessibility semantics. Example announcement: “Column 3, eight of hearts, face up; select this card and four cards below it.”
+- Expose legal destinations and selected-group movement as accessible actions; do not require a complex touch gesture or only rely on highlighted color.
+- Aim for **at least 48dp touch targets** for toolbar controls and stand-alone actions. Overlapped card strips may be smaller in the overview, so provide a reliable larger inspection/selection alternative instead of claiming every strip is a 48dp target.
+- Maintain text/icon contrast, distinguish suits by symbols as well as red/black ink, support system font scaling and TalkBack, and respect reduced-motion settings.
+- Ensure cards, reserve, Undo, Hint, Settings and the win flow remain usable at representative phone/tablet sizes and under rotation.
+
+These are acceptance requirements. Exact semantics labels, magnification treatment and measurements should be validated with actual devices and accessibility testing.
+
+## Motion, audio and haptics (UX-DEC-07)
+
+| Event | Approved feedback direction |
+| --- | --- |
+| Select card/tail | Subtle elevation and outline |
+| Successful move | Short glide/snap |
+| Invalid drop | Gentle return without board mutation |
+| Newly revealed face-down card | Brief face flip, if motion is enabled |
+| Completed same-suit run | Brief in-place highlight; no removal animation |
+| Hint | Brief highlight/pulse of legal source and destination, or reserve |
+| Win | Restrained celebration and accessible win summary |
+
+Use an **initial movement-animation target around 120–220 ms**, subject to later device testing, frame performance and reduced-motion policy. This timing is a tunable usability target, not an exact inviolable number.
+
+**Default preferences:** Sound **off**; haptics optional and governed by system preferences; default reduced motion follows the system preference, with an additional in-app reduction option. No sound, vibration, or animation may be required to understand rules or complete the game.
+
+## Active-play timer UX (UX-DEC-08)
+
+- **Start** timing on the **first successfully committed gameplay action**, whether a legal tableau move or the one-time reserve deal. Opening a game, selecting a card, requesting a Hint or entering a menu must not start the clock.
+- **Pause** whenever the app is backgrounded or a blocking screen/dialog prevents active play, including How to Play, Settings, Statistics, a blocking menu or a confirmation dialog.
+- **Resume** only when the in-progress game board is available for active play again.
+- **Stop** once the game enters its won state. Elapsed time should restore exactly after process death/rotation.
+- Measure **active play time**, not wall-clock time, under RULE-03. This preserves the approved best winning time statistic (MVP-DEC-04). Exact lifecycle implementation and monotonic-clock bookkeeping are engineering details.
+
+## Asset provenance and licensing
+
+Use original scalable card symbols/art, or alternatives with an explicitly verified license appropriate for the intended distribution. Before importing any third-party pack, record creator, URL, license, attribution requirement and modifications in an asset manifest. **No specific external card pack, app logo, trade name, license or payment for assets is approved by UX-DEC-02.**
+
+A previous research candidate was the [Kenney Playing Cards Pack](https://kenney.nl/assets/playing-cards-pack); it remains a reference only until its actual license and suitability are verified.
+
+## UX acceptance scenarios
+
+1. All seven tableau columns are visible as an overview on a narrow portrait phone; expanded inspection makes tiny selectable cards accessible without changing their game-state meaning.
+2. A player can move a mixed-order attached card group by either drag/drop or explicit tap-to-move, including to an empty column.
+3. Selecting another card or canceling selection makes no game move; an illegal drop returns without changing state/Undo history.
+4. The reserve stays available regardless of legal tableau moves until the one allowed deal. A no-moves state is informational, never an automatic defeat.
+5. A completed K→A suit remains on the board; a win produces a summary with the correct active time and moves, and Undo use never disqualifies it.
+6. Restart/New Game confirmation prevents accidental loss of in-progress play; Undo and Hint remain easy to reach.
+7. TalkBack/large-text/non-drag users can select every legal source/destination, including small overlapped strips, on portrait, landscape and adaptive tablet layouts.
+8. Sound-off default, system-aware haptics and reduced-motion preferences are honored; all meaning remains available without motion/sound.
+9. The timer starts on the first committed action, pauses on background/blocking screens, resumes on gameplay return, stops on win, and restores after app interruption.
+10. Settings and basic statistics operate offline; only the four approved MVP statistical measures are shown.
+
+## Still pending after UX approval
+
+- App/product name, icon, brand ownership, actual card art acquisition/license selection and any required attributions.
+- Play Console account, release countries/languages, publishing policy declarations, monetization/ads/purchases and tester/release approach.
+- Representative physical/emulator device matrix, accessibility validation results and final art/contrast/performance tuning.
+- Application/package ID, signing ownership and launch assets.
+- Explicit authorization for Phase 2 implementation, which is **not granted by approving these UX decisions**.
+
+See [game-rules.md](game-rules.md), [product-requirements.md](product-requirements.md), [architecture.md](architecture.md), [decisions.md](decisions.md) and [roadmap.md](roadmap.md).
