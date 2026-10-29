@@ -1,6 +1,6 @@
 # UX and visual design direction
 
-**Status:** Proposed, not approved  
+**Status:** UX proposed, not approved; RULE-01–05 accepted in rules specification  
 **Last reviewed:** 2026-10-29
 
 ## Experience goals
@@ -34,12 +34,14 @@ Allow scrolling or inspection if the screen genuinely cannot display all cards r
 3. Drag the selected group with a visible elevated preview; release on a valid destination to commit; invalid drops restore without changing game state.
 4. For tiny overlapping card regions, provide inspection/selection controls and accessibility actions rather than relying exclusively on precise gestures.
 5. Keep Undo and New Game discoverable. Confirm actions that discard in-progress work.
-6. For reserve dealing, show remaining count and clear that there is only one three-card deal.
+6. For reserve dealing, show remaining count and clarify that the one three-card deal is available **at any time during active play**, even if other moves exist (RULE-01).
+7. Indicate completed same-suit K→A runs **in place on the tableau**. Do not animate their removal to a separate pile (RULE-02).
+8. Show elapsed **active gameplay** time (RULE-03) and do not mark a win as assisted or disqualified because Undo was used (RULE-04).
 
 ## Initial screen inventory
 
 - **Home/resume:** Continue, New Game, How to Play, Settings.
-- **Game board:** Reserve, tableau columns, completed-suits area/indicator, moves and time, controls.
+- **Game board:** Reserve, tableau columns, completed-suits **progress indicator only** (no card-storage area), moves and active-play time, controls.
 - **How to Play:** Short illustrations and examples of group movement, same-suit builds, empty columns, reserve, and winning.
 - **Settings:** Theme (if options are available), sound, haptics, reduced motion, privacy link.
 - **Statistics:** Explicitly defined game counts and records.
