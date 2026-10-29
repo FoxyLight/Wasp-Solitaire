@@ -1,19 +1,19 @@
 # Project documentation
 
-**Status:** Draft documentation set, prepared 2026-10-29. None of the recommendations is approved solely by appearing here.
+**Status:** Draft documentation set, prepared 2026-10-29. RULE-01–06 were explicitly approved by the project owner on 2026-10-29; other recommendations remain proposed until separately approved.
 
 This directory is intended to become the canonical home of the project specifications. Once a document or decision is approved, update its status in a reviewed commit. The `main` branch represents the accepted project record; proposed changes belong in pull requests.
 
 | File | Purpose | Status |
 | --- | --- | --- |
 | [product-requirements.md](product-requirements.md) | Product vision, MVP scope, acceptance criteria | Proposed |
-| [game-rules.md](game-rules.md) | Gameplay mechanics and rule ambiguities | Proposed |
+| [game-rules.md](game-rules.md) | Gameplay mechanics and rule decisions | RULE-01–06 accepted; remaining project scope pending |
 | [architecture.md](architecture.md) | Android stack, system boundaries, persistence and testing | Proposed |
 | [ux-design.md](ux-design.md) | Interaction and responsive design principles | Proposed |
 | [market-research.md](market-research.md) | Competitors and differentiation hypotheses | Research draft |
 | [google-play.md](google-play.md) | Publishing requirements and verification checkpoints | Research draft |
 | [roadmap.md](roadmap.md) | Phases, dependencies, risks, quality gates | Proposed |
-| [decisions.md](decisions.md) | Decisions, alternatives, approval status | Pending approval |
+| [decisions.md](decisions.md) | Decisions, alternatives, approval status | Mixed: five rules decisions accepted; other ADRs proposed |
 | [sources.md](sources.md) | Source register and verification dates | Research draft |
 
 ## Working agreements

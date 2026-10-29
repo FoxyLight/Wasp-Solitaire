@@ -18,13 +18,13 @@ Build a reliable engine first, then an accessible card board, then polish and pu
 | 7. Store preparation | Package, signing, policy declarations, listing, tester rollout | Phase 6, Play account | Account/test/review delay | Submission approved for appropriate release track |
 | 8. Launch/maintenance | Monitoring, bug fixes, feedback-led backlog | Phase 7 | Retention/compatibility | Post-release issue process in place |
 
-Development cannot commence without documented Phase 1 approval.
+The five rules decisions are approved, but **development cannot commence without approval of the remaining Phase 1 product, architecture, UX and publishing decisions**.
 
 ## Top risks
 
 | Risk | Impact | Mitigation |
 | --- | --- | --- |
-| Wasp rule misunderstanding | High | Formally approve [game-rules.md](game-rules.md); deterministic example and property tests |
+| Wasp rule misunderstanding | High | Formally approve [game-rules.md](game-rules.md); deterministic example and property tests, including no-move states (RULE-06) |
 | Unordered group-movement bug | High | Unit tests for attached tails of mixed cards |
 | Card input on small screens | High | Prototype early; explicit tap selection and accessible alternative |
 | Save corruption after interruptions | High | Versioned snapshots, integrity invariants, restore/Undo tests |
@@ -36,7 +36,8 @@ Development cannot commence without documented Phase 1 approval.
 
 ## Phase 1 readiness checklist
 
-- [ ] Approve the precise Wasp rules and digital-game conventions.
+- [x] Approve RULE-01–06: reserve timing, completed runs, timer, Undo wins, Classic Wasp v1.0 scope, and no automatic defeat on zero tableau moves (owner-approved 2026-10-29).
+- [ ] Complete broader Phase 1 approvals before authorizing implementation.
 - [ ] Approve v1.0 MVP and explicit exclusions.
 - [ ] Approve native Kotlin + Compose and engine separation.
 - [ ] Confirm minimum Android version and physical test-device plan.

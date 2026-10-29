@@ -1,6 +1,6 @@
 # Technical architecture proposal
 
-**Status:** Proposed, no app code authorized  
+**Status:** Architecture proposed, no app code authorized; RULE-01–06 accepted in rules specification  
 **Last reviewed:** 2026-10-29
 
 ## Stack recommendation
@@ -33,7 +33,7 @@ Player action -> Compose UI -> GameViewModel -> RulesEngine
 ```
 
 - **Model:** immutable `Card`, `TableauColumn`, `GameState`, `GameAction`, `GameResult`. Use stable card IDs and explicit ordering.
-- **Rules engine:** validate a requested move; transition state atomically; detect exposures and completions; enumerate legal moves for hints.
+- **Rules engine:** validate a requested move; transition state atomically; detect exposures and completed **tableau** runs without extracting them; allow the single reserve deal at any time during play; enumerate legal moves for hints. **Never interpret zero available tableau moves as an automatic loss** (RULE-06).
 - **Deal generator:** deterministic shuffle from a seed for replay and debugging.
 - **ViewModel:** receives user intents, exposes display state, coordinates animation requests and saves. It does **not** decide move legality.
 - **UI:** renders state, performs drag hit-testing, shows errors/feedback, and honors accessibility preferences.
@@ -59,11 +59,14 @@ Start as one Gradle application module with separate packages; extract an engine
 ## State and persistence
 
 - Do not let animation state be the source of truth for cards.
-- Represent a move, reserve deal, automatic reveal and optional complete-run transfer as one reversible command transaction.
-- Save a versioned snapshot with the shuffle seed and all cards, face states, reserve and completion states, move history and elapsed active play time.
+- Represent a move, reserve deal and automatic reveal as reversible command transactions. **Do not implement automatic completed-run transfer or a completed-suits card pile** (RULE-02).
+- Save a versioned snapshot with the shuffle seed and all tableau/reserve cards, face states, move history and elapsed active gameplay time. Derive completed-suit progress from the tableau rather than storing/removing completed cards.
 - Restore logical state before rendering. On an unsupported save schema, recover safely without claiming success.
 - Validate card count/identity after load and in engine tests.
-- Pause game clock when the app is not foreground-active.
+- Count active gameplay time only (RULE-03); pause during backgrounding and on win. Details of pauses for modal menus and clock-start timing remain UX-level implementation choices.
+- Wins after Undo count normally (RULE-04), without a separate win classification.
+- Only Classic Wasp is included in v1.0 (RULE-05); do not introduce a parallel Scorpion ruleset as part of core engine scope.
+- **RULE-06:** Model the absence of tableau moves as an observable board condition, **not** an automatic terminal/defeat state. If reserve cards remain, dealing the reserve is still a possible action; after reserve exhaustion, Undo/Restart/New Game must remain possible per UX scope. Only the four-run win condition produces a terminal game outcome in the approved rules. Do not infer deal unsolvability from legal-move enumeration alone.
 
 ## Touch and layout
 
@@ -77,7 +80,7 @@ Start as one Gradle application module with separate packages; extract an engine
 ## Testing strategy
 
 1. Deterministic example-based rules tests.
-2. Randomized action sequence invariants and saved-state roundtrips.
+2. Randomized action sequence invariants and saved-state roundtrips; include zero-tableau-move states with reserve available and exhausted, without an auto-loss transition.
 3. Compose gesture and semantics tests.
 4. Rotation/process death/background-resume tests.
 5. Performance profiling on smaller/midrange phones and at least one large-screen layout.
