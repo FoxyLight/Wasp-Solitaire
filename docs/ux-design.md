@@ -1,6 +1,6 @@
 # UX and visual design direction
 
-**Status:** UX proposed, not approved; RULE-01–05 accepted in rules specification  
+**Status:** UX proposed, not approved; RULE-01–06 accepted in rules specification  
 **Last reviewed:** 2026-10-29
 
 ## Experience goals
@@ -37,6 +37,7 @@ Allow scrolling or inspection if the screen genuinely cannot display all cards r
 6. For reserve dealing, show remaining count and clarify that the one three-card deal is available **at any time during active play**, even if other moves exist (RULE-01).
 7. Indicate completed same-suit K→A runs **in place on the tableau**. Do not animate their removal to a separate pile (RULE-02).
 8. Show elapsed **active gameplay** time (RULE-03) and do not mark a win as assisted or disqualified because Undo was used (RULE-04).
+9. **RULE-06:** When no tableau moves are currently available, do not display a loss/game-over verdict. If the reserve is undealt, keep its deal action accessible. If exhausted, keep Undo/Restart/New Game accessible as applicable. A proposed informational message is "No available tableau moves," without any claim that the deal is unwinnable.
 
 ## Initial screen inventory
 
