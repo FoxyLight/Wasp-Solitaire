@@ -57,7 +57,7 @@ A complete run is 13 face-up cards of one suit in order K-Q-J-10-9-8-7-6-5-4-3-2
 
 ## Approved rules decisions
 
-The project owner explicitly approved these six decisions on **2026-10-29**. Their incorporation into the default branch is proposed through this documentation PR; approval of these decisions does **not** approve the entire Phase 1 plan or authorize app development.
+The project owner explicitly approved these six decisions on **2026-10-29**. They are recorded on the default branch through merged PR #2; their approval does **not** approve the entire Phase 1 plan or authorize app development.
 
 | ID | Question | Accepted behavior | Status |
 | --- | --- | --- | --- |
@@ -79,7 +79,7 @@ The project owner explicitly approved these six decisions on **2026-10-29**. The
 - The total number of physical cards remains 52 after every action and Undo.
 - A group move keeps the entire attached tail intact and preserves its order.
 - Only a face-up card can be selected.
-- A reserve deal is atomic, happens at most once regardless of tableau moves/empty columns, and is reversible by Undo under the proposed MVP Undo behavior.
+- A reserve deal is atomic, happens at most once regardless of tableau moves/empty columns, and is reversible by **unlimited Undo within the current deal (MVP-DEC-02, accepted 2026-10-29)**.
 - Invalid actions do not change state or history.
 - A saved game and its restored version represent precisely the same logical board, score/timer metadata, and available actions.
 - New games support deterministic seeding to reproduce reports of incorrect moves.

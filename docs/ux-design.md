@@ -1,6 +1,6 @@
 # UX and visual design direction
 
-**Status:** UX proposed, not approved; RULE-01–06 accepted in rules specification  
+**Status:** Specific UI/visual design proposed; RULE-01–06 and MVP-DEC-01–08 accepted as requirements. No final visual direction or layout measurements approved.  
 **Last reviewed:** 2026-10-29
 
 ## Experience goals
@@ -9,11 +9,11 @@ The player should understand the current board at a glance, move cards confident
 
 ## Starting visual language
 
-- Classic deep green table, light/high-contrast card faces, restrained blue card backs.
+- **Proposed, not yet approved:** classic deep green table, light/high-contrast card faces, restrained blue card backs. **Approved MVP-DEC-06:** ship one readable initial theme; palette and exact assets are pending.
 - Large corner rank and suit; preserve enough of each overlapped card to identify it.
 - Simple native controls for Undo, Hint, Reserve, New Game, and Settings.
 - Minimal, purposeful animation: lift on drag, snap to valid target, rebound on invalid drop, flip on reveal, celebration on win.
-- Sound and haptics default to subtle and optional.
+- **Approved MVP-DEC-06:** expose optional sound and haptics toggles and a reduced-motion preference; default intensities remain to be specified.
 - Keep a reduce-motion setting; respect system accessibility preferences when feasible.
 
 ## Layout by available space
@@ -45,8 +45,18 @@ Allow scrolling or inspection if the screen genuinely cannot display all cards r
 - **Game board:** Reserve, tableau columns, completed-suits **progress indicator only** (no card-storage area), moves and active-play time, controls.
 - **How to Play:** Short illustrations and examples of group movement, same-suit builds, empty columns, reserve, and winning.
 - **Settings:** Theme (if options are available), sound, haptics, reduced motion, privacy link.
-- **Statistics:** Explicitly defined game counts and records.
+- **Statistics:** Four approved Version 1.0 records: unique games started, games won, best winning active-play time and fewest successful actions in a win (MVP-DEC-04). No win-rate, abandon counter, or streak dashboard.
 - **Win summary:** Win feedback, completed time/moves, another game.
+
+## MVP-approved interaction and accessibility boundaries
+
+- **MVP-DEC-01:** All legal group moves work with both drag/drop and tap-select/tap-destination. Tap destinations must be explicit rather than silently guessed.
+- **MVP-DEC-02:** Unlimited Undo within the current deal, including reserve-deal actions and flips; Undo must remain usable after saving/resuming.
+- **MVP-DEC-03:** Hint identifies at least one legal tableau move where possible or suggests undealt reserve when no tableau move is available; it does not assert that a deal is lost or solvable.
+- **MVP-DEC-05:** Portrait/landscape phones and adaptive tablet layouts are required, not optional stretch goals.
+- **MVP-DEC-06:** One visual theme; optional sound/haptics and reduce-motion controls; additional themes deferred.
+- **MVP-DEC-07:** Resume an offline in-progress game after process death/rotation with Undo history intact.
+- **MVP-DEC-08:** No advanced strategic hint system, variants, daily challenges, cloud/account flows or theme catalogs for initial release.
 
 ## Accessibility requirements
 

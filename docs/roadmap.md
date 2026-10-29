@@ -11,14 +11,14 @@ Build a reliable engine first, then an accessible card board, then polish and pu
 | --- | --- | --- | --- | --- |
 | 1. Research and approval | Approved rules, requirements, architecture and UX criteria | None | Ambiguous conventions | Owner records explicit approvals |
 | 2. Environment/setup | Buildable native Android app shell, Git/CI and unit test setup | Phase 1 | Toolchain/SDK incompatibility | Clean local+CI build on device/emulator |
-| 3. Pure game engine | Deterministic deals, rule validation, reserve, Undo, win detection | Phase 2 + approved rules | Invalid moves/card duplication | Unit/invariant suites pass |
+| 3. Pure game engine | Deterministic deals, rule validation, reserve, **unlimited Undo**, win detection and legal Hint enumeration | Phase 2 + approved rules and MVP | Invalid moves/card duplication | Unit/invariant suites pass, including reserve Undo and zero-move states |
 | 4. Board/input | Adaptive tableau, tap and drag group moves, reserve controls | Phase 3 interface | Tiny hit targets/gesture errors | Entire game playable on representative screens |
-| 5. Polish/state | Autosave, hints, statistics, menus, animations and audio toggles | Phase 4 | Lifecycle/animation state drift | End-to-end MVP acceptance scenarios pass |
+| 5. Polish/state | Offline autosave/resume, basic legal Hint, four agreed statistics, menus, one theme, audio/haptics/reduced-motion toggles | Phase 4 | Lifecycle/animation state drift | End-to-end MVP acceptance scenarios pass, including persisted Undo history |
 | 6. QA/optimization | Regression tests, performance, TalkBack, device coverage | Phase 5 | Device-specific bugs | No known release blockers |
 | 7. Store preparation | Package, signing, policy declarations, listing, tester rollout | Phase 6, Play account | Account/test/review delay | Submission approved for appropriate release track |
 | 8. Launch/maintenance | Monitoring, bug fixes, feedback-led backlog | Phase 7 | Retention/compatibility | Post-release issue process in place |
 
-The five rules decisions are approved, but **development cannot commence without approval of the remaining Phase 1 product, architecture, UX and publishing decisions**.
+All six rules decisions and eight Version 1.0 MVP decisions are approved. **Development cannot commence without approval of the remaining Phase 1 technical architecture, UX design details and publishing decisions**.
 
 ## Top risks
 
@@ -38,7 +38,7 @@ The five rules decisions are approved, but **development cannot commence without
 
 - [x] Approve RULE-01–06: reserve timing, completed runs, timer, Undo wins, Classic Wasp v1.0 scope, and no automatic defeat on zero tableau moves (owner-approved 2026-10-29).
 - [ ] Complete broader Phase 1 approvals before authorizing implementation.
-- [ ] Approve v1.0 MVP and explicit exclusions.
+- [x] Approve Version 1.0 MVP and explicit exclusions (MVP-DEC-01–08 accepted 2026-10-29).
 - [ ] Approve native Kotlin + Compose and engine separation.
 - [ ] Confirm minimum Android version and physical test-device plan.
 - [ ] Approve initial visual direction, cards, accessibility goals.
