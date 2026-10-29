@@ -97,7 +97,7 @@ The specific Room entity schema, snapshot encoding, compression, serialization f
 
 The board is a custom Compose layout with seven columns, position/overlap derived from available window dimensions, and hit-testing that selects the intended face-up card plus every attached card below it. The drag preview is drawn above the tableau, with the underlying rules state unchanged until a valid drop is committed. Invalid drops visually return cards without altering the state.
 
-The supported tap path selects a card group, highlights valid destinations, and requires an explicit destination selection; gameplay must be possible without dragging. Use Android accessibility semantics, reduced-motion preference, and window-inset awareness. Portrait and landscape phone layouts plus an adaptive tablet layout are MVP requirements. **The actual palette, typography, card art and detailed screen layouts remain subject to the UI/UX milestone.**
+The supported tap path selects a card group, highlights valid destinations, and requires an explicit destination selection; gameplay must be possible without dragging. Use Android accessibility semantics, reduced-motion preference, and window-inset awareness. Portrait and landscape phone layouts plus an adaptive tablet layout are MVP requirements. **UX-DEC-01–08 now approve** a green-table/ivory-face/blue-back design direction, expanded column inspection, compact controls, accessible feedback and interruption-aware timer. Final art assets/licensing and tested dimensions remain pending; see [ux-design.md](ux-design.md).
 
 ## SDK and build baseline (ARCH-DEC-07 and ARCH-DEC-08)
 
@@ -122,11 +122,11 @@ The supported tap path selects a card group, highlights valid destinations, and 
 
 ## Still open and explicitly not approved by ARCH-DEC-01–08
 
-- Card art, green-table palette and exact visual style; layout details and animation timing; accessibility UI microinteractions.
+- The UX design direction is approved (UX-DEC-01–08). Exact final card assets/licensing, validated contrast, device-tested dimensions and detailed animation tuning remain to be finalized.
 - App name/package ID, branding and assets/licenses.
 - Pricing, advertisements, purchases, analytics SDKs and publication account details.
 - Specific Android/Compose/Room/JUnit/Gradle versions, Room tables/serialization and dependency-injection frameworks.
-- Starting/pausing the active timer for non-background UI overlays.
+- UX-DEC-08 specifies first-successful-action start, blocking-screen/dialog pauses and stop on victory. Lifecycle/monotonic-clock implementation details remain engineering work.
 - Authorization to create the Android project, execute code or start Phase 2.
 
 ## Supporting references

@@ -52,7 +52,7 @@ A complete run is 13 face-up cards of one suit in order K-Q-J-10-9-8-7-6-5-4-3-2
 
 ### Timer and statistics conventions
 
-- **RULE-03 (accepted):** Count **active gameplay time only**. Pause while the game is backgrounded and after the game is won. A proposed implementation detail is to begin counting on the first valid gameplay action and pause while blocking menus are shown; the exact UI edge cases can be specified during UX review without changing the approved active-time principle.
+- **RULE-03 (accepted):** Count **active gameplay time only**. Pause while the game is backgrounded and after the game is won. **UX-DEC-08 (accepted 2026-10-29)** specifies the UI semantics: start timing on the first successfully committed tableau move or reserve deal, pause while blocking menus/screens/dialogs interrupt play, and stop at victory. These UX details preserve the approved active-time rule.
 - **RULE-04 (accepted):** A win after using Undo counts **normally** as a victory, including win totals, win rate, and streaks. Undo does not disqualify a result. Other statistics definitions (denominators, abandonment, and move-count conventions) remain separate proposed product decisions.
 
 ## Approved rules decisions
@@ -98,7 +98,7 @@ The project owner explicitly approved these six decisions on **2026-10-29**. The
 9. A complete K→A run is recognized in-place; no cards are removed, and incomplete or mixed-suit runs are not counted.
 10. When four completed runs exist, all 52 cards remain on the tableau and the game enters the won state.
 11. An Undo-assisted victory is counted in normal win statistics.
-12. The active-time clock pauses during backgrounding and after victory.
+12. The active-time clock starts on the first successfully committed gameplay action, pauses during backgrounding or blocking screens/dialogs, resumes when gameplay becomes available, and stops after victory (RULE-03; UX-DEC-08).
 13. Property tests/random action sequences preserve card identity/count and legality.
 14. When no legal tableau moves exist but the reserve is undealt, the game remains in progress and allows the reserve deal.
 15. When no legal tableau moves exist and the reserve has been dealt, the game does not automatically declare defeat or increment a loss statistic; recovery controls remain available.
