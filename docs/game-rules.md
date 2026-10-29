@@ -1,6 +1,6 @@
 # Classic Wasp Solitaire: rules specification
 
-**Status:** RULE-01 through RULE-05 accepted by project owner on 2026-10-29; broader Phase 1 approvals remain pending  
+**Status:** RULE-01 through RULE-06 accepted by project owner on 2026-10-29; broader Phase 1 approvals remain pending  
 **Last reviewed:** 2026-10-29  
 **Primary references:** [Semicolon Wasp](https://www.semicolon.com/Solitaire/Rules/Wasp.html), [BVS Wasp](https://www.bvssolitaire.com/rules/wasp.htm), [Semicolon Scorpion](https://www.semicolon.com/Solitaire/Rules/Scorpion.html).
 
@@ -42,6 +42,14 @@ A complete run is 13 face-up cards of one suit in order K-Q-J-10-9-8-7-6-5-4-3-2
 - A completed run does not create a new movement restriction: until the game is won, ordinary legal moves (including selecting a face-up card within a completed run) remain available.
 - The game ends in victory when the tableau contains all four complete 13-card same-suit descending runs, accounting for all 52 cards. With no cards removed, three of the seven columns will be empty. The UI may show a completed-suit **indicator**, not a separate card-storage area.
 
+### No legal tableau moves and loss detection
+
+- **RULE-06 (accepted):** A game **must not automatically declare defeat** merely because no legal tableau move is currently available. A lack of immediately available moves is not sufficient proof that the deal is unwinnable.
+- When the reserve is still undealt, the player can still use the one-time three-card reserve deal (RULE-01), even if there are no legal tableau moves.
+- Even when the reserve has already been dealt and no tableau move is available, **do not automatically mark the game as lost**, record a loss, or display a definitive "unwinnable" verdict based on that condition alone. Undo, Restart and New Game remain available under their separately specified behaviors.
+- A UI may indicate **"No available tableau moves"** or a similar strictly factual state. Such a message is **not** a defeat declaration or a solver-certified judgment.
+- No generalized automatic loss/unsolvability detection is part of the accepted Classic Wasp rules. A future solver would require separate specification and validation.
+
 ### Timer and statistics conventions
 
 - **RULE-03 (accepted):** Count **active gameplay time only**. Pause while the game is backgrounded and after the game is won. A proposed implementation detail is to begin counting on the first valid gameplay action and pause while blocking menus are shown; the exact UI edge cases can be specified during UX review without changing the approved active-time principle.
@@ -49,7 +57,7 @@ A complete run is 13 face-up cards of one suit in order K-Q-J-10-9-8-7-6-5-4-3-2
 
 ## Approved rules decisions
 
-The project owner explicitly approved these five decisions on **2026-10-29**. Their incorporation into the default branch is proposed through this documentation PR; approval of these decisions does **not** approve the entire Phase 1 plan or authorize app development.
+The project owner explicitly approved these six decisions on **2026-10-29**. Their incorporation into the default branch is proposed through this documentation PR; approval of these decisions does **not** approve the entire Phase 1 plan or authorize app development.
 
 | ID | Question | Accepted behavior | Status |
 | --- | --- | --- | --- |
@@ -58,6 +66,7 @@ The project owner explicitly approved these five decisions on **2026-10-29**. Th
 | RULE-03 | When does the clock run? | Active gameplay time only | Accepted |
 | RULE-04 | Are Undo-assisted wins recorded normally? | Yes, count them as ordinary wins | Accepted |
 | RULE-05 | Is the first release Classic Wasp only? | Yes; other variants such as Scorpion are out of initial scope | Accepted |
+| RULE-06 | Should no immediately available tableau move automatically trigger defeat? | No; reserve may remain, and no-move detection alone is not proof of unwinnability | Accepted |
 
 ### Initial release scope
 
@@ -74,6 +83,7 @@ The project owner explicitly approved these five decisions on **2026-10-29**. Th
 - Invalid actions do not change state or history.
 - A saved game and its restored version represent precisely the same logical board, score/timer metadata, and available actions.
 - New games support deterministic seeding to reproduce reports of incorrect moves.
+- Zero legal tableau moves is **not** a loss condition. No automatic state transition to defeat occurs solely from a zero-move enumeration, regardless of reserve state.
 
 ## Required rule test scenarios
 
@@ -90,6 +100,9 @@ The project owner explicitly approved these five decisions on **2026-10-29**. Th
 11. An Undo-assisted victory is counted in normal win statistics.
 12. The active-time clock pauses during backgrounding and after victory.
 13. Property tests/random action sequences preserve card identity/count and legality.
+14. When no legal tableau moves exist but the reserve is undealt, the game remains in progress and allows the reserve deal.
+15. When no legal tableau moves exist and the reserve has been dealt, the game does not automatically declare defeat or increment a loss statistic; recovery controls remain available.
+16. A no-moves notification never states that the game is provably unwinnable, and a won state is determined only by the completed four tableau runs.
 
 ## Notes on accuracy
 
