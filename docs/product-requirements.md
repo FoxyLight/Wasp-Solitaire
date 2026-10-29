@@ -1,6 +1,6 @@
 # Product requirements and MVP scope
 
-**Status:** Proposed, not yet approved  
+**Status:** MVP and architecture proposed; RULE-01–05 approved by owner on 2026-10-29  
 **Last reviewed:** 2026-10-29  
 **Working product name:** Wasp Solitaire for Android
 
@@ -30,12 +30,12 @@ A polished, trustworthy, offline-first implementation of Classic Wasp Solitaire 
 | MVP-01 | Classic Wasp deal/rules | Complies with approved [game-rules.md](game-rules.md); reproducible deterministic seed |
 | MVP-02 | Group moves | Tap selection and drag/drop both permit all legal moves; illegal moves are rejected without state change |
 | MVP-03 | Move guidance | Selection exposes valid destinations; ambiguous tap-to-move is resolved explicitly |
-| MVP-04 | Reserve | One three-card deal, correct target columns, visible remaining status |
+| MVP-04 | Reserve | One three-card deal **at any time during play** (RULE-01), correct target columns, visible remaining status |
 | MVP-05 | Undo, restart, new game | Complete atomic Undo; restart repeats same initial deal; new game generates a new seed with confirmation where needed |
-| MVP-06 | Win detection | Four completed suited King-to-Ace runs correctly recognized |
-| MVP-07 | Autosave and resume | Exact board, seed, move history, reserve state, completed runs, and statistics restored after app/process interruption |
+| MVP-06 | Win detection | Four suited King-to-Ace tableau runs recognized **without removing them** (RULE-02) |
+| MVP-07 | Autosave and resume | Exact tableau, seed, move history, reserve state, and statistics restored; completed-run status is derived from cards **remaining on tableau** |
 | MVP-08 | Hint | Highlights at least one **legal** move; does not promise strategic optimality |
-| MVP-09 | Basic statistics | Counts wins, starts, abandons, timing, and moves with documented denominators and rules |
+| MVP-09 | Basic statistics | Counts wins, starts, abandons, timing, and moves; **Undo-assisted wins count normally** (RULE-04); timer counts active play only (RULE-03); other definitions pending |
 | MVP-10 | Layout | Playable in portrait and landscape across representative phone sizes; tablets supported where practical |
 | MVP-11 | Accessibility | Essential interaction possible without dragging; labeled controls, readable card indices, contrast and reduced-motion checks |
 | MVP-12 | Tutorial and controls | Clear How to Play, New Game, Restart, Undo, Hint, Settings, and completed-game flow |
@@ -49,23 +49,26 @@ A polished, trustworthy, offline-first implementation of Classic Wasp Solitaire 
 - Scorpion mode and other related patience games.
 - Daily challenges, achievements, leaderboards, sync, optional purchases, and solver-certified solvable deals.
 
-## Proposed product decisions to approve
+## Approved rules decisions and remaining product proposals
 
-- Classic Wasp only for v1.0.
+**Accepted rules scope (2026-10-29):** Classic Wasp only for v1.0 (RULE-05); reserve available once at any time (RULE-01); completed sequences stay on the tableau (RULE-02); active gameplay time only (RULE-03); Undo-assisted wins count normally (RULE-04). See [game-rules.md](game-rules.md) and [decisions.md](decisions.md).
+
+**Still proposed, not approved:**
+
 - Free, ad-free, offline-first launch; no backend or sign-in.
 - Kotlin / Compose Android-native implementation.
 - Minimum API 26 as provisional compatibility target; Google Play target API must be verified for submission.
 - Default table is classic green with high-readability cards.
-- Reserve and completed-run conventions from [game-rules.md](game-rules.md).
+- The remaining detailed MVP features and the full release plan.
 
 ## Analytics and statistics definitions (proposed)
 
 - **Games started:** count a newly dealt board, not each app launch.
-- **Games won:** completed boards.
+- **Games won:** completed boards, **including games in which Undo was used** (RULE-04).
 - **Abandoned:** newly starting/restarting without completing previous board; separately count restarts if desired.
 - **Win rate:** games won / (games won + abandoned), excluding active in-progress games.
-- **Best time:** active playing duration for a completed board, paused while backgrounded.
-- **Fewest moves:** player actions for a completed board, with dealing the reserve counted as an action; Undo should not inflate the count.
+- **Best time:** active gameplay duration for a completed board (RULE-03); exact menu/first-action edge-case handling remains for UX specification.
+- **Fewest moves:** proposed: player actions for a completed board, with dealing the reserve counted as an action; Undo should not inflate the count. This move-count convention is **not yet approved**.
 - Do not imply in-progress deals are losses.
 
 ## Quality/release gates
