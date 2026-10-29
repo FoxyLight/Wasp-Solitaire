@@ -24,7 +24,7 @@ The five rules decisions are approved, but **development cannot commence without
 
 | Risk | Impact | Mitigation |
 | --- | --- | --- |
-| Wasp rule misunderstanding | High | Formally approve [game-rules.md](game-rules.md); deterministic example and property tests |
+| Wasp rule misunderstanding | High | Formally approve [game-rules.md](game-rules.md); deterministic example and property tests, including no-move states (RULE-06) |
 | Unordered group-movement bug | High | Unit tests for attached tails of mixed cards |
 | Card input on small screens | High | Prototype early; explicit tap selection and accessible alternative |
 | Save corruption after interruptions | High | Versioned snapshots, integrity invariants, restore/Undo tests |
@@ -36,7 +36,7 @@ The five rules decisions are approved, but **development cannot commence without
 
 ## Phase 1 readiness checklist
 
-- [x] Approve RULE-01–05: reserve timing, completed runs, timer, Undo wins and Classic Wasp v1.0 scope (owner-approved 2026-10-29).
+- [x] Approve RULE-01–06: reserve timing, completed runs, timer, Undo wins, Classic Wasp v1.0 scope, and no automatic defeat on zero tableau moves (owner-approved 2026-10-29).
 - [ ] Complete broader Phase 1 approvals before authorizing implementation.
 - [ ] Approve v1.0 MVP and explicit exclusions.
 - [ ] Approve native Kotlin + Compose and engine separation.
