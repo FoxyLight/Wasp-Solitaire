@@ -1,9 +1,9 @@
 # Architecture and product decision log
 
-**Status:** Mixed: RULE-01–05 and their corresponding decisions **Accepted** by project owner; other ADRs remain **Proposed**  
+**Status:** Mixed: RULE-01–06 and their corresponding decisions **Accepted** by project owner; other ADRs remain **Proposed**  
 **Created:** 2026-10-29  
 **Last updated:** 2026-10-29  
-**Approval record:** Project owner explicitly approved RULE-01 through RULE-05 in the project conversation on 2026-10-29. This documentation PR records the approval without authorizing app development.
+**Approval record:** Project owner explicitly approved RULE-01 through RULE-06 in the project conversation on 2026-10-29. This documentation PR records the approval without authorizing app development.
 
 This log is the canonical location for major decisions once reviewed on the default branch. A recommendation is **not** an approved requirement unless its status is explicitly updated to **Accepted** with a date and rationale. When a decision changes, mark the old entry **Superseded** and link to the replacement.
 
@@ -23,6 +23,7 @@ This log is the canonical location for major decisions once reviewed on the defa
 | ADR-012 | Documentation approval gate | No app code until rules, MVP and technical plan approved | Proposed process, aligned with Phase 1 instructions |
 | ADR-013 | Timer / RULE-03 | Count active gameplay time only; pause in background and once won | **Accepted 2026-10-29** |
 | ADR-014 | Undo-assisted wins / RULE-04 | Count Undo-assisted victories as normal wins | **Accepted 2026-10-29** |
+| ADR-015 | No automatic defeat / RULE-06 | No legal tableau moves alone must not auto-declare defeat; undealt reserve and non-proof of unwinnability are explicitly recognized | **Accepted 2026-10-29** |
 
 ## Approval template
 
@@ -46,4 +47,4 @@ Link to issue / PR:
 - Which card graphic license and application/package name should be used?
 - What additional statistics conventions (move counts, abandoned/restarted games, win-rate denominators) and timer UI edge cases should apply? RULE-03 and RULE-04 are accepted; related details are not all decided.
 
-The accepted rules decisions are now fixed for the proposed Classic Wasp ruleset. **All other Proposed entries remain unapproved.** Do not start app development until Phase 1's wider product, architecture, UX, and release decisions have been approved.
+The six accepted rules decisions are now fixed for the proposed Classic Wasp ruleset. **All other Proposed entries remain unapproved.** Do not start app development until Phase 1's wider product, architecture, UX, and release decisions have been approved.
