@@ -1,6 +1,6 @@
 # UX and visual design direction
 
-**Status:** Specific UI/visual design proposed; RULE-01–06 and MVP-DEC-01–08 accepted as requirements. No final visual direction or layout measurements approved.  
+**Status:** Specific UI/visual design proposed; RULE-01–06, MVP-DEC-01–08 and ARCH-DEC-01–08 accepted as constraints. No final visual direction or layout measurements approved.  
 **Last reviewed:** 2026-10-29
 
 ## Experience goals
@@ -47,6 +47,13 @@ Allow scrolling or inspection if the screen genuinely cannot display all cards r
 - **Settings:** Theme (if options are available), sound, haptics, reduced motion, privacy link.
 - **Statistics:** Four approved Version 1.0 records: unique games started, games won, best winning active-play time and fewest successful actions in a win (MVP-DEC-04). No win-rate, abandon counter, or streak dashboard.
 - **Win summary:** Win feedback, completed time/moves, another game.
+
+## Approved technical constraints and pending visual decisions
+
+- **ARCH-DEC-01, ARCH-DEC-06:** Compose and a custom adaptive Compose board layout/gesture system are approved, with the existing tap-select/tap-destination accessibility path (MVP-DEC-01).
+- **ARCH-DEC-03:** A ViewModel exposes StateFlow; the UI displays engine-validated state, not independently computed legality.
+- **ARCH-DEC-07:** Minimum API 26; target at least API 36 with current-policy recheck, including edge-to-edge layout considerations.
+- **Still proposed:** actual colors, card designs/assets, component measurements, animations, precise timer/menu behavior and branded screen treatments. Approval of the rendering technology is not approval of the visual design.
 
 ## MVP-approved interaction and accessibility boundaries
 
