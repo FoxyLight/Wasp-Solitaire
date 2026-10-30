@@ -39,6 +39,8 @@ Prerequisites: JDK **17**, Android SDK **platforms;android-37.0** (and Android b
 - Initial PR #7 CI failed at `:app:checkDebugAarMetadata` because Compose dependencies required API 37. The stabilization PR updates the compile SDK and tests the setup in GitHub Actions.
 - CI success must be checked on the stabilization PR; a passing build, JVM smoke test and emulator test are required before declaring Phase 2 verified.
 - The Compose setup smoke test runs in CI on an Android emulator. Broader device coverage and accessible gameplay tests remain later milestones.
+- GitHub Actions uses the [official KVM permissions setup](https://github.com/ReactiveCircus/android-emulator-runner#running-hardware-accelerated-emulators-on-linux-runners) before the Android 35 instrumented Compose smoke test. On the prior run, the runner could not access `/dev/kvm`; software-emulated x86_64 boot timed out. The stabilization PR restores KVM access and explicitly requires hardware acceleration. Verify the actual emulator test result in CI; do not assume a pass.
+
 
 ## Next milestone, not included here
 
