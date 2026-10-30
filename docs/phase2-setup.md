@@ -8,7 +8,7 @@
 - Two approved Gradle modules: `:app` (native Android/Compose) and `:game-engine` (**pure Kotlin JVM**, no Android dependency).
 - Minimal display-only Compose activity. **No real board, game rules, new deals, persistence or timer logic yet.**
 - Pinned Android Gradle Plugin **9.3.1**, Gradle **9.5.0** (installed by CI), Kotlin/Compose compiler **2.4.21** and stable Compose BOM **2026.09.00**.
-- Android minSdk **26**, targetSdk **36**, compileSdk **37**. The next setup/release review must recheck current Play requirements.
+- Android minSdk **26**, targetSdk **36**, compileSdk **36**. The next setup/release review must recheck current Play requirements.
 - A JUnit module-wiring smoke test and a device-only Compose UI smoke test. **These do not establish game correctness**.
 - GitHub Actions executes engine JUnit tests and assembles a debug APK; device instrumentation tests need a separately provisioned emulator.
 - No analytics, ads, network permissions, account system or in-app purchase integration.
@@ -19,7 +19,7 @@ The Android namespace and application ID are temporarily set to `org.example.was
 
 ## Build instructions
 
-Prerequisites: JDK **17**, Android SDK **platforms;android-37** (and Android build tools **36.0.0**), Gradle **9.5.0**.
+Prerequisites: JDK **17**, Android SDK **platforms;android-36** (and Android build tools **36.0.0**), Gradle **9.5.0**.
 
 ```sh
 gradle --no-daemon :game-engine:test
