@@ -19,7 +19,7 @@ The Android namespace and application ID are temporarily set to `org.example.was
 
 ## Build instructions
 
-Prerequisites: JDK **17**, Android SDK **platforms;android-37** (and Android build tools **36.0.0**), and the committed Gradle **9.5.0** wrapper.
+Prerequisites: JDK **17**, Android SDK **platforms;android-37.0** (and Android build tools **36.0.0**), and the committed Gradle **9.5.0** wrapper.
 
 ```sh
 ./gradlew --no-daemon :game-engine:test
@@ -28,6 +28,8 @@ Prerequisites: JDK **17**, Android SDK **platforms;android-37** (and Android bui
 ```
 
 **Verified Gradle wrapper:** The stabilization PR generates official Gradle 9.5.0 wrapper files using Gradle itself. The wrapper JAR must match the [Gradle-published SHA-256](https://gradle.org/release-checksums/) `497c8c2a7e5031f6aa847f88104aa80a93532ec32ee17bdb8d1d2f67a194a9c7`; the distribution is pinned with `distributionSha256Sum=553c78f50dafcd54d65b9a444649057857469edf836431389695608536d6b746`. The wrapper is validated by GitHub Actions. This is a stabilization-PR change until merged.
+
+**SDK package name:** Android 37 is distributed through the Android SDK Manager as `platforms;android-37.0` (including preview channel access when necessary), not `platforms;android-37`. CI explicitly installs that package before Gradle to avoid an on-demand installation mismatch.
 
 **Why API 37 compilation:** [Compose 1.12](https://android-developers.googleblog.com/2026/08/jetpack-compose-august-2026-release.html) requires compiling with API 37. Android Gradle Plugin 9.3 supports API 37. `compileSdk 37` does **not** change `minSdk 26` or `targetSdk 36`.
 

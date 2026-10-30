@@ -25,12 +25,12 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - name: Install Android SDK API 37 for Compose compilation
+      - name: Install Android SDK API 37.0 for Compose compilation
         run: |
           SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
           test -x "$SDKMANAGER"
           yes | "$SDKMANAGER" --licenses >/dev/null || true
-          "$SDKMANAGER" --install "platforms;android-37" "build-tools;36.0.0"
+          "$SDKMANAGER" --channel=3 --install "platforms;android-37.0" "build-tools;36.0.0"
       - name: Configure pinned Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
@@ -51,12 +51,12 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - name: Install SDK API 37 for compilation
+      - name: Install SDK API 37.0 for compilation
         run: |
           SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
           test -x "$SDKMANAGER"
           yes | "$SDKMANAGER" --licenses >/dev/null || true
-          "$SDKMANAGER" --install "platforms;android-37" "build-tools;36.0.0"
+          "$SDKMANAGER" --channel=3 --install "platforms;android-37.0" "build-tools;36.0.0"
         env:
           ANDROID_HOME: /usr/local/lib/android/sdk
       - name: Configure pinned Gradle
