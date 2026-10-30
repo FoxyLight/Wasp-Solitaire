@@ -63,14 +63,14 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '9.5.0'
-      # Ubuntu runners provide KVM, but the runner account may lack permission.
-      # Without acceleration, the x86_64 AVD never completed booting (PR #8).
+      # Linux hosted runner has /dev/kvm but normal user lacks access.
+      # Change permissions on this disposable CI VM only. udevadm reload-rules
+      # returned exit 1 on the initial attempt, before the emulator launched.
       - name: Enable hardware acceleration for Android emulator
         run: |
-          test -e /dev/kvm
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
+          test -c /dev/kvm
+          sudo chmod a+rw /dev/kvm
+          ls -l /dev/kvm
           test -r /dev/kvm
           test -w /dev/kvm
       - name: Run Compose instrumentation smoke test on Android 35
