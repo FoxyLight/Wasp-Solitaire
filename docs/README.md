@@ -12,7 +12,7 @@ This directory is intended to become the canonical home of the project specifica
 | [ux-design.md](ux-design.md) | Interaction and responsive design principles | UX-DEC-01–08 accepted; final asset selection and validation pending |
 | [market-research.md](market-research.md) | Competitors and differentiation hypotheses | Research draft |
 | [google-play.md](google-play.md) | Publishing strategy, requirements and verification checkpoints | REL-DEC-01–08 accepted; account/package/assets and release prerequisites unverified |
-| [roadmap.md](roadmap.md) | Phases, dependencies, risks, quality gates | Decision groups accepted; readiness and authorization remain pending |
+| [roadmap.md](roadmap.md) | Phases, dependencies, risks, quality gates | Decision groups and Phase 2 setup authorization recorded; release prerequisites remain pending |
 | [decisions.md](decisions.md) | Decisions, alternatives, approval status | Six rules plus eight MVP, eight architecture, eight UX and eight release decisions accepted; provisional qualifications tracked |
 | [sources.md](sources.md) | Source register and verification dates | Research draft |
 
