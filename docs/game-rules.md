@@ -1,6 +1,6 @@
 # Classic Wasp Solitaire: rules specification
 
-**Status:** RULE-01 through RULE-06 accepted by project owner on 2026-10-29; broader Phase 1 approvals remain pending  
+**Status:** RULE-01 through RULE-06 accepted by project owner on 2026-10-29; all other Phase 1 decision groups approved; Phase 2 scaffold merged but game rules not implemented  
 **Last reviewed:** 2026-10-29  
 **Primary references:** [Semicolon Wasp](https://www.semicolon.com/Solitaire/Rules/Wasp.html), [BVS Wasp](https://www.bvssolitaire.com/rules/wasp.htm), [Semicolon Scorpion](https://www.semicolon.com/Solitaire/Rules/Scorpion.html).
 

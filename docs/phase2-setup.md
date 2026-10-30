@@ -1,16 +1,16 @@
 # Phase 2: Android project environment and setup
 
-**Status:** Implementation authorized by the project owner on 2026-10-30; **setup PR remains under review** until merged. The owner said "Begin phase 2." This authorization covers starting the approved Android project setup milestone, not production release, new features, or unreviewed merges.
+**Status:** Initial scaffold merged through [PR #7](https://github.com/FoxyLight/Wasp-Solitaire/pull/7) on 2026-10-30 under the owner's Phase 2 authorization. Its CI checks failed due to Compose 1.12 dependencies requiring API 37 while `compileSdk` was 36. The Phase 2 stabilization PR addresses that failure. Phase 2 setup is **not verified complete** until the build and tests pass. No game-engine implementation, public release or unreviewed merge is authorized.
 **Last reviewed:** 2026-10-30
 
-## Scope in this PR
+## Scope of the Phase 2 setup
 
 - Two approved Gradle modules: `:app` (native Android/Compose) and `:game-engine` (**pure Kotlin JVM**, no Android dependency).
 - Minimal display-only Compose activity. **No real board, game rules, new deals, persistence or timer logic yet.**
-- Pinned Android Gradle Plugin **9.3.1**, Gradle **9.5.0** (installed by CI), Kotlin/Compose compiler **2.4.21** and stable Compose BOM **2026.09.00**.
-- Android minSdk **26**, targetSdk **36**, compileSdk **36**. The next setup/release review must recheck current Play requirements.
+- Pinned Android Gradle Plugin **9.3.1**, Gradle **9.5.0** (wrapper and CI), Kotlin/Compose compiler **2.4.21** and stable Compose BOM **2026.09.00**.
+- Android minSdk **26**, targetSdk **36**, compileSdk **37**. The next setup/release review must recheck current Play requirements.
 - A JUnit module-wiring smoke test and a device-only Compose UI smoke test. **These do not establish game correctness**.
-- GitHub Actions executes engine JUnit tests and assembles a debug APK; device instrumentation tests need a separately provisioned emulator.
+- GitHub Actions runs the JVM smoke test, builds a debug APK, and has a separate Android emulator job for the existing Compose screen test. These are setup tests, not Wasp gameplay tests.
 - No analytics, ads, network permissions, account system or in-app purchase integration.
 
 ## Important placeholder identity
@@ -19,22 +19,24 @@ The Android namespace and application ID are temporarily set to `org.example.was
 
 ## Build instructions
 
-Prerequisites: JDK **17**, Android SDK **platforms;android-36** (and Android build tools **36.0.0**), Gradle **9.5.0**.
+Prerequisites: JDK **17**, Android SDK **platforms;android-37** (and Android build tools **36.0.0**), and the committed Gradle **9.5.0** wrapper.
 
 ```sh
-gradle --no-daemon :game-engine:test
-gradle --no-daemon :app:assembleDebug
-gradle --no-daemon :app:testDebugUnitTest
+./gradlew --no-daemon :game-engine:test
+./gradlew --no-daemon :app:assembleDebug
+./gradlew --no-daemon :app:testDebugUnitTest
 ```
 
-**Wrapper limitation:** A trusted, official `gradle-wrapper.jar` is not yet committed because the authoring environment could not retrieve the binary. This PR uses a pinned Gradle version via `gradle/actions/setup-gradle@v4` in CI, rather than shipping an incomplete/broken wrapper. A follow-up setup PR should generate and verify the standard wrapper from a trusted Gradle 9.5.0 installation, then commit `gradlew`, `gradlew.bat`, `gradle/wrapper/gradle-wrapper.properties` and the official wrapper JAR. Until then, local builds need installed Gradle 9.5.0.
+**Verified Gradle wrapper:** The stabilization PR generates official Gradle 9.5.0 wrapper files using Gradle itself. The wrapper JAR must match the [Gradle-published SHA-256](https://gradle.org/release-checksums/) `497c8c2a7e5031f6aa847f88104aa80a93532ec32ee17bdb8d1d2f67a194a9c7`; the distribution is pinned with `distributionSha256Sum=553c78f50dafcd54d65b9a444649057857469edf836431389695608536d6b746`. The wrapper is validated by GitHub Actions. This is a stabilization-PR change until merged.
+
+**Why API 37 compilation:** [Compose 1.12](https://android-developers.googleblog.com/2026/08/jetpack-compose-august-2026-release.html) requires compiling with API 37. Android Gradle Plugin 9.3 supports API 37. `compileSdk 37` does **not** change `minSdk 26` or `targetSdk 36`.
 
 ## Validation status
 
 - Structure and source/static consistency can be checked from this PR.
-- **A local Android compile was not executed**: the authoring environment lacks an Android SDK, installed Gradle and external dependency resolution.
-- GitHub Actions is configured to run the real build and JVM smoke tests once the PR event starts. CI success must be checked in GitHub; do not mark it as passed without a run.
-- A device/emulator UI test and SDK compatibility across supported devices are later acceptance gates.
+- Initial PR #7 CI failed at `:app:checkDebugAarMetadata` because Compose dependencies required API 37. The stabilization PR updates the compile SDK and tests the setup in GitHub Actions.
+- CI success must be checked on the stabilization PR; a passing build, JVM smoke test and emulator test are required before declaring Phase 2 verified.
+- The Compose setup smoke test runs in CI on an Android emulator. Broader device coverage and accessible gameplay tests remain later milestones.
 
 ## Next milestone, not included here
 
