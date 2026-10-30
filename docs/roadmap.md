@@ -1,6 +1,6 @@
 # Development roadmap and risk register
 
-**Status:** Phase 1 decision groups (RULE, MVP, ARCH, UX, REL) approved; **operational prerequisites and explicit development authorization still pending**  
+**Status:** Phase 1 decision groups approved; owner explicitly authorized beginning Phase 2 on 2026-10-30. **Setup is in a reviewable PR; operational release prerequisites and final publisher identity remain pending.**  
 **Last reviewed:** 2026-10-29
 
 ## Overall approach
@@ -18,7 +18,7 @@ Build a reliable engine first, then an accessible card board, then polish and pu
 | 7. Store preparation | Confirm publisher/package and licenses, sign App Bundle, publish privacy policy, finish declarations/listing and required tests | Phase 6 and verified owner-controlled Play account | Verification, account testing and review delay | Owner-reviewed release candidate and required Play production access |
 | 8. Launch/maintenance | Owner-approved staged production rollout, feedback-led fixes and release maintenance | Phase 7 and separate owner production go/no-go | Retention/compatibility and policy changes | Post-release issue and rollout monitoring process in place |
 
-Six rules decisions and **all four sets of eight** MVP, architecture, UX and release decisions are approved (REL-DEC-01–08 accepted 2026-10-29). The **publishing strategy is approved**, but brand/account/package/artwork verification, the actual device/tester matrix and an explicit Phase 2 authorization are still pending. **No development or production release is authorized by the documentation approvals.**
+Six rules decisions and **all four sets of eight** MVP, architecture, UX and release decisions are approved (REL-DEC-01–08 accepted 2026-10-29). The owner separately authorized **beginning Phase 2 setup on 2026-10-30**. Brand/account/package/artwork verification and actual device/tester matrix remain pending. **No production release is authorized**; setup changes still require PR review/merge.
 
 ## Top risks
 
@@ -38,7 +38,7 @@ Six rules decisions and **all four sets of eight** MVP, architecture, UX and rel
 
 - [x] Approve RULE-01–06: reserve timing, completed runs, timer, Undo wins, Classic Wasp v1.0 scope, and no automatic defeat on zero tableau moves (owner-approved 2026-10-29).
 - [x] Complete five Phase 1 **decision-group** approvals: RULE-01–06; MVP-DEC-01–08; ARCH-DEC-01–08; UX-DEC-01–08; REL-DEC-01–08 (2026-10-29).
-- [ ] Complete Phase 1 **operational readiness** review and separately authorize implementation.
+- [x] Complete Phase 1 readiness review and separately authorize **beginning Phase 2 setup** (owner instruction 2026-10-30). Operational publisher/identity/art/test verification remains open.
 - [x] Approve Version 1.0 MVP and explicit exclusions (MVP-DEC-01–08 accepted 2026-10-29).
 - [x] Approve ARCH-DEC-01–08: Kotlin/Compose; two modules; ViewModel/StateFlow; Room + DataStore; durable snapshot Undo; adaptive board; API 26 minimum/36+ target; testing and GitHub Actions (owner-approved 2026-10-29).
 - [x] Confirm minimum Android version: API 26 (ARCH-DEC-07).
@@ -52,7 +52,7 @@ Six rules decisions and **all four sets of eight** MVP, architecture, UX and rel
 - [x] Approve release policy for English (US), initial US distribution, no tracking SDKs, asset provenance, internal/account-appropriate closed testing, and separate owner-controlled staged rollout (REL-DEC-04–08; owner-approved 2026-10-29).
 - [ ] Confirm public privacy-policy hosting and contact, final asset licenses, representative device/tester plan and current Play declarations.
 - [ ] Recheck time-sensitive SDK target and Play requirements before development and store submission.
-- [ ] Complete Phase 1 readiness/authorization review and secure the owner's **explicit permission** to begin Phase 2.
+- [x] Receive owner's **explicit authorization to begin Phase 2 setup** (2026-10-30); implementation changes require reviewed PRs, and public release requires a separate go/no-go.
 
 ## Milestone quality gates
 

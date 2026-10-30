@@ -1,6 +1,6 @@
 # Product requirements and MVP scope
 
-**Status:** RULE-01–06, MVP-DEC-01–08, ARCH-DEC-01–08, UX-DEC-01–08 and REL-DEC-01–08 **approved** by project owner on 2026-10-29. Business/release strategy is settled; actual publisher, branding/package eligibility, assets/licensing and implementation authorization remain unverified or pending  
+**Status:** RULE-01–06, MVP-DEC-01–08, ARCH-DEC-01–08, UX-DEC-01–08 and REL-DEC-01–08 **approved** by project owner on 2026-10-29. Business/release strategy is settled; actual publisher, branding/package eligibility and assets/licensing remain unverified; beginning Phase 2 setup was separately authorized on 2026-10-30  
 **Last reviewed:** 2026-10-29  
 **Working product name:** Wasp Solitaire for Android
 

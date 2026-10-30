@@ -1,6 +1,6 @@
 # Technical architecture: approved baseline for Version 1.0
 
-**Status:** ARCH-DEC-01 through ARCH-DEC-08 **Accepted** by the project owner on 2026-10-29. RULE-01–06 and MVP-DEC-01–08 are also accepted. **No app development has been authorized.**  
+**Status:** ARCH-DEC-01 through ARCH-DEC-08 **Accepted** by the project owner on 2026-10-29. RULE-01–06 and MVP-DEC-01–08 are also accepted. **Phase 2 project setup was explicitly authorized on 2026-10-30; game implementation and release are separate milestones.**  
 **Last reviewed:** 2026-10-29  
 **Approvals:** See [decisions.md](decisions.md). Any detail labeled *proposed* below is not an additional approved product decision.
 
@@ -127,7 +127,7 @@ The supported tap path selects a card group, highlights valid destinations, and 
 - Pricing, advertisements, purchases, analytics SDKs and publication account details.
 - Specific Android/Compose/Room/JUnit/Gradle versions, Room tables/serialization and dependency-injection frameworks.
 - UX-DEC-08 specifies first-successful-action start, blocking-screen/dialog pauses and stop on victory. Lifecycle/monotonic-clock implementation details remain engineering work.
-- Authorization to create the Android project, execute code or start Phase 2.
+- Phase 2 project setup was authorized 2026-10-30; the actual game engine, UI, persistence and release require milestone-specific review and acceptance.
 
 ## Supporting references
 
@@ -138,4 +138,4 @@ The supported tap path selects a card group, highlights valid destinations, and 
 - [Compose testing](https://developer.android.com/develop/ui/compose/testing)
 - [Google Play target API levels](https://support.google.com/googleplay/android-developer/answer/11926878)
 
-Time-sensitive Google Play requirements must be revalidated ahead of release. The documentation repository remains the source of truth, and implementation remains on hold pending the remaining Phase 1 approvals.
+Time-sensitive Google Play requirements must be revalidated ahead of release. The documentation repository remains the source of truth. The owner authorized beginning Phase 2 setup on 2026-10-30; further features and public release retain their separate review and authorization gates.
