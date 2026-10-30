@@ -6,7 +6,8 @@ plugins {
 
 android {
     namespace = "org.example.waspsolitaire"
-    compileSdk = 36
+    // Compose 1.12+ requires API 37 for compilation; targetSdk remains 36.
+    compileSdk = 37
 
     defaultConfig {
         // INTERNAL PLACEHOLDER ONLY. Never publish with this applicationId.
