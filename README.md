@@ -17,7 +17,7 @@ The project owner approved the Classic Wasp rules, Version 1.0 MVP, Android arch
 
 ## Build the setup
 
-Use JDK 17, Android SDK platform 37 and Gradle 9.5.0:
+Use JDK 17, Android SDK platform 36 and Gradle 9.5.0:
 
 ```sh
 gradle --no-daemon :game-engine:test :app:assembleDebug :app:testDebugUnitTest
