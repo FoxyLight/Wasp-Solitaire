@@ -21,10 +21,12 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - name: Install Android SDK command-line tooling
-        uses: android-actions/setup-android@v3
-      - name: Install required Android platform
-        run: sdkmanager --install "platforms;android-37" "build-tools;36.0.0"
+      - name: Install required Android SDK platform
+        # GitHub-hosted ubuntu-latest already ships Android command-line tools.
+        # Avoid android-actions/setup-android, which still requests obsolete "tools".
+        run: |
+          echo "y" | sdkmanager --licenses >/dev/null
+          sdkmanager --install "platforms;android-37" "build-tools;36.0.0"
       - name: Configure pinned Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
