@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "org.example.waspsolitaire"
-    compileSdk = 37
+    compileSdk = 36
 
     defaultConfig {
         // INTERNAL PLACEHOLDER ONLY. Never publish with this applicationId.
