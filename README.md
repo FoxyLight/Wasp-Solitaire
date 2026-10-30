@@ -1,20 +1,41 @@
 # Wasp Solitaire for Android
 
-This repository is the **single source of truth** for the Wasp Solitaire Android project.
+This repository is the source of truth for **Wasp Solitaire Android**.
 
 ## Current status
-**Phase 1: research and preparation.** No application code has been started, and product/technical recommendations are not approved until explicitly accepted.
 
-## Documentation policy
-- Version-controlled Markdown in `docs/` is the canonical location for project requirements, game rules, architecture, design decisions, release policy notes, and roadmap.
-- The documents on the default branch are authoritative **only to the extent that their status explicitly says Approved**. A file marked Draft, Proposed, or Pending decision is not an approved requirement.
-- Propose changes through pull requests where practical. Record major decisions with status, date, rationale, and tradeoffs.
-- Cite external sources and dates for time-sensitive claims. Recheck Google Play policies before release.
-- GitHub issues are for tasks and discussions; approved specifications live in `docs/`, not scattered among chats.
-- No coding begins until Phase 1 is reviewed and the development direction is approved.
+The project owner approved the Classic Wasp rules, Version 1.0 MVP, Android architecture, UI/UX and release strategy in Phase 1. On **2026-10-30**, the owner explicitly authorized **beginning Phase 2**. The Android setup is proposed in a reviewable PR and is **not yet merged**.
 
-## Project resources
-- Repository: https://github.com/FoxyLight/Wasp-Solitaire
-- Documentation: `docs/` (to be added in a documentation review PR)
+**No playable game exists yet.** The Phase 2 setup provides a minimal Compose placeholder screen and a pure Kotlin JVM engine scaffold, deliberately without implementing card rules or gameplay.
 
-This initial README establishes document governance without approving the draft Phase 1 recommendations.
+## Project structure
+
+- `app/`: native Android Jetpack Compose app. **Temporary** app ID `org.example.waspsolitaire`, not for Google Play publication.
+- `game-engine/`: pure Kotlin/JVM module. Contains a **scaffold only** until Phase 3.
+- `.github/workflows/android-ci.yml`: pinned Gradle Android build and engine test workflow.
+- `docs/`: authoritative approved specifications, milestone tracking and release constraints.
+
+## Build the setup
+
+Use JDK 17, Android SDK platform 37 and Gradle 9.5.0:
+
+```sh
+gradle --no-daemon :game-engine:test :app:assembleDebug :app:testDebugUnitTest
+```
+
+The official Gradle wrapper binary has not been retrieved/committed in this environment; see [Phase 2 setup notes](docs/phase2-setup.md). CI pins Gradle 9.5.0 through `gradle/actions/setup-gradle`.
+
+Do not mistake the scaffold tests for game-engine validation. No app code may be published to Google Play without verified developer identity, final package ID, asset rights, compliance checks and **separate owner release approval**.
+
+## Documentation and governance
+
+- [Rules](docs/game-rules.md)
+- [MVP scope](docs/product-requirements.md)
+- [Architecture](docs/architecture.md)
+- [UX design](docs/ux-design.md)
+- [Release strategy](docs/google-play.md)
+- [Decision log](docs/decisions.md)
+- [Roadmap](docs/roadmap.md)
+- [Phase 2 setup and build caveats](docs/phase2-setup.md)
+
+All substantive changes go through reviewable pull requests. Never auto-merge or publish.

@@ -3,7 +3,7 @@
 **Status:** RULE-01–06, MVP-DEC-01–08, ARCH-DEC-01–08, UX-DEC-01–08 and REL-DEC-01–08 **Accepted** by project owner on 2026-10-29. Provisional app identity and real-world account, trademark, package, asset and release verification remain outstanding.  
 **Created:** 2026-10-29  
 **Last updated:** 2026-10-29  
-**Approval record:** Project owner explicitly approved RULE-01–06, MVP-DEC-01–08, ARCH-DEC-01–08, UX-DEC-01–08 and then REL-DEC-01–08 on 2026-10-29 for Version 1.0, including a provisional identity and account process subject to verification. These records do **not** authorize app development, account actions or publication.
+**Approval record:** Project owner explicitly approved RULE-01–06, MVP-DEC-01–08, ARCH-DEC-01–08, UX-DEC-01–08 and then REL-DEC-01–08 on 2026-10-29 for Version 1.0, including a provisional identity and account process subject to verification. These Phase 1 decisions did **not themselves** authorize development, account actions or publication. The owner subsequently authorized **beginning Phase 2 setup on 2026-10-30**; no account or publication action has been authorized.
 
 This log is the canonical location for major decisions once reviewed on the default branch. A recommendation is **not** an approved requirement unless its status is explicitly updated to **Accepted** with a date and rationale. When a decision changes, mark the old entry **Superseded** and link to the replacement.
 
@@ -91,7 +91,7 @@ The project owner explicitly approved **REL-DEC-01 through REL-DEC-08** on **202
 | REL-DEC-07 | Testing | Internal and account-dependent closed testing, representative device/accessibility QA, release-candidate verification and staged production rollout | **Accepted process; no tests completed** |
 | REL-DEC-08 | Governance | Recheck live Play rules, use formal release checklist and obtain **separate owner go/no-go for publication**; **no Phase 2 authorization** | **Accepted 2026-10-29** |
 
-**Scope boundary:** Acceptance records the **strategy and validation gates**, not actual developer-account creation, verified account category/ownership, permission to use FoxyLight, availability/registration of `com.foxylight.waspsolitaire`, asset licenses, privacy-policy publication, working Android software or store submission. **Do not begin app development** until an explicit later authorization.
+**Scope boundary:** Acceptance records the **strategy and validation gates**, not actual developer-account creation, verified account category/ownership, permission to use FoxyLight, availability/registration of `com.foxylight.waspsolitaire`, asset licenses, privacy-policy publication, working Android software or store submission. **The owner later authorized beginning Phase 2 setup on 2026-10-30**; no Play Console registration, publication or unreviewed merge is authorized.
 
 ## Approval template
 
@@ -115,6 +115,6 @@ Link to issue / PR:
 - Identify public privacy-policy URL and contact information, then validate data practices and Google Play declarations against an actual app build.
 - Finalize representative devices/testers and confirm any account-dependent Play Console test duration or production-access requirements.
 - Recheck target API and all time-sensitive Play policies before implementation and again before submission.
-- Obtain explicit owner authorization **before Phase 2 development**; later require a separate release-candidate go/no-go before production publication.
+- **Phase 2 setup authorization granted 2026-10-30**; review/merge the setup changes separately. Later require a release-candidate go/no-go before production publication.
 
-RULE-01–06, MVP-DEC-01–08, ARCH-DEC-01–08, UX-DEC-01–08 and REL-DEC-01–08 are **accepted Phase 1 decision groups**, with the provisional qualifiers above. The next activity is a **Phase 1 readiness and implementation authorization review**, not automatic software development. All operational prerequisites and authorization gates remain in force.
+RULE-01–06, MVP-DEC-01–08, ARCH-DEC-01–08, UX-DEC-01–08 and REL-DEC-01–08 are **accepted Phase 1 decision groups**, with the provisional qualifiers above. The Phase 1 readiness review was completed and the owner explicitly authorized **beginning Phase 2 setup on 2026-10-30**. Other phases, release activity and account/package registration remain independently gated. All operational prerequisites and authorization gates remain in force.

@@ -1,6 +1,6 @@
 # Google Play publishing and release plan
 
-**Status:** **REL-DEC-01 through REL-DEC-08 accepted** by the project owner on 2026-10-29. These approve the Version 1.0 **release plan and its verification gates**, not evidence that a Play Console account, package ID, brand, asset license, store listing or release has been created or verified. **Application development and publication are not authorized.**  
+**Status:** **REL-DEC-01 through REL-DEC-08 accepted** by the project owner on 2026-10-29. These approve the Version 1.0 **release plan and its verification gates**, not evidence that a Play Console account, package ID, brand, asset license, store listing or release has been created or verified. **Phase 2 project setup was authorized on 2026-10-30; app publication remains unauthorized.**  
 **Last reviewed:** 2026-10-29  
 **Platform:** Standard Android phones/tablets (no Wear, Auto, TV or XR commitment)  
 **Source-of-truth decision log:** [decisions.md](decisions.md)
@@ -16,7 +16,7 @@
 | **REL-DEC-05** | Assets and listing | Use original or properly licensed art/assets, documented provenance and genuine compliant store artwork/screenshots. | Specific card images, icon/brand, fonts/audio, licenses, rights and asset manifest must be verified; no particular third-party pack is approved. |
 | **REL-DEC-06** | Initial locale and geography | **English (United States)** user-facing release, distributed initially in the **United States**. | Verify target audience/country settings and available listing localization before launch. Other locales/regions require a later distribution decision. |
 | **REL-DEC-07** | Testing and rollout | Internal tests → account-appropriate closed testing → device/accessibility QA and release candidate checks → conservative staged production rollout. | Test requirements depend on the actual account and current Play policies. Production access and rollout remain subject to review/authorization. |
-| **REL-DEC-08** | Release governance | Formal publication checklist, owner approval **before public release**, and current-policy revalidation at implementation and submission. | This planning approval **does not authorize Phase 2 app development or a store submission**. Separate express authorization is required. |
+| **REL-DEC-08** | Release governance | Formal publication checklist, owner approval **before public release**, and current-policy revalidation at implementation and submission. | The REL decision itself did not authorize development. The owner later expressly authorized beginning **Phase 2 setup on 2026-10-30**; store submission remains unauthorized. |
 
 ## Identity, account and publication prerequisites
 
@@ -95,6 +95,6 @@ This approved **process** is not evidence that any tests have been run, an accou
 
 ## Scope and authorization boundary
 
-All major Phase 1 **decision groups** may be accepted while some **real-world verification and execution prerequisites** remain incomplete. A merged documentation PR records the owner's planning choices, not package ownership, accepted artwork licenses, verified Play Console credentials, a validated release candidate or authorization to begin building software. The next milestone is a Phase 1 readiness/implementation authorization review; implementation stays on hold until expressly approved.
+All major Phase 1 **decision groups** may be accepted while some **real-world verification and execution prerequisites** remain incomplete. A merged documentation PR records the owner's planning choices, not package ownership, accepted artwork licenses, verified Play Console credentials, a validated release candidate or authorization to begin building software. A Phase 1 readiness review was conducted and the owner expressly authorized beginning **Phase 2 setup on 2026-10-30**. Neither that instruction nor this plan authorizes a public release or bypasses publisher/package/asset verification.
 
 See [roadmap.md](roadmap.md), [product-requirements.md](product-requirements.md), [ux-design.md](ux-design.md), [architecture.md](architecture.md) and [sources.md](sources.md).

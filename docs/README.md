@@ -1,6 +1,6 @@
 # Project documentation
 
-**Status:** RULE-01–06 and MVP-DEC-01–08, ARCH-DEC-01–08, UX-DEC-01–08, REL-DEC-01–08 were explicitly approved by the project owner on 2026-10-29. The release strategy is approved, while actual account, brand/package and asset verification, release execution and development authorization remain pending.
+**Status:** RULE-01–06 and MVP/ARCH/UX/REL-DEC-01–08 approved 2026-10-29; owner separately authorized beginning Phase 2 setup on 2026-10-30. Actual account, brand/package and asset verification, full implementation and release authorization remain pending.
 
 This directory is intended to become the canonical home of the project specifications. Once a document or decision is approved, update its status in a reviewed commit. The `main` branch represents the accepted project record; proposed changes belong in pull requests.
 
@@ -23,8 +23,8 @@ This directory is intended to become the canonical home of the project specifica
 3. Game logic is specified separately from UI effects. A presentation convention must not silently redefine the rules.
 4. Link externally verifiable claims to [sources.md](sources.md) or direct primary references, and refresh volatile policies ahead of launch.
 5. Record new decisions in [decisions.md](decisions.md), including explicit approval and rationale.
-6. No implementation code until Phase 1 readiness review and **separate explicit owner authorization**. Agreement on all decision groups alone does not authorize building.
+6. The owner expressly authorized **beginning Phase 2 setup on 2026-10-30** after Phase 1 review. New phases/features remain subject to the approved roadmap, reviewed PRs and later release authorization.
 
 ## Phase 1 exit requirements
 
-The owner has approved the five decision groups (rules, MVP, architecture, UX, release strategy), with account/package/brand/assets and other operational checks still outstanding. Conduct a **Phase 1 readiness and implementation authorization review** before initiating Phase 2. Owner permission to start coding must be explicit. A later, separate go/no-go is required before any production store release.
+The owner approved all five decision groups and **explicitly authorized beginning Phase 2 setup on 2026-10-30**. Verification of account/package/brand/assets and other release prerequisites is still required. A **later, separate go/no-go** is mandatory before production publication.
