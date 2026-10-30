@@ -138,4 +138,4 @@ The supported tap path selects a card group, highlights valid destinations, and 
 - [Compose testing](https://developer.android.com/develop/ui/compose/testing)
 - [Google Play target API levels](https://support.google.com/googleplay/android-developer/answer/11926878)
 
-Time-sensitive Google Play requirements must be revalidated ahead of release. The documentation repository remains the source of truth, and implementation remains on hold pending the remaining Phase 1 approvals.
+Time-sensitive Google Play requirements must be revalidated ahead of release. The documentation repository remains the source of truth. The owner authorized beginning Phase 2 setup on 2026-10-30; further features and public release retain their separate review and authorization gates.
