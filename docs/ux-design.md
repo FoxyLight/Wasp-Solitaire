@@ -1,6 +1,6 @@
 # UI/UX specification: approved Version 1.0 baseline
 
-**Status:** **UX-DEC-01 through UX-DEC-08 Accepted** by the project owner on 2026-10-29. RULE-01–06, MVP-DEC-01–08, and ARCH-DEC-01–08 remain accepted. Publication, branding/package identity and business decisions are not yet approved. **No app implementation is authorized.**  
+**Status:** **UX-DEC-01–08 Accepted** on 2026-10-29, alongside RULE-01–06, MVP-DEC-01–08 and ARCH-DEC-01–08. REL-DEC-01–08 now approve the free/ad-free release strategy and provisional identity-validation process. Final branding/package/assets, account verification and explicit implementation permission remain pending. **No app implementation is authorized.**  
 **Last reviewed:** 2026-10-29  
 **Approval record:** [decisions.md](decisions.md)
 
@@ -149,10 +149,10 @@ A previous research candidate was the [Kenney Playing Cards Pack](https://kenney
 
 ## Still pending after UX approval
 
-- App/product name, icon, brand ownership, actual card art acquisition/license selection and any required attributions.
-- Play Console account, release countries/languages, publishing policy declarations, monetization/ads/purchases and tester/release approach.
+- REL-DEC-02 proposes the **working title Wasp Solitaire**, candidate **FoxyLight** branding and candidate package `com.foxylight.waspsolitaire` subject to legal/account/registration checks; final icon, brand ownership, card art acquisition/license selection and attributions remain unverified.
+- REL-DEC-01, 04, 06, 07 and 08 approve free/ad-free/no-tracking Version 1.0, English (US), initial United States market, and account-appropriate testing/rollout strategy. Actual Play Console account, testing eligibility, privacy declarations, contact/policy URLs, store account configuration and publication remain unfinished.
 - Representative physical/emulator device matrix, accessibility validation results and final art/contrast/performance tuning.
-- Application/package ID, signing ownership and launch assets.
+- Candidate package ID must be verified and formally registered; signing ownership, release assets and app-store configuration remain pending.
 - Explicit authorization for Phase 2 implementation, which is **not granted by approving these UX decisions**.
 
 See [game-rules.md](game-rules.md), [product-requirements.md](product-requirements.md), [architecture.md](architecture.md), [decisions.md](decisions.md) and [roadmap.md](roadmap.md).

@@ -1,9 +1,9 @@
 # Architecture and product decision log
 
-**Status:** Mixed: RULE-01–06, MVP-DEC-01–08, ARCH-DEC-01–08 and UX-DEC-01–08 **Accepted** by project owner; commercial, branding/asset-licensing and publication decisions remain **Proposed**  
+**Status:** RULE-01–06, MVP-DEC-01–08, ARCH-DEC-01–08, UX-DEC-01–08 and REL-DEC-01–08 **Accepted** by project owner on 2026-10-29. Provisional app identity and real-world account, trademark, package, asset and release verification remain outstanding.  
 **Created:** 2026-10-29  
 **Last updated:** 2026-10-29  
-**Approval record:** Project owner explicitly approved RULE-01–06, MVP-DEC-01–08, ARCH-DEC-01–08 and then UX-DEC-01–08 on 2026-10-29 for Version 1.0. These records do **not** authorize app development.
+**Approval record:** Project owner explicitly approved RULE-01–06, MVP-DEC-01–08, ARCH-DEC-01–08, UX-DEC-01–08 and then REL-DEC-01–08 on 2026-10-29 for Version 1.0, including a provisional identity and account process subject to verification. These records do **not** authorize app development, account actions or publication.
 
 This log is the canonical location for major decisions once reviewed on the default branch. A recommendation is **not** an approved requirement unless its status is explicitly updated to **Accepted** with a date and rationale. When a decision changes, mark the old entry **Superseded** and link to the replacement.
 
@@ -17,7 +17,7 @@ This log is the canonical location for major decisions once reviewed on the defa
 | ADR-006 | Android SDK / ARCH-DEC-07 | Minimum API 26; target API 36 or higher, reverified against Play policy before implementation/release | **Accepted 2026-10-29** |
 | ADR-007 | Persistence / ARCH-DEC-04, 05 | Room for current game, atomic durable previous-state Undo snapshots and four MVP statistics; DataStore for settings | **Accepted 2026-10-29; supersedes earlier DataStore-only game-save proposal** |
 | ADR-008 | Interaction / MVP-DEC-01 | Drag/drop plus explicit tap-select/tap-destination for every legal move | **Accepted 2026-10-29** |
-| ADR-009 | Launch business model | Free, ad-free; no account or backend | Proposed |
+| ADR-009 | Launch business model / REL-DEC-01, 04 | Free and ad-free, no IAP/subscriptions, tracking or required player account; offline gameplay and accurate privacy disclosures | **Accepted 2026-10-29** |
 | ADR-010 | Initial appearance / UX-DEC-01, 02 | Classic green table, ivory readable faces, restrained blue backs, traditional rank/suit symbols; specific card assets/brand licenses pending | **Accepted design direction 2026-10-29** |
 | ADR-011 | Future analytics | Definitions of win rate, abandoned games and streaks are deferred; these metrics are not in v1.0 | **Superseded by MVP-DEC-04 (2026-10-29)** |
 | ADR-012 | Documentation approval gate | No app code until rules, MVP and technical plan approved | Proposed process, aligned with Phase 1 instructions |
@@ -40,7 +40,7 @@ The project owner accepted the following on **2026-10-29**. The scope and testab
 | MVP-DEC-07 | Saving | Fully offline autosave and precise resume | **Accepted** |
 | MVP-DEC-08 | Exclusions | Defer advanced modes, challenges, solver, cloud, large theme catalog and advanced statistics | **Accepted** |
 
-**Boundary:** Offline gameplay and one theme are approved as MVP features. The Android stack is approved by ARCH-DEC-01–08, and the visual/interaction direction is approved by UX-DEC-01–08. Exact branded assets and licenses, pricing/ad policy, Play Console account and release plan remain pending. No development is authorized by these approvals.
+**Boundary:** Offline gameplay and one theme are approved as MVP features. Architecture is approved by ARCH-DEC-01–08, UI/UX by UX-DEC-01–08, and the **free/ad-free launch and publication strategy** by REL-DEC-01–08. Actual publishing account, brand rights, package ID, assets/licenses, signed releases and owner authorization remain unverified/unexecuted.
 
 ## Approved technical architecture decisions
 
@@ -57,7 +57,7 @@ The project owner accepted **ARCH-DEC-01–08** on **2026-10-29**. The accepted 
 | ARCH-DEC-07 | SDK | Minimum API 26; target API 36+ with current-policy recheck | **Accepted** |
 | ARCH-DEC-08 | Testing and tools | Gradle, JUnit, Compose UI tests, device/lifecycle tests and GitHub Actions | **Accepted** |
 
-**Boundary:** The owner has subsequently approved UX-DEC-01–08, including the classic palette direction and initial reference colors, but **not** a finalized asset pack or branded artwork. Monetization, publishing/account configuration, application ID, library version pins and permission to start coding remain unapproved.
+**Boundary:** The owner subsequently approved UX-DEC-01–08 and REL-DEC-01–08, including the free/ad-free launch plan and a **provisional identity-validation process**. Final asset ownership/licenses, developer account, application ID registration, library versions and authorization to code remain unverified or unapproved.
 
 ## Approved Version 1.0 UI/UX decisions
 
@@ -74,7 +74,24 @@ The project owner accepted **UX-DEC-01 through UX-DEC-08** on **2026-10-29**, af
 | UX-DEC-07 | Feedback | Brief unobtrusive animations, optional sound/haptics and system-aware reduced motion | **Accepted 2026-10-29** |
 | UX-DEC-08 | Timer UX | First committed move/reserve starts timer; pause in background or blocking screen/dialog; stop on win | **Accepted 2026-10-29** |
 
-**Scope boundary:** The visual direction is accepted, but no individual third-party artwork/license, brand name/icon or publication plan has been approved. Timing targets and palette tokens are initial design references to be tuned through accessibility and device testing. No implementation is authorized.
+**Scope boundary:** The visual direction is accepted; REL-DEC-01–08 now approve the **publishing strategy**, including a provisional app-name/brand/package candidate. No specific third-party artwork/license, trademark rights, verified account or package registration is established. Timing/palette details require accessibility/device validation. No implementation is authorized.
+
+## Approved Version 1.0 publishing and release decisions
+
+The project owner explicitly approved **REL-DEC-01 through REL-DEC-08** on **2026-10-29**, including provisional identity/account details **subject to verification**. Requirements and release gates are defined in [google-play.md](google-play.md).
+
+| ID | Area | Accepted policy or process | Status |
+| --- | --- | --- | --- |
+| REL-DEC-01 | Business model | Free, ad-free, without IAP/subscriptions or monetization SDKs in v1.0; future changes need new approval | **Accepted 2026-10-29** |
+| REL-DEC-02 | Product identity | Working title **Wasp Solitaire**; **FoxyLight** branding and `com.foxylight.waspsolitaire` as **candidates only**, pending rights, account and registration checks | **Accepted provisionally 2026-10-29** |
+| REL-DEC-03 | Publisher/account | Owner-controlled, verified Play Console account; verify whether personal/organization and who owns it before setup | **Accepted process; account not verified** |
+| REL-DEC-04 | Privacy | Local offline-first storage, no tracking SDKs, accurate privacy/Data Safety disclosures and public app-specific privacy policy | **Accepted 2026-10-29** |
+| REL-DEC-05 | Assets | Original or appropriately licensed assets, recorded provenance, genuine compliant store assets and screenshots | **Accepted process; assets/licenses not selected** |
+| REL-DEC-06 | Distribution | English (US), initial United States release; expansion only through later decision | **Accepted 2026-10-29** |
+| REL-DEC-07 | Testing | Internal and account-dependent closed testing, representative device/accessibility QA, release-candidate verification and staged production rollout | **Accepted process; no tests completed** |
+| REL-DEC-08 | Governance | Recheck live Play rules, use formal release checklist and obtain **separate owner go/no-go for publication**; **no Phase 2 authorization** | **Accepted 2026-10-29** |
+
+**Scope boundary:** Acceptance records the **strategy and validation gates**, not actual developer-account creation, verified account category/ownership, permission to use FoxyLight, availability/registration of `com.foxylight.waspsolitaire`, asset licenses, privacy-policy publication, working Android software or store submission. **Do not begin app development** until an explicit later authorization.
 
 ## Approval template
 
@@ -90,13 +107,14 @@ Consequences:
 Link to issue / PR:
 ```
 
-## Outstanding questions
+## Outstanding prerequisites (release strategy approved, checks incomplete)
 
-- The minimum Android version is settled (API 26, ARCH-DEC-07), but the specific device test matrix is still to be finalized during UX/release planning.
-- Will the Play account be personal or organization, and does it already exist?
-- Is the no-ads/free policy acceptable for initial release?
-- Which specific card artwork/license, app branding, and application/package ID should be used? UX-DEC-01/02 approve a direction and licensing standard, not an individual supplier or graphic.
-- Timer starts on the first successfully committed move or reserve deal and pauses on blocking screens/dialogs (UX-DEC-08); exact monotonic clock implementation is an engineering detail. Advanced win-rate/abandoned/streak definitions are deferred beyond v1.0 under MVP-DEC-04.
-- Architecture and UX direction are approved (ARCH-DEC-01–08, UX-DEC-01–08). Package ID, exact art assets/licenses, representative test-device lineup and publishing/monetization still require separate decisions.
+- Confirm actual Play Console publisher/account, account category, identity verification, signing/control and support contact. **An account has not been verified here.**
+- Verify ownership and legal suitability of the FoxyLight brand and Wasp Solitaire title; select/register the final package ID. `com.foxylight.waspsolitaire` is only a candidate.
+- Select or create card/art/icon/font/audio assets, verify distribution licenses, and maintain the asset provenance manifest.
+- Identify public privacy-policy URL and contact information, then validate data practices and Google Play declarations against an actual app build.
+- Finalize representative devices/testers and confirm any account-dependent Play Console test duration or production-access requirements.
+- Recheck target API and all time-sensitive Play policies before implementation and again before submission.
+- Obtain explicit owner authorization **before Phase 2 development**; later require a separate release-candidate go/no-go before production publication.
 
-RULE-01–06, MVP-DEC-01–08, ARCH-DEC-01–08 and UX-DEC-01–08 are accepted for Version 1.0. **All remaining Proposed decisions stay unapproved.** Do not start application development until the remaining Phase 1 publishing/business, branding/asset and release prerequisites are approved and the owner explicitly authorizes implementation.
+RULE-01–06, MVP-DEC-01–08, ARCH-DEC-01–08, UX-DEC-01–08 and REL-DEC-01–08 are **accepted Phase 1 decision groups**, with the provisional qualifiers above. The next activity is a **Phase 1 readiness and implementation authorization review**, not automatic software development. All operational prerequisites and authorization gates remain in force.
