@@ -4,6 +4,8 @@
 
 **Requirements:** [roadmap](roadmap.md), [Phase 4 delivery plan](phase4-delivery-plan.md), [rules](game-rules.md), [MVP](product-requirements.md), [architecture](architecture.md), [UX](ux-design.md); tracking [issue #12](https://github.com/FoxyLight/Wasp-Solitaire/issues/12).
 
+Phase 4B host/rendering subsequently merged in PR #19. This document preserves Phase 4A scope; Phase 4C controller extensions are proposed in PR #20 and described in [phase4c-gameplay.md](phase4c-gameplay.md).
+
 ## Architecture and ownership
 
 ```text

@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.Button
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -161,11 +162,13 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
 
 @Composable
 private fun GameControls(state: GameUiState, enabled: Boolean, send: (GameIntent) -> Unit) {
+    val colors = ButtonDefaults.buttonColors(containerColor = Blue, contentColor = Ivory,
+        disabledContainerColor = Blue.copy(alpha = .5f), disabledContentColor = Ivory.copy(alpha = .45f))
     Column(Modifier.fillMaxWidth().padding(horizontal = 8.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            Button({ send(GameIntent.Undo) }, Modifier.weight(1f).heightIn(min = 48.dp).testTag("undo"), enabled && state.session.history.isNotEmpty()) { Text("Undo") }
-            Button({ send(GameIntent.Hint) }, Modifier.weight(1f).heightIn(min = 48.dp).testTag("hint"), enabled && state.board.status != GameStatus.WON) { Text("Hint") }
-            Button({ send(GameIntent.DealReserve) }, Modifier.weight(1f).heightIn(min = 48.dp).testTag("deal"), enabled && state.board.reserve.isNotEmpty() && state.board.status != GameStatus.WON) { Text("Deal 3") }
+            Button({ send(GameIntent.Undo) }, Modifier.weight(1f).heightIn(min = 48.dp).testTag("undo"), enabled && state.session.history.isNotEmpty(), colors = colors) { Text("Undo") }
+            Button({ send(GameIntent.Hint) }, Modifier.weight(1f).heightIn(min = 48.dp).testTag("hint"), enabled && state.board.status != GameStatus.WON, colors = colors) { Text("Hint") }
+            Button({ send(GameIntent.DealReserve) }, Modifier.weight(1f).heightIn(min = 48.dp).testTag("deal"), enabled && state.board.reserve.isNotEmpty() && state.board.status != GameStatus.WON, colors = colors) { Text("Deal 3") }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
             TextButton({ send(GameIntent.RequestRestart) }, Modifier.weight(1f).heightIn(min = 48.dp).testTag("restart"), enabled) { Text("Restart", color = Ivory) }

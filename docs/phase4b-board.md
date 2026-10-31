@@ -1,6 +1,6 @@
 # Phase 4B: adaptive read-only Compose board
 
-Owner-authorized 2026-10-31; proposed in [PR #19](https://github.com/FoxyLight/Wasp-Solitaire/pull/19), tracking [Issue #13](https://github.com/FoxyLight/Wasp-Solitaire/issues/13). The PR requires owner review and separate merge approval. Issue #13 remains open until approved and merged. Phase 4C/4D, Phase 5 and publication remain separately gated.
+Owner-authorized 2026-10-31 and merged after explicit owner approval in [PR #19](https://github.com/FoxyLight/Wasp-Solitaire/pull/19), merge commit 46f6dae320ab33959a31fb00d3c1d15f456fd2a7. Issue #13 is closed. The sections below describe the accepted Phase 4B rendering milestone; separately owner-authorized Phase 4C interaction changes are proposed in [PR #20](https://github.com/FoxyLight/Wasp-Solitaire/pull/20), documented in [phase4c-gameplay.md](phase4c-gameplay.md). Phase 4D, Phase 5 and publication remain gated.
 
 ## Baseline and approved requirements
 

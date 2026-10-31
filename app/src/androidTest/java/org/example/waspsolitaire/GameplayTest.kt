@@ -73,7 +73,9 @@ class GameplayTest {
         val directory = File(requireNotNull(InstrumentationRegistry.getArguments().getString("additionalTestOutputDir")), "phase4c-evidence")
         directory.mkdirs()
         File(directory, "$name.png").outputStream().use {
-            rule.onNodeWithTag("game-screen").captureToImage().asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 100, it)
+            val bitmap = if (name.contains("confirmation")) InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
+                else rule.onNodeWithTag("game-screen").captureToImage().asAndroidBitmap()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
         }
     }
 
@@ -206,6 +208,38 @@ class GameplayTest {
         rule.onNodeWithTag("action-feedback").assertTextContains("unchanged", substring = true)
         assertSame(before, model.uiState.value.session)
         assertTrue(model.uiState.value.session.history.isEmpty())
+    }
+
+    private fun noMoves(withReserve: Boolean): GameSession {
+        val reserve = if (withReserve) Suit.entries.take(3).map { Card(it, Rank.KING) } else emptyList()
+        val tips = Suit.entries.map { Card(it, Rank.ACE) } + Suit.entries.take(3).map { Card(it, if (withReserve) Rank.QUEEN else Rank.KING) }
+        val buried = Suit.entries.flatMap { suit -> Rank.entries.map { Card(suit, it) } }
+            .filterNot { it in reserve || it in tips }.map { TableauCard(it, false) }
+        val columns = tips.mapIndexed { index, tip -> (if (index == 0) buried else emptyList()) + TableauCard(tip) }
+        return GameSession.restore(GameState.restore(columns, reserve, 51))
+    }
+
+    @Test fun hintSuggestsAvailableReserveWhenThereAreNoTableauMoves() {
+        prepare(noMoves(true)); render()
+        val before = model.uiState.value.session
+        click("hint")
+        assertEquals(GameAction.DealReserve, model.uiState.value.hintedAction)
+        assertSame(before, model.uiState.value.session)
+        rule.onNodeWithText("Hint · Reserve available").assertExists()
+        click("deal"); revision(1)
+        click("undo"); revision(2)
+        assertEquals(before.state, model.uiState.value.board)
+    }
+
+    @Test fun noMovesHintNeverDeclaresALossOrChangesHistory() {
+        prepare(noMoves(false)); render()
+        val before = model.uiState.value.session
+        click("hint")
+        rule.onNodeWithTag("action-feedback").assertTextContains("No available tableau moves", substring = true)
+        assertEquals(GameStatus.IN_PROGRESS, model.uiState.value.board.status)
+        assertSame(before, model.uiState.value.session)
+        rule.onNodeWithTag("restart").assertIsEnabled()
+        rule.onNodeWithTag("new-game").assertIsEnabled()
     }
 
     @Test fun interactiveControlsAndMovesWorkAcrossSizesAndLargeText() {
