@@ -101,7 +101,15 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
        Column(Modifier.fillMaxSize().safeDrawingPadding()) {
         if (dispatch != null) {
             GameControls(state, drag.active == null, dispatch)
-            Text(drag.notice ?: feedback ?: "Tap to select. Hold a card to drag its tail.", color = Ivory, fontSize = 14.sp,
+            val hintMessage = when (val hint = state.hintedAction) {
+                is GameAction.Move -> "Hint: Column ${hint.source + 1}, card ${hint.cardIndex + 1} → Column ${hint.destination + 1}"
+                GameAction.DealReserve -> "Hint: The reserve is available. Use Deal 3."
+                else -> null
+            }
+            val message = if (state.board.status == GameStatus.WON) "You won! All four suits are complete. Undo or start a New Game."
+                else drag.notice ?: feedback ?: hintMessage ?: state.selection?.let { "Selected: Column ${it.column + 1}, card ${it.cardIndex + 1}. Choose a highlighted destination." }
+                    ?: "Tap to select. Hold a card to drag its tail."
+            Text(message, color = Ivory, fontSize = 14.sp,
                 maxLines = 3, modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp).heightIn(min = 40.dp)
                     .testTag("action-feedback").semantics { liveRegion = LiveRegionMode.Polite })
         }
