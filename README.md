@@ -42,3 +42,5 @@ The engine has rule tests; Android instrumentation currently covers only the set
 - [Repository merge-gate administration](docs/repository-governance.md)
 
 All substantive changes go through reviewable pull requests. Never auto-merge or publish.
+
+Phase 4A state/control is merged in PR #18. The owner-authorized [Phase 4B rendering PR #19](https://github.com/FoxyLight/Wasp-Solitaire/pull/19) replaces the setup screen with a read-only board; see [components, scope and evidence](docs/phase4b-board.md). Gameplay input, expanded inspection and durable saves remain later milestones.

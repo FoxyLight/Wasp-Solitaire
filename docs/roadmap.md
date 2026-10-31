@@ -3,6 +3,8 @@
 **Status:** Phases 1–2 complete; Phase 3 pure Kotlin rules engine merged in PR #11 on 2026-10-31 after passing required CI. GitHub branch protection is enforced. Phase 4A–4D and Phase 5A–5B are proposed reviewable delivery gates in PR #17, not implementation authorizations. Actual Play Console account and other release prerequisites remain outstanding.
 **Last reviewed:** 2026-10-31
 
+Phase 4A is merged through owner-approved PR #18. Phase 4B rendering is separately owner-authorized and proposed in [PR #19](https://github.com/FoxyLight/Wasp-Solitaire/pull/19); see [board implementation and evidence](phase4b-board.md). Phase 4C/4D and Phase 5 remain separately gated; no merge or publishing authorization is implied.
+
 ## Overall approach
 
 Build a reliable engine first, then an accessible card board, then polish and publication. These are rough **planning ranges**, not deadlines. A solo experienced developer might require about **8–14 weeks** from approved Phase 1 to a release candidate, with additional external review/testing time.

@@ -1,6 +1,6 @@
 # Phase 4A: GameViewModel, StateFlow and session boundary
 
-**Status:** Owner authorized Phase 4A on 2026-10-31. This implementation is proposed in a separate PR pending owner review and merge. Phase 4B board rendering, Phase 5A durable saves, timer/statistics, and Google Play actions are **not** authorized by this milestone.
+**Status:** Owner authorized Phase 4A on 2026-10-31. Merged through owner-approved PR #18 at main 3d6db934a66a430a5afcaae5ac0b9b6067eabf30. Phase 4B board rendering, Phase 5A durable saves, timer/statistics, and Google Play actions are **not** authorized by this milestone.
 
 **Requirements:** [roadmap](roadmap.md), [Phase 4 delivery plan](phase4-delivery-plan.md), [rules](game-rules.md), [MVP](product-requirements.md), [architecture](architecture.md), [UX](ux-design.md); tracking [issue #12](https://github.com/FoxyLight/Wasp-Solitaire/issues/12).
 
