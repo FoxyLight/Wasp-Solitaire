@@ -1,7 +1,7 @@
 # Development roadmap and risk register
 
-**Status:** Phase 1 decision groups approved; owner explicitly authorized beginning Phase 2 on 2026-10-30. **Initial setup merged in PR #7 but CI failed; stabilization and verification remain pending. Actual Play Console account and release prerequisites are outstanding.**  
-**Last reviewed:** 2026-10-30
+**Status:** Phase 2 stabilized in PR #8; fresh build, JVM and emulator checks passed 2026-10-31. Required CI protection verified and Issue #9 closed. Owner authorized Phase 3 engine implementation, now on a review branch pending merge approval. Actual Play Console account and release prerequisites remain outstanding.
+**Last reviewed:** 2026-10-31
 
 ## Overall approach
 
@@ -54,13 +54,15 @@ Six rules decisions and **all four sets of eight** MVP, architecture, UX and rel
 - [ ] Recheck time-sensitive SDK target and Play requirements before development and store submission.
 - [x] Receive owner's **explicit authorization to begin Phase 2 setup** (2026-10-30); implementation changes require reviewed PRs, and public release requires a separate go/no-go.
 
-## Phase 2 stabilization gate (still pending)
+## Phase 2 stabilization gate (verified 2026-10-31)
 
-- [ ] Clean-checkout Android debug build and pure JVM tests pass on GitHub Actions with Compose-compatible `compileSdk 37`.
-- [ ] Official Gradle 9.5.0 wrapper is committed, with published wrapper-JAR and distribution SHA-256 verification.
-- [ ] Setup-screen Compose instrumentation test passes on a managed emulator.
-- [ ] Owner/administrator enforces pull-request reviews and required CI checks on `main` in GitHub settings. This cannot be accomplished solely by committing workflow files; see [repository governance](repository-governance.md).
-- [ ] Reconcile setup documentation with actual merged files and CI evidence.
+- [x] Fresh Android debug build and pure JVM tests pass with `compileSdk 37`: [baseline run](https://github.com/FoxyLight/Wasp-Solitaire/actions/runs/41229459279).
+- [x] Official Gradle 9.5.0 wrapper committed, with matching wrapper-JAR checksum and pinned distribution SHA-256.
+- [x] Setup-screen Compose instrumentation test passes on Android 35.
+- [x] Active PR and required CI checks on `main`, zero mandatory external approvals and no bypasses: see [repository governance](repository-governance.md).
+- [x] Reconcile setup documentation with merged files and fresh CI evidence.
+
+Phase 3 engine scope, API choices, verification and the next milestone are tracked in [phase3-engine.md](phase3-engine.md). The Android board, persistence, clock and statistics integration remain future work.
 
 Do not start the Phase 3 rules engine while the setup baseline is red. A later owner-approved merge is required; no production release is authorized.
 
