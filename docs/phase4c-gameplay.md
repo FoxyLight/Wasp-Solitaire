@@ -46,3 +46,22 @@ The overlapping overview still has small card strips. Expanded interactive inspe
 Physical validation found the older Espresso 3.6.x harness blocked all 13 tests before view interaction on Android 17 (InputManager.getInstance reflection). Test-only dependencies were updated to stable Espresso 3.7.0 and AndroidX Test JUnit 1.3.0, using the [officially documented compatibility fix](https://developer.android.com/jetpack/androidx/releases/test). Application runtime dependencies and rules are unchanged; rerun outcomes are recorded in the PR.
 
 Focused visual review is part of the milestone gate: it caught cramped 200%-text control labels and excessive landscape toolbar space despite passing behavioral tests. The final controls use reduced horizontal padding, secondary actions move into a More menu below 400dp window height, and BoardGeometry caps card size to the actual scroll viewport as well as width. A dedicated JVM case covers whole-card reachability in a short viewport. Screenshot capture waits for native popup/ripple transitions to settle; tests still assert state and interaction outcomes independently of capture.
+
+## Recorded execution and reviewed captures
+
+Application/test code head `7f9e88237583d0ef90d1e6827d9079dc9ea14762`:
+
+- [CI run 41240933869](https://github.com/FoxyLight/Wasp-Solitaire/actions/runs/41240933869) verify passed Android compilation and both APK builds. Downloaded JUnit XML confirms **41 tests, zero failures/errors/skips**: 17 engine, 13 existing controller, seven reset/equivalence and four geometry/initialization tests. See the run's jvm-tests-and-debug-apk artifact.
+- Installed the app and test APKs from that same verify artifact on the owner's Pixel 7a via wireless ADB. The focused GameplayTest + SetupScreenTest run returned **OK (13 tests)** in **33.87 seconds**, including physical touch/drag, confirmations, no-move/Hint behavior, invalid drops, write failures, responsive overrides, real Activity recreation and landscape rotation. Default phone font scale was 1.3, configured density 460; size/font override tests explicitly set their own values. Device display settings were read, not changed.
+- Captured nine phone images from the app's private test-output directory. The five representative originals below were visually reviewed and committed for PR review. Layout variants are Compose configuration overrides on the physical device, not independently resized system windows. Real rotation was also exercised by the Activity test.
+- The final documentation/evidence commit contains no application or test-code changes after this tested code head. The final review head and both required CI job outcomes are recorded in PR #20; its checks must be green before handoff.
+
+| Evidence | Review observation |
+| --- | --- |
+| [Whole-tail drag](evidence/phase4c/drag-whole-tail.png) | Lifted three-card unordered tail, dimmed source, legal column outlines and explicit drag target |
+| [Restart confirmation](evidence/phase4c/restart-confirmation.png) | Stable opaque modal with clear discard explanation and Keep playing / Confirm |
+| [Short landscape](evidence/phase4c/interactive-landscape.png) | Undo/Hint/Deal 3 and More remain visible; viewport-sized cards stay scroll-reachable |
+| [200% text](evidence/phase4c/interactive-large-text.png) | Primary labels remain complete; seven columns and rank/suit headers remain ordered |
+| [Victory](evidence/phase4c/victory-runs-retained.png) | Engine-confirmed win with completed runs retained, and Undo still available |
+
+Earlier attempts and corrections are not counted as passes: an obsolete Phase 4B no-click assertion was replaced by gameplay assertions; a touch-injection API argument and a nested Compose constraint-scope reference were corrected; Android 17 blocked the old Espresso harness before gameplay; manual ADB screenshot collection needed app-private storage. The updated phone run above passed in full. No branch protection or test requirement was bypassed. The physical debug app remains an internal test installation with the placeholder identity; it is not a signed production release.
