@@ -25,7 +25,7 @@
 | Product name | Wasp Solitaire | **Working title only**; verify legal/brand/store suitability |
 | Developer label | FoxyLight | **Provisional**, based on existing repository branding; verify ownership and right to use it |
 | Application ID | `com.foxylight.waspsolitaire` | **Candidate only**; not registered or availability-checked; verify before Android project initialization |
-| Play Console | Account controlled by the legitimate project owner | **Not confirmed**; check whether one exists, actual owner, whether personal/organization, and verification |
+| Play Console | Owner personally publishing as an individual | **Owner confirmed intended personal account and that no account exists yet**. Account creation, verification and support contacts remain pending. |
 | Support email and public developer contact | Owner-controlled contact | **Not provided or validated**; no address is invented |
 | Privacy-policy page | Public app-specific webpage (GitHub Pages is a **possible** host) | **Not published**; URL, content and ownership remain to be confirmed |
 | App icon and brand assets | Original graphics aligned with approved green/ivory/blue UX direction | **Not designed or licensed**; approval is only of the approach |
@@ -82,7 +82,7 @@ This approved **process** is not evidence that any tests have been run, an accou
 ## Readiness checklist (not evidence of completion)
 
 - [x] Approve Version 1.0 publishing **strategy** and governance (REL-DEC-01–08; owner-approved 2026-10-29).
-- [ ] Confirm Play Console existence, personal/organization category, identity verification and actual publisher ownership.
+- [ ] Create an owner-controlled personal/individual Play Console account (owner selected personal and reported no existing account); then verify identity, contacts and ownership.
 - [ ] Verify FoxyLight branding rights, final app title and candidate package eligibility; formally select and register actual application ID.
 - [ ] Confirm owner-controlled developer/support contacts, privacy-policy URL and account/signing ownership.
 - [ ] Confirm final card artwork/icon/font/audio sources and redistribution licenses; create provenance manifest.

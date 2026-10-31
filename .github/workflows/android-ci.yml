@@ -1,4 +1,4 @@
-name: Android setup build and JVM tests
+name: Android setup build and tests
 
 on:
   workflow_dispatch:
@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   verify:
+    name: verify
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
@@ -24,17 +25,61 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - name: Install required Android SDK platform
-        # GitHub-hosted ubuntu-latest already ships Android command-line tools.
-        # Avoid android-actions/setup-android, which still requests obsolete "tools".
+      - name: Install Android SDK API 37.0 for Compose compilation
         run: |
           SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
           test -x "$SDKMANAGER"
           yes | "$SDKMANAGER" --licenses >/dev/null || true
-          "$SDKMANAGER" --install "platforms;android-36" "build-tools;36.0.0"
+          "$SDKMANAGER" --channel=3 --install "platforms;android-37.0" "build-tools;36.0.0"
       - name: Configure pinned Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '9.5.0'
-      - name: Test pure JVM engine scaffold and build Android debug APK
-        run: gradle --no-daemon :game-engine:test :app:assembleDebug :app:testDebugUnitTest
+      - name: Test pure JVM module and build Android debug APK
+        run: ./gradlew --no-daemon :game-engine:test :app:assembleDebug :app:testDebugUnitTest
+
+  emulator:
+    name: emulator
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+      - name: Configure JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install SDK API 37.0 for compilation
+        run: |
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          test -x "$SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" --channel=3 --install "platforms;android-37.0" "build-tools;36.0.0"
+        env:
+          ANDROID_HOME: /usr/local/lib/android/sdk
+      - name: Configure pinned Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.5.0'
+      # Linux hosted runner has /dev/kvm but normal user lacks access.
+      # Change permissions on this disposable CI VM only. udevadm reload-rules
+      # returned exit 1 on the initial attempt, before the emulator launched.
+      - name: Enable hardware acceleration for Android emulator
+        run: |
+          test -c /dev/kvm
+          sudo chmod a+rw /dev/kvm
+          ls -l /dev/kvm
+          test -r /dev/kvm
+          test -w /dev/kvm
+      - name: Run Compose instrumentation smoke test on Android 35
+        uses: ReactiveCircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          disable-linux-hw-accel: false
+          emulator-boot-timeout: 600
+          script: ./gradlew --no-daemon :app:connectedDebugAndroidTest

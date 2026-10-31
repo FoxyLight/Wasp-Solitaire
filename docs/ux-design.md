@@ -1,6 +1,6 @@
 # UI/UX specification: approved Version 1.0 baseline
 
-**Status:** **UX-DEC-01–08 Accepted** on 2026-10-29, alongside RULE-01–06, MVP-DEC-01–08 and ARCH-DEC-01–08. REL-DEC-01–08 now approve the free/ad-free release strategy and provisional identity-validation process. Final branding/package/assets, account verification and explicit implementation permission remain pending. **Phase 2 setup was authorized on 2026-10-30; this does not approve later game/board milestone changes or publication.**  
+**Status:** **UX-DEC-01–08 Accepted** on 2026-10-29, alongside RULE-01–06, MVP-DEC-01–08 and ARCH-DEC-01–08. REL-DEC-01–08 now approve the free/ad-free release strategy and provisional identity-validation process. Final branding/package/assets, account verification and permission for later implementation milestones remain pending. **Phase 2 setup was authorized on 2026-10-30 and the initial scaffold merged in PR #7; this does not approve later game/board milestones or publication.**  
 **Last reviewed:** 2026-10-29  
 **Approval record:** [decisions.md](decisions.md)
 
