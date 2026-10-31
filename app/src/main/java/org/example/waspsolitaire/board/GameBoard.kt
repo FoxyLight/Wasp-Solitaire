@@ -16,6 +16,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +35,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.zIndex
@@ -89,6 +92,8 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
     onIntent: ((GameIntent) -> Unit)? = null, feedback: String? = null) {
     val currentState by rememberUpdatedState(state)
     val drag = remember { BoardDrag() }
+    val density = LocalDensity.current
+    var viewportHeight by remember { mutableFloatStateOf(Float.POSITIVE_INFINITY) }
     val dispatch: ((GameIntent) -> Unit)? = if (onIntent == null) null else { intent -> drag.notice = null; onIntent(intent) }
     val send by rememberUpdatedState(dispatch)
     LaunchedEffect(state.revision) { if (drag.active?.revision != state.revision) drag.active = null }
@@ -96,11 +101,11 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
         if (drag.active != null) drag.cancel() else onIntent?.invoke(GameIntent.CancelSelection)
     }
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-      Box(modifier.fillMaxSize().background(Felt).clipToBounds().testTag("game-screen")
+      BoxWithConstraints(modifier.fillMaxSize().background(Felt).clipToBounds().testTag("game-screen")
           .onGloballyPositioned { drag.origin = it.positionInRoot() }) {
        Column(Modifier.fillMaxSize().safeDrawingPadding()) {
         if (dispatch != null) {
-            GameControls(state, drag.active == null, dispatch)
+            GameControls(state, drag.active == null, maxHeight < 400.dp, dispatch)
             val hintMessage = when (val hint = state.hintedAction) {
                 is GameAction.Move -> "Hint: Column ${hint.source + 1}, card ${hint.cardIndex + 1} → Column ${hint.destination + 1}"
                 GameAction.DealReserve -> "Hint: The reserve is available. Use Deal 3."
@@ -113,7 +118,7 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
                 maxLines = 3, modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp).heightIn(min = 40.dp)
                     .testTag("action-feedback").semantics { liveRegion = LiveRegionMode.Polite })
         }
-        Column(Modifier.weight(1f).fillMaxWidth()
+        Column(Modifier.weight(1f).fillMaxWidth().onSizeChanged { viewportHeight = with(density) { it.height.toDp().value } }
             .verticalScroll(rememberScrollState(), enabled = drag.active == null).padding(horizontal = 8.dp, vertical = 16.dp)
             .testTag("board"), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Text("WASP", color = Ivory, fontSize = 28.sp, fontFamily = FontFamily.Serif, fontWeight = FontWeight.Bold)
@@ -130,7 +135,7 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
             }
             }
             BoxWithConstraints(Modifier.fillMaxWidth()) {
-                val geometry = BoardGeometry.fit(maxWidth.value, LocalDensity.current.fontScale)
+                val geometry = BoardGeometry.fit(maxWidth.value, LocalDensity.current.fontScale, viewportHeight)
                 Row(Modifier.fillMaxWidth().onGloballyPositioned { drag.tableau = Rect(it.positionInRoot(), it.size.toSize()) }, horizontalArrangement = Arrangement.spacedBy(BoardGeometry.GUTTER.dp, Alignment.CenterHorizontally)) {
                     state.board.tableau.forEachIndexed { index, cards -> TableauColumn(index, cards, state, geometry, dispatch, drag,
                         onDragStart = { chosen, grab -> send?.let { drag.begin(chosen, grab, geometry, currentState, it) } },
@@ -169,16 +174,26 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
 }
 
 @Composable
-private fun GameControls(state: GameUiState, enabled: Boolean, send: (GameIntent) -> Unit) {
+private fun GameControls(state: GameUiState, enabled: Boolean, compact: Boolean, send: (GameIntent) -> Unit) {
     val colors = ButtonDefaults.buttonColors(containerColor = Blue, contentColor = Ivory,
         disabledContainerColor = Blue.copy(alpha = .5f), disabledContentColor = Ivory.copy(alpha = .45f))
+    val padding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
+    var expanded by remember { mutableStateOf(false) }
     Column(Modifier.fillMaxWidth().padding(horizontal = 8.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            Button({ send(GameIntent.Undo) }, Modifier.weight(1f).heightIn(min = 48.dp).testTag("undo"), enabled && state.session.history.isNotEmpty(), colors = colors) { Text("Undo") }
-            Button({ send(GameIntent.Hint) }, Modifier.weight(1f).heightIn(min = 48.dp).testTag("hint"), enabled && state.board.status != GameStatus.WON, colors = colors) { Text("Hint") }
-            Button({ send(GameIntent.DealReserve) }, Modifier.weight(1f).heightIn(min = 48.dp).testTag("deal"), enabled && state.board.reserve.isNotEmpty() && state.board.status != GameStatus.WON, colors = colors) { Text("Deal 3") }
+            Button({ send(GameIntent.Undo) }, Modifier.weight(1f).heightIn(min = 48.dp).testTag("undo"), enabled && state.session.history.isNotEmpty(), colors = colors, contentPadding = padding) { Text("Undo") }
+            Button({ send(GameIntent.Hint) }, Modifier.weight(1f).heightIn(min = 48.dp).testTag("hint"), enabled && state.board.status != GameStatus.WON, colors = colors, contentPadding = padding) { Text("Hint") }
+            Button({ send(GameIntent.DealReserve) }, Modifier.weight(1f).heightIn(min = 48.dp).testTag("deal"), enabled && state.board.reserve.isNotEmpty() && state.board.status != GameStatus.WON, colors = colors, contentPadding = padding) { Text("Deal 3") }
+            if (compact) Box(Modifier.weight(1f)) {
+                TextButton({ expanded = true }, Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("more"), enabled, contentPadding = padding) { Text("More", color = Ivory) }
+                DropdownMenu(expanded, { expanded = false }) {
+                    DropdownMenuItem(text = { Text("Restart") }, onClick = { expanded = false; send(GameIntent.RequestRestart) }, modifier = Modifier.heightIn(min = 48.dp).testTag("restart"))
+                    DropdownMenuItem(text = { Text("New Game") }, onClick = { expanded = false; send(GameIntent.RequestNewGame) }, modifier = Modifier.heightIn(min = 48.dp).testTag("new-game"))
+                    if (state.selection != null || state.hintedAction != null) DropdownMenuItem(text = { Text("Cancel selection") }, onClick = { expanded = false; send(GameIntent.CancelSelection) }, modifier = Modifier.heightIn(min = 48.dp).testTag("cancel-selection"))
+                }
+            }
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        if (!compact) Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
             TextButton({ send(GameIntent.RequestRestart) }, Modifier.weight(1f).heightIn(min = 48.dp).testTag("restart"), enabled) { Text("Restart", color = Ivory) }
             TextButton({ send(GameIntent.RequestNewGame) }, Modifier.weight(1f).heightIn(min = 48.dp).testTag("new-game"), enabled) { Text("New Game", color = Ivory) }
             if (state.selection != null || state.hintedAction != null) TextButton({ send(GameIntent.CancelSelection) }, Modifier.weight(1f).heightIn(min = 48.dp).testTag("cancel-selection"), enabled) { Text("Cancel", color = Ivory) }

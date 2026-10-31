@@ -9,6 +9,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.espresso.Espresso.pressBack
 import kotlinx.coroutines.runBlocking
 import org.example.waspsolitaire.board.GameBoardHost
 import org.example.waspsolitaire.engine.*
@@ -41,7 +42,10 @@ class GameplayTest {
         model = GameViewModel(runBlocking { GameController.open(repository) { 777L } })
     }
     private fun render() { rule.setContent { GameBoardHost(model) } }
-    private fun click(tag: String) { rule.onNodeWithTag(tag).performClick(); rule.waitForIdle() }
+    private fun click(tag: String) {
+        if (rule.onAllNodesWithTag(tag).fetchSemanticsNodes().isEmpty()) rule.onNodeWithTag("more").performClick()
+        rule.onNodeWithTag(tag).performClick(); rule.waitForIdle()
+    }
     private fun tapCard(column: Int, index: Int) {
         rule.onNodeWithTag("card-$column-$index").performScrollTo().performTouchInput { click(Offset(width / 2f, 4f)) }
         rule.waitForIdle()
@@ -70,6 +74,8 @@ class GameplayTest {
         rule.waitForIdle()
     }
     private fun snapshot(name: String) {
+        // Native popup/ripple animations are not all driven by Compose's test clock.
+        android.os.SystemClock.sleep(500)
         val directory = File(requireNotNull(InstrumentationRegistry.getArguments().getString("additionalTestOutputDir")), "phase4c-evidence")
         directory.mkdirs()
         File(directory, "$name.png").outputStream().use {
@@ -256,7 +262,11 @@ class GameplayTest {
         cases.forEach { (name, viewport, scale) ->
             rule.runOnIdle { size = viewport; fontScale = scale }; rule.waitForIdle()
             val before = model.uiState.value.session
-            for (tag in listOf("undo","hint","deal","restart","new-game")) rule.onNodeWithTag(tag).assertIsDisplayed().assertHeightIsAtLeast(48.dp)
+            for (tag in listOf("undo","hint","deal")) rule.onNodeWithTag(tag).assertIsDisplayed().assertHeightIsAtLeast(48.dp)
+            val compact = rule.onAllNodesWithTag("more").fetchSemanticsNodes().isNotEmpty()
+            if (compact) click("more")
+            for (tag in listOf("restart","new-game")) rule.onNodeWithTag(tag).assertIsDisplayed().assertHeightIsAtLeast(48.dp)
+            if (compact) { pressBack(); rule.waitForIdle() }
             click("deal"); revision(model.uiState.value.revision)
             rule.waitUntil(10_000) { model.uiState.value.board.reserve.isEmpty() }
             click("undo"); rule.waitUntil(10_000) { model.uiState.value.board.reserve.size == 3 }

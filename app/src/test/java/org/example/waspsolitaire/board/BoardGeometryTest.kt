@@ -22,6 +22,11 @@ class BoardGeometryTest {
         assertTrue(large.cardHeight > large.faceStep)
         assertEquals(large.cardHeight + 51 * large.faceStep, large.columnHeight(List(52) { true }), .05f)
     }
+    @Test fun shortViewportKeepsAWholeCardReachable() {
+        val geometry = BoardGeometry.fit(624f, 1f, 96f)
+        assertTrue(geometry.cardHeight <= 96f)
+        assertTrue(geometry.cardWidth * 7 + BoardGeometry.GUTTER * 6 <= 624f)
+    }
     @Test fun seedSupplierRunsOnceAndFactoryKeepsRepositorySnapshot() = runBlocking<Unit> {
         var calls = 0
         val owner = GameSessionOwner { calls++; 123L }
