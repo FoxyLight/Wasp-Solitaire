@@ -8,6 +8,8 @@ The project owner approved the Phase 1 specifications and authorized Phase 2 set
 
 **The Android screen remains a setup placeholder.** The owner-approved Classic Wasp engine and deterministic rule tests merged in [PR #11](https://github.com/FoxyLight/Wasp-Solitaire/pull/11) on 2026-10-31. The [proposed Phase 4 board milestones](docs/phase4-delivery-plan.md) are awaiting separate implementation authorization and a reviewable documentation merge. See the [engine API and milestone notes](docs/phase3-engine.md).
 
+**Phase 4A in development:** A separate owner-authorized PR introduces the GameViewModel/StateFlow session boundary and tests. The Android screen is still a placeholder; there is no interactive board or durable save yet. See [Phase 4A architecture notes](docs/phase4a-state.md).
+
 ## Project structure
 
 - `app/`: native Android Jetpack Compose app. **Temporary** app ID `org.example.waspsolitaire`, not for Google Play publication.
