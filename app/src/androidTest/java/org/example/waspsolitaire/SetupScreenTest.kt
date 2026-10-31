@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.runBlocking
 import org.example.waspsolitaire.game.*
+import org.example.waspsolitaire.engine.ClassicWasp
+import androidx.compose.ui.geometry.Offset
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -22,7 +24,22 @@ class SetupScreenTest {
         rule.onNodeWithText("WASP").assertIsDisplayed()
         lateinit var model: GameViewModel
         rule.activityRule.scenario.onActivity { model = ViewModelProvider(it)[GameViewModel::class.java] }
-        runBlocking { model.dispatch(GameIntent.DealReserve); model.dispatch(GameIntent.Select(0, 7)) }
+        // Install a deterministic fixture through the real repository contract, then use UI controls.
+        val repository = (rule.activity.application as WaspApplication).sessions.repository
+        runBlocking {
+            val current = repository.load()
+            repository.commit(current.revision, SessionRecord(current.revision + 1, ClassicWasp.newGame(123)))
+            model.dispatch(GameIntent.Refresh)
+        }
+        val move = ClassicWasp.legalMoves(model.uiState.value.board).first()
+        val startingRevision = model.uiState.value.revision
+        rule.onNodeWithTag("card-${move.source}-${move.cardIndex}").performScrollTo().performTouchInput { click(Offset(width / 2f, 4f)) }
+        rule.waitUntil(10_000) { model.uiState.value.selection != null }
+        rule.onNodeWithTag("column-surface-${move.destination}").performTouchInput { click(Offset(width / 2f, 4f)) }
+        rule.waitUntil(10_000) { model.uiState.value.revision == startingRevision + 1 }
+        rule.onNodeWithTag("deal").performClick()
+        rule.waitUntil(10_000) { model.uiState.value.board.reserve.isEmpty() }
+        runBlocking { model.dispatch(GameIntent.Select(0, model.uiState.value.board.tableau[0].lastIndex)) }
         val before = model.uiState.value
         rule.activityRule.scenario.recreate()
         rule.waitUntil(10_000) { rule.onAllNodesWithTag("board").fetchSemanticsNodes().isNotEmpty() }
@@ -42,6 +59,6 @@ class SetupScreenTest {
         assertSame(before.session, model.uiState.value.session)
         assertEquals(before.selection, model.uiState.value.selection)
         rule.onNodeWithTag("reserve-status").performScrollTo().assertTextEquals("Dealt · 0 remaining")
-        rule.onAllNodes(hasClickAction()).assertCountEquals(0)
+        rule.onNodeWithTag("undo").assertIsDisplayed().assertIsEnabled()
     }
 }
