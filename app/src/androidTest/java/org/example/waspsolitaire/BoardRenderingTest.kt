@@ -27,7 +27,10 @@ class BoardRenderingTest {
         rule.setContent { MaterialTheme { GameBoard(state) } }
     }
     private fun snapshot(name: String) {
-        val directory = File(InstrumentationRegistry.getInstrumentation().targetContext.getExternalFilesDir(null), "board-evidence")
+        val output = requireNotNull(InstrumentationRegistry.getArguments().getString("additionalTestOutputDir")) {
+            "Run through Gradle connectedDebugAndroidTest to collect screenshot artifacts"
+        }
+        val directory = File(output, "board-evidence")
         directory.mkdirs()
         File(directory, "$name.png").outputStream().use {
             rule.onNodeWithTag("board").captureToImage().asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 100, it)

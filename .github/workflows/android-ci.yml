@@ -84,13 +84,13 @@ jobs:
           emulator-boot-timeout: 600
           script: |
             ./gradlew --no-daemon :app:connectedDebugAndroidTest
-            adb pull /sdcard/Android/data/org.example.waspsolitaire/files/board-evidence app/build/board-evidence
+            test -n "$(find app/build/outputs/connected_android_test_additional_output -name '*.png' -print -quit)"
       - name: Upload board screenshots and instrumentation reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: board-rendering-evidence
           path: |
-            app/build/board-evidence
+            app/build/outputs/connected_android_test_additional_output
             app/build/reports/androidTests
             app/build/outputs/androidTest-results
