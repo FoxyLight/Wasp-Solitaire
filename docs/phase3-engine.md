@@ -1,6 +1,6 @@
 # Phase 3: Classic Wasp engine
 
-Owner-authorized 2026-10-31 after completing repository protection and fresh Phase 2 verification. Implementation is on a feature branch for review; no merge or publication is authorized.
+Owner-authorized 2026-10-31 after completing repository protection and fresh Phase 2 verification. Implementation merged into `main` through [PR #11](https://github.com/FoxyLight/Wasp-Solitaire/pull/11) on 2026-10-31 after required checks passed. Phase 4 implementation and publication are separate authorization gates.
 
 ## Approved requirements
 
@@ -28,4 +28,4 @@ Twenty seeded action sequences each exercise up to 160 moves/deals, checking car
 
 ## Remaining work and next milestone
 
-Phase 4 should connect the engine to a GameViewModel/StateFlow and build the adaptive seven-column board with explicit tap destinations, whole-tail dragging, accessible column inspection, Undo/Hint/Deal 3 and in-place run indicators. Add integration tests proving UI actions use engine legality and preserve state on invalid input across portrait, landscape and tablet layouts. Room encoding/transactions, durable saves/history, lifecycle timer, four statistics and preferences follow in Phase 5. No accounts, production identity/signing changes or store publishing are included here.
+The proposed [Phase 4 plan](phase4-delivery-plan.md), subject to owner approval, should connect the engine to a GameViewModel/StateFlow and build the adaptive seven-column board with explicit tap destinations, whole-tail dragging, accessible column inspection, Undo/Hint/Deal 3 and in-place run indicators. Add integration tests proving UI actions use engine legality and preserve state on invalid input across portrait, landscape and tablet layouts. Room encoding/transactions, durable saves/history, lifecycle timer, four statistics and preferences follow in Phase 5. No accounts, production identity/signing changes or store publishing are included here.

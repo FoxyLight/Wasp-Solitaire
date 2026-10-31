@@ -6,7 +6,7 @@ This repository is the source of truth for **Wasp Solitaire Android**.
 
 The project owner approved the Phase 1 specifications and authorized Phase 2 setup. Stabilization merged in [PR #8](https://github.com/FoxyLight/Wasp-Solitaire/pull/8); a fresh [baseline run](https://github.com/FoxyLight/Wasp-Solitaire/actions/runs/41229459279) passed Android compilation, JVM tests and Android 35 instrumentation on 2026-10-31. Required PR/CI protection is now configured and independently tested; see [governance](docs/repository-governance.md).
 
-**The Android screen remains a setup placeholder.** This branch implements the owner-authorized Phase 3 Classic Wasp engine and deterministic rule tests, awaiting PR review and merge approval. See the [engine API and milestone notes](docs/phase3-engine.md).
+**The Android screen remains a setup placeholder.** The owner-approved Classic Wasp engine and deterministic rule tests merged in [PR #11](https://github.com/FoxyLight/Wasp-Solitaire/pull/11) on 2026-10-31. The [proposed Phase 4 board milestones](docs/phase4-delivery-plan.md) are awaiting separate implementation authorization and a reviewable documentation merge. See the [engine API and milestone notes](docs/phase3-engine.md).
 
 ## Project structure
 

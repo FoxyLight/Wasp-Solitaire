@@ -1,6 +1,6 @@
 # Phase 2: Android project environment and setup
 
-**Status:** Stabilization merged through [PR #8](https://github.com/FoxyLight/Wasp-Solitaire/pull/8). Fresh verification passed on 2026-10-31; Phase 3 engine work is separately owner-authorized and awaits PR review. Public release and automatic merge remain unauthorized.
+**Status:** Stabilization merged through [PR #8](https://github.com/FoxyLight/Wasp-Solitaire/pull/8). Fresh verification passed on 2026-10-31; Phase 3 engine PR #11 was subsequently owner-approved and merged. Phase 4 application implementation, automatic merge, and public release remain separately gated.
 **Last reviewed:** 2026-10-31
 
 ## Fresh baseline verification

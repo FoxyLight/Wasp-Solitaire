@@ -1,7 +1,7 @@
 # UI/UX specification: approved Version 1.0 baseline
 
-**Status:** **UX-DEC-01–08 Accepted** on 2026-10-29, alongside RULE-01–06, MVP-DEC-01–08 and ARCH-DEC-01–08. REL-DEC-01–08 now approve the free/ad-free release strategy and provisional identity-validation process. Final branding/package/assets, account verification and permission for later implementation milestones remain pending. **Phase 2 setup was authorized on 2026-10-30 and the initial scaffold merged in PR #7; this does not approve later game/board milestones or publication.**  
-**Last reviewed:** 2026-10-29  
+**Status:** **UX-DEC-01–08 Accepted** on 2026-10-29, alongside RULE-01–06, MVP-DEC-01–08 and ARCH-DEC-01–08. REL-DEC-01–08 now approve the free/ad-free release strategy and provisional identity-validation process. Final branding/package/assets, account verification and permission for later implementation milestones remain pending. **Phase 2 setup and stabilization were separately authorized and merged (PRs #7–8); Phase 3 engine PR #11 was owner-approved and merged on 2026-10-31. These approvals do not authorize Phase 4 board implementation or publication.**  
+**Last reviewed:** 2026-10-31  
 **Approval record:** [decisions.md](decisions.md)
 
 ## Experience goals
@@ -146,6 +146,10 @@ A previous research candidate was the [Kenney Playing Cards Pack](https://kenney
 8. Sound-off default, system-aware haptics and reduced-motion preferences are honored; all meaning remains available without motion/sound.
 9. The timer starts on the first committed action, pauses on background/blocking screens, resumes on gameplay return, stops on win, and restores after app interruption.
 10. Settings and basic statistics operate offline; only the four approved MVP statistical measures are shown.
+
+## Phase 4 delivery and verification
+
+See [phase4-delivery-plan.md](phase4-delivery-plan.md) for 4A–4D implementation slices and a provisional screen/accessibility test matrix. These milestones implement, but do not change, UX-DEC-01–08. Review final assets/contrast and actual representative devices before shipping. This planning refinement is not owner authorization to begin Phase 4 implementation.
 
 ## Still pending after UX approval
 
