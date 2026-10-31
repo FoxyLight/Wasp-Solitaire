@@ -61,7 +61,7 @@ class GameplayTest {
         node.performTouchInput {
             down(Offset(width / 2f, 4f))
             advanceEventTime(650)
-            moveTo(Offset(width / 2f, 4f) + delta, durationMillis = 400)
+            moveTo(Offset(width / 2f, 4f) + delta, delayMillis = 400)
         }
         rule.waitForIdle()
         rule.onNodeWithTag("drag-preview").assertExists()

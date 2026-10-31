@@ -36,7 +36,7 @@ jobs:
         with:
           gradle-version: '9.5.0'
       - name: Test pure JVM module and build Android debug APK
-        run: ./gradlew --no-daemon :game-engine:test :app:assembleDebug :app:testDebugUnitTest
+        run: ./gradlew --no-daemon :game-engine:test :app:assembleDebug :app:testDebugUnitTest :app:assembleDebugAndroidTest
       - name: Upload debug APK and JVM reports
         if: always()
         uses: actions/upload-artifact@v4
