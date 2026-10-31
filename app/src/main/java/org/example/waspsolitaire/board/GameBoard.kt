@@ -103,9 +103,10 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
       BoxWithConstraints(modifier.fillMaxSize().background(Felt).clipToBounds().testTag("game-screen")
           .onGloballyPositioned { drag.origin = it.positionInRoot() }) {
+       val compactWindow = maxHeight < 400.dp
        Column(Modifier.fillMaxSize().safeDrawingPadding()) {
         if (dispatch != null) {
-            GameControls(state, drag.active == null, maxHeight < 400.dp, dispatch)
+            GameControls(state, drag.active == null, compactWindow, dispatch)
             val hintMessage = when (val hint = state.hintedAction) {
                 is GameAction.Move -> "Hint: Column ${hint.source + 1}, card ${hint.cardIndex + 1} → Column ${hint.destination + 1}"
                 GameAction.DealReserve -> "Hint: The reserve is available. Use Deal 3."
