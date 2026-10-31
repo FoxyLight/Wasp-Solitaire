@@ -12,13 +12,30 @@ Build a reliable engine first, then an accessible card board, then polish and pu
 | 1. Research and approval | Approved rules, MVP, architecture, UX and release strategy; verified readiness prerequisites | None | Unverified publisher/brand/assets or ambiguous scope | Owner records all decisions, closes readiness gaps and separately authorizes Phase 2 |
 | 2. Environment/setup | Kotlin/Compose `:app`, pure Kotlin `:game-engine`, Gradle and GitHub Actions setup | Entire Phase 1 and explicit implementation authorization | Toolchain/SDK compatibility | Clean builds, JVM tests and CI; minimum API 26, target API 36+ verified at setup |
 | 3. Pure game engine | Deterministic deals, move validation, reserve, completed tableau runs, legal Hint enumeration and snapshot-compatible state | Phase 2 + approved rules/MVP/architecture | Invalid moves/card duplication | JUnit/invariant suites pass, including reserve Undo and zero-move states |
-| 4. Board/input | Seven-column overview, expanded column inspection, explicit tap/drag interactions and accessible reserve controls | Phase 3 interface + approved UX-DEC-01–08 | Tiny hit targets/gesture errors | Every legal move accessible across portrait/landscape phones and tablets, including TalkBack inspection |
-| 5. Polish/state | Room-backed atomic autosave/Undo, four stats, DataStore settings, single green-table visual theme, feedback preferences, win summary and interruption-aware timer | Phase 4 + UX-DEC-01–08 | Lifecycle/animation state drift | Offline resume and timer tests pass, with accessible reduced-motion/sound-off behavior |
+| 4. Board/input (4A–4D) | [GameViewModel and state contract → adaptive board → playable controls → accessible inspection](phase4-delivery-plan.md) | Approved Phase 3 engine merged through a separate owner decision; UX-DEC-01–08 | State divergence, tiny hit targets, gesture errors | Four small reviewed PR gates; all legal actions work by tap and drag and on a representative phone/tablet matrix |
+| 5. Persistence/polish (5A–5B) | [5A Room atomic saves/Undo and recovery; 5B clock, exactly four stats, DataStore preferences, win summary and polish](phase4-delivery-plan.md) | Phase 4 plus approved ARCH-DEC-04/05 and UX-DEC-08 | Save corruption, duplicate win counts, lifecycle drift | Process-death, rotation, transaction/Undo, active-time and statistics tests pass; offline recovery demonstrated |
 | 6. QA/optimization | Regression tests, performance, TalkBack, device coverage | Phase 5 | Device-specific bugs | No known release blockers |
 | 7. Store preparation | Confirm publisher/package and licenses, sign App Bundle, publish privacy policy, finish declarations/listing and required tests | Phase 6 and verified owner-controlled Play account | Verification, account testing and review delay | Owner-reviewed release candidate and required Play production access |
 | 8. Launch/maintenance | Owner-approved staged production rollout, feedback-led fixes and release maintenance | Phase 7 and separate owner production go/no-go | Retention/compatibility and policy changes | Post-release issue and rollout monitoring process in place |
 
-Six rules decisions and **all four sets of eight** MVP, architecture, UX and release decisions are approved (REL-DEC-01–08 accepted 2026-10-29). The owner separately authorized **beginning Phase 2 setup on 2026-10-30**. Brand/account/package/artwork verification and actual device/tester matrix remain pending. **No production release is authorized**; setup stabilization still requires a passing CI result and reviewed PR.
+## Next delivery gates and owner approvals
+
+Phase 3 is implemented in [PR #11](https://github.com/FoxyLight/Wasp-Solitaire/pull/11), which remains **open and unmerged** as of this refinement. Passing CI and a review comment do not substitute for the owner's explicit merge approval. Do not start Phase 4 application implementation until the owner approves that merge and the required checks remain green.
+
+The [Phase 4 delivery plan](phase4-delivery-plan.md) is the execution checklist for four independently reviewable implementation increments:
+
+- **4A:** GameViewModel + StateFlow, single-source-of-truth session/selection/intents, and a persistence-ready boundary ([issue #12](https://github.com/FoxyLight/Wasp-Solitaire/issues/12)).
+- **4B:** Responsive seven-column Compose rendering using the engine state and original or verified-licensed provisional card symbols ([issue #13](https://github.com/FoxyLight/Wasp-Solitaire/issues/13)).
+- **4C:** Explicit tap/drag moves and controls including Undo, Hint, Deal 3, Restart/New Game and win indication ([issue #14](https://github.com/FoxyLight/Wasp-Solitaire/issues/14)).
+- **4D:** Expanded column inspection, non-drag accessibility, TalkBack and representative phone/landscape/tablet verification ([issue #15](https://github.com/FoxyLight/Wasp-Solitaire/issues/15)).
+
+**Architecture-forward constraint:** 4A defines the repository interface and snapshot/version/Undo contract, but **does not claim durable saves**. Phase 5A must implement Room atomic state+history writes, migrations/recovery and interruption tests before the app claims offline autosave or exact resume. Phase 5B implements the approved active-only timer, exactly four statistics, DataStore settings and remaining feedback/polish.
+
+**Parallel readiness track:** Identify representative devices/testers, verify final card-asset provenance, candidate brand and package, and plan Play Console registration/privacy-policy needs early ([issue #16](https://github.com/FoxyLight/Wasp-Solitaire/issues/16)). Account creation, spending, production identity/signing changes, external enrollment and publishing require separate owner authorization. These are administrative prerequisites, **not** dependencies that should block authorized board prototypes.
+
+Each implementation slice needs its own branch/PR, recorded acceptance evidence, both required GitHub Actions checks, manual owner review and an explicit merge decision. The roadmap refinement **does not authorize Phase 4 code, Phase 5 code, account actions or release**.
+
+Six rules decisions and **all four sets of eight** MVP, architecture, UX and release decisions are approved (REL-DEC-01–08 accepted 2026-10-29). The owner separately authorized **beginning Phase 2 setup on 2026-10-30**. Brand/account/package/artwork verification and the actual device/tester matrix remain pending. **No production release is authorized**; Phase 2 stabilization has passed, while Phase 3 PR #11 still requires the owner's merge decision.
 
 ## Top risks
 

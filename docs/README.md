@@ -1,6 +1,6 @@
 # Project documentation
 
-**Status:** RULE-01–06 and MVP/ARCH/UX/REL-DEC-01–08 approved 2026-10-29; owner separately authorized beginning Phase 2 setup on 2026-10-30; initial scaffold PR #7 was merged but the build verification failed and stabilization is under review. Actual account, brand/package and asset verification, full implementation and release authorization remain pending.
+**Status:** Approved Phase 1 decisions and the separately authorized Phase 2 setup are documented. Phase 2 stabilization was merged via PR #8 with passing Android/JVM/emulator checks; GitHub branch protection is active. Phase 3 engine is implemented in PR #11, **open and pending owner merge approval**. Phase 4 delivery refinements are proposed for review; account, package, art and production-release prerequisites remain pending.
 
 This directory is intended to become the canonical home of the project specifications. Once a document or decision is approved, update its status in a reviewed commit. The `main` branch represents the accepted project record; proposed changes belong in pull requests.
 
@@ -12,11 +12,12 @@ This directory is intended to become the canonical home of the project specifica
 | [ux-design.md](ux-design.md) | Interaction and responsive design principles | UX-DEC-01–08 accepted; final asset selection and validation pending |
 | [market-research.md](market-research.md) | Competitors and differentiation hypotheses | Research draft |
 | [google-play.md](google-play.md) | Publishing strategy, requirements and verification checkpoints | REL-DEC-01–08 accepted; account/package/assets and release prerequisites unverified |
-| [roadmap.md](roadmap.md) | Phases, dependencies, risks, quality gates | Decision groups and Phase 2 setup authorization recorded; release prerequisites remain pending |
+| [roadmap.md](roadmap.md) | Phases, dependencies, risks, quality gates | Phase 4/5 delivery gates clarified; Phase 3 merge and release prerequisites pending |
 | [decisions.md](decisions.md) | Decisions, alternatives, approval status | Six rules plus eight MVP, eight architecture, eight UX and eight release decisions accepted; provisional qualifications tracked |
 | [sources.md](sources.md) | Source register and verification dates | Research draft |
-| [phase2-setup.md](phase2-setup.md) | Phase 2 structure, SDK/build validation and known setup limitations | Initial scaffold merged; stabilization checks pending |
-| [repository-governance.md](repository-governance.md) | GitHub required-check and review protection instructions | Administrator action pending |
+| [phase2-setup.md](phase2-setup.md) | Phase 2 structure, SDK/build validation and known setup limitations | Stabilized in PR #8, with fresh passing CI |
+| [repository-governance.md](repository-governance.md) | GitHub required-check and review protection instructions | Active required checks and PR protection, Issue #9 closed |
+| [phase4-delivery-plan.md](phase4-delivery-plan.md) | Reviewable 4A–4D board milestones, 5A/5B persistence and quality gates | Proposed delivery sequencing; no Phase 4 implementation authorized |
 
 ## Working agreements
 
