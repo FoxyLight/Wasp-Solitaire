@@ -1,7 +1,7 @@
 # Development roadmap and risk register
 
-**Status:** Phase 1 decision groups approved; owner explicitly authorized beginning Phase 2 on 2026-10-30. **Initial setup merged in PR #7 but CI failed; stabilization and verification remain pending. Actual Play Console account and release prerequisites are outstanding.**  
-**Last reviewed:** 2026-10-30
+**Status:** Phases 1–2 complete; Phase 3 pure Kotlin rules engine merged in PR #11 on 2026-10-31 after passing required CI. GitHub branch protection is enforced. Phase 4A–4D and Phase 5A–5B are proposed reviewable delivery gates in PR #17, not implementation authorizations. Actual Play Console account and other release prerequisites remain outstanding.
+**Last reviewed:** 2026-10-31
 
 ## Overall approach
 
@@ -20,7 +20,7 @@ Build a reliable engine first, then an accessible card board, then polish and pu
 
 ## Next delivery gates and owner approvals
 
-Phase 3 is implemented in [PR #11](https://github.com/FoxyLight/Wasp-Solitaire/pull/11), which remains **open and unmerged** as of this refinement. Passing CI and a review comment do not substitute for the owner's explicit merge approval. Do not start Phase 4 application implementation until the owner approves that merge and the required checks remain green.
+Phase 3 was merged through the owner's explicit approval in [PR #11](https://github.com/FoxyLight/Wasp-Solitaire/pull/11) on 2026-10-31 after both required checks passed. The pure Kotlin engine is on `main`. **Phase 4 application implementation is a separate milestone and requires its own authorization**; approval of this documentation refinement alone does not grant it.
 
 The [Phase 4 delivery plan](phase4-delivery-plan.md) is the execution checklist for four independently reviewable implementation increments:
 
@@ -35,7 +35,7 @@ The [Phase 4 delivery plan](phase4-delivery-plan.md) is the execution checklist 
 
 Each implementation slice needs its own branch/PR, recorded acceptance evidence, both required GitHub Actions checks, manual owner review and an explicit merge decision. The roadmap refinement **does not authorize Phase 4 code, Phase 5 code, account actions or release**.
 
-Six rules decisions and **all four sets of eight** MVP, architecture, UX and release decisions are approved (REL-DEC-01–08 accepted 2026-10-29). The owner separately authorized **beginning Phase 2 setup on 2026-10-30**. Brand/account/package/artwork verification and the actual device/tester matrix remain pending. **No production release is authorized**; Phase 2 stabilization has passed, while Phase 3 PR #11 still requires the owner's merge decision.
+Six rules decisions and **all four sets of eight** MVP, architecture, UX and release decisions are approved (REL-DEC-01–08 accepted 2026-10-29). The owner separately authorized **beginning Phase 2 setup on 2026-10-30**. Brand/account/package/artwork verification and actual device/tester matrix remain pending. **No production release is authorized**; Phase 2 and Phase 3 code merges are complete and their required verification passed. Phase 4 remains separately gated.
 
 ## Top risks
 
@@ -71,15 +71,17 @@ Six rules decisions and **all four sets of eight** MVP, architecture, UX and rel
 - [ ] Recheck time-sensitive SDK target and Play requirements before development and store submission.
 - [x] Receive owner's **explicit authorization to begin Phase 2 setup** (2026-10-30); implementation changes require reviewed PRs, and public release requires a separate go/no-go.
 
-## Phase 2 stabilization gate (still pending)
+## Phase 2 stabilization gate (verified 2026-10-31)
 
-- [ ] Clean-checkout Android debug build and pure JVM tests pass on GitHub Actions with Compose-compatible `compileSdk 37`.
-- [ ] Official Gradle 9.5.0 wrapper is committed, with published wrapper-JAR and distribution SHA-256 verification.
-- [ ] Setup-screen Compose instrumentation test passes on a managed emulator.
-- [ ] Owner/administrator enforces pull-request reviews and required CI checks on `main` in GitHub settings. This cannot be accomplished solely by committing workflow files; see [repository governance](repository-governance.md).
-- [ ] Reconcile setup documentation with actual merged files and CI evidence.
+- [x] Fresh Android debug build and pure JVM tests pass with `compileSdk 37`: [baseline run](https://github.com/FoxyLight/Wasp-Solitaire/actions/runs/41229459279).
+- [x] Official Gradle 9.5.0 wrapper committed, with matching wrapper-JAR checksum and pinned distribution SHA-256.
+- [x] Setup-screen Compose instrumentation test passes on Android 35.
+- [x] Active PR and required CI checks on `main`, zero mandatory external approvals and no bypasses: see [repository governance](repository-governance.md).
+- [x] Reconcile setup documentation with merged files and fresh CI evidence.
 
-Do not start the Phase 3 rules engine while the setup baseline is red. A later owner-approved merge is required; no production release is authorized.
+Phase 3 engine scope, API choices, verification and the next milestone are tracked in [phase3-engine.md](phase3-engine.md). The Android board, persistence, clock and statistics integration remain future work.
+
+Phase 3's rules engine is merged and its unit tests passed. Do not begin Phase 4 application code, create external accounts, or publish without the required separate owner authorization. This documentation PR remains unmerged pending review.
 
 ## Milestone quality gates
 

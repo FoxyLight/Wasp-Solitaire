@@ -4,14 +4,14 @@ This repository is the source of truth for **Wasp Solitaire Android**.
 
 ## Current status
 
-The project owner approved the Classic Wasp rules, Version 1.0 MVP, Android architecture, UI/UX and release strategy in Phase 1. On **2026-10-30**, the owner explicitly authorized **beginning Phase 2**. The Phase 2 Android setup scaffold was merged in [PR #7](https://github.com/FoxyLight/Wasp-Solitaire/pull/7) on 2026-10-30. The initial CI build failed due to a Compose/compile SDK mismatch; Phase 2 setup remains subject to successful stabilization and verification.
+The project owner approved the Phase 1 specifications and authorized Phase 2 setup. Stabilization merged in [PR #8](https://github.com/FoxyLight/Wasp-Solitaire/pull/8); a fresh [baseline run](https://github.com/FoxyLight/Wasp-Solitaire/actions/runs/41229459279) passed Android compilation, JVM tests and Android 35 instrumentation on 2026-10-31. Required PR/CI protection is now configured and independently tested; see [governance](docs/repository-governance.md).
 
-**No playable game exists yet.** The Phase 2 setup provides a minimal Compose placeholder screen and a pure Kotlin JVM engine scaffold, deliberately without implementing card rules or gameplay.
+**The Android screen remains a setup placeholder.** The owner-approved Classic Wasp engine and deterministic rule tests merged in [PR #11](https://github.com/FoxyLight/Wasp-Solitaire/pull/11) on 2026-10-31. The [proposed Phase 4 board milestones](docs/phase4-delivery-plan.md) are awaiting separate implementation authorization and a reviewable documentation merge. See the [engine API and milestone notes](docs/phase3-engine.md).
 
 ## Project structure
 
 - `app/`: native Android Jetpack Compose app. **Temporary** app ID `org.example.waspsolitaire`, not for Google Play publication.
-- `game-engine/`: pure Kotlin/JVM module. Contains a **scaffold only** until Phase 3.
+- `game-engine/`: pure Kotlin/JVM rules engine, immutable snapshots, Undo and legal hints.
 - `.github/workflows/android-ci.yml`: pinned Gradle Android build and engine test workflow.
 - `docs/`: authoritative approved specifications, milestone tracking and release constraints.
 
@@ -23,9 +23,9 @@ Use JDK 17, Android SDK platform 37.0 for compilation, and the Gradle 9.5.0 wrap
 ./gradlew --no-daemon :game-engine:test :app:assembleDebug :app:testDebugUnitTest
 ```
 
-The official Gradle wrapper and its SHA-256-verified Gradle 9.5.0 distribution are supplied by the Phase 2 stabilization PR. Recheck CI status before treating the setup as validated; see [Phase 2 setup notes](docs/phase2-setup.md).
+The official Gradle wrapper and its SHA-256-pinned Gradle 9.5.0 distribution are committed. See [Phase 2 setup notes](docs/phase2-setup.md) for prerequisites and verification evidence.
 
-Do not mistake the scaffold tests for game-engine validation. No app code may be published to Google Play without verified developer identity, final package ID, asset rights, compliance checks and **separate owner release approval**.
+The engine has rule tests; Android instrumentation currently covers only the setup screen. No app code may be published to Google Play without verified developer identity, final package ID, asset rights, compliance checks and **separate owner release approval**.
 
 ## Documentation and governance
 

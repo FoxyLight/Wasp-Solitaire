@@ -1,7 +1,19 @@
 # Phase 2: Android project environment and setup
 
-**Status:** Initial scaffold merged through [PR #7](https://github.com/FoxyLight/Wasp-Solitaire/pull/7) on 2026-10-30 under the owner's Phase 2 authorization. Its CI checks failed due to Compose 1.12 dependencies requiring API 37 while `compileSdk` was 36. The Phase 2 stabilization PR addresses that failure. Phase 2 setup is **not verified complete** until the build and tests pass. No game-engine implementation, public release or unreviewed merge is authorized.
-**Last reviewed:** 2026-10-30
+**Status:** Stabilization merged through [PR #8](https://github.com/FoxyLight/Wasp-Solitaire/pull/8). Fresh verification passed on 2026-10-31; Phase 3 engine PR #11 was subsequently owner-approved and merged. Phase 4 application implementation, automatic merge, and public release remain separately gated.
+**Last reviewed:** 2026-10-31
+
+## Fresh baseline verification
+
+[Run 41229459279](https://github.com/FoxyLight/Wasp-Solitaire/actions/runs/41229459279), explicitly dispatched on `main` commit `02dd13e4051d50da3a87339bb9dd52466219a702`, passed both jobs:
+
+- `verify`: `:game-engine:test :app:assembleDebug :app:testDebugUnitTest` passed. The app JVM task has no test sources; the baseline engine has one scaffold JUnit test.
+- `emulator`: `:app:connectedDebugAndroidTest` passed the single setup-screen Compose test on Android 35.
+- Wrapper JAR SHA-256 locally matched `497c8c2a7e5031f6aa847f88104aa80a93532ec32ee17bdb8d1d2f67a194a9c7`; the distribution checksum remains pinned.
+- Pure Kotlin baseline tests also passed locally using JDK 17. Local Android compilation could not run because no Android SDK was configured; CI supplied the SDK and emulator. No repository build correction was needed.
+- Required `verify`/`emulator` enforcement was independently proven with failures; see [governance](repository-governance.md).
+
+The remaining original setup notes below describe the Phase 2 scaffold and the failures corrected by PR #8; references to the stabilization PR being pending are historical, superseded by this verification.
 
 ## Scope of the Phase 2 setup
 

@@ -1,7 +1,7 @@
 # Phase 4 delivery plan: from engine to accessible playable board
 
 **Status:** Proposed execution refinement for review, 2026-10-31. No new product/rules decisions, code changes, implementation authorization, merge approval or release authorization are implied.
-**Dependencies:** Owner-approved merge of [Phase 3 PR #11](https://github.com/FoxyLight/Wasp-Solitaire/pull/11), green required GitHub checks and current accepted [rules](game-rules.md), [MVP](product-requirements.md), [architecture](architecture.md) and [UX](ux-design.md).
+**Dependencies:** Phase 3's owner-approved [PR #11](https://github.com/FoxyLight/Wasp-Solitaire/pull/11) merged on 2026-10-31 with required CI green. Beginning Phase 4 application code requires separate owner authorization. The accepted [rules](game-rules.md), [MVP](product-requirements.md), [architecture](architecture.md) and [UX](ux-design.md) remain authoritative.
 
 ## Product contract (do not reinterpret)
 
