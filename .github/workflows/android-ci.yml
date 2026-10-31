@@ -82,4 +82,15 @@ jobs:
           disable-animations: true
           disable-linux-hw-accel: false
           emulator-boot-timeout: 600
-          script: ./gradlew --no-daemon :app:connectedDebugAndroidTest
+          script: |
+            ./gradlew --no-daemon :app:connectedDebugAndroidTest
+            adb pull /sdcard/Android/data/org.example.waspsolitaire/files/board-evidence app/build/board-evidence
+      - name: Upload board screenshots and instrumentation reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: board-rendering-evidence
+          path: |
+            app/build/board-evidence
+            app/build/reports/androidTests
+            app/build/outputs/androidTest-results

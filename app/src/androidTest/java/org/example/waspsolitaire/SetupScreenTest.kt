@@ -1,21 +1,35 @@
 package org.example.waspsolitaire
 
-import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithText
+import androidx.lifecycle.ViewModelProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import kotlinx.coroutines.runBlocking
+import org.example.waspsolitaire.game.*
+import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** Requires an Android emulator/device; CI runs JVM tests and assembles the app. */
 @RunWith(AndroidJUnit4::class)
 class SetupScreenTest {
-    @get:Rule
-    val composeRule = createAndroidComposeRule<MainActivity>()
+    @get:Rule val rule = createAndroidComposeRule<MainActivity>()
 
-    @Test
-    fun displaysSetupOnlyLabel() {
-        composeRule.onNodeWithText("Project setup only", substring = true).assertIsDisplayed()
+    @Test fun entryRendersBoardAndRecreationRetainsViewModelAndSession() {
+        rule.waitUntil(10_000) { rule.onAllNodesWithTag("board").fetchSemanticsNodes().isNotEmpty() }
+        rule.onNodeWithText("WASP").assertIsDisplayed()
+        lateinit var model: GameViewModel
+        rule.activityRule.scenario.onActivity { model = ViewModelProvider(it)[GameViewModel::class.java] }
+        runBlocking { model.dispatch(GameIntent.DealReserve); model.dispatch(GameIntent.Select(0, 7)) }
+        val before = model.uiState.value
+        rule.activityRule.scenario.recreate()
+        rule.waitUntil(10_000) { rule.onAllNodesWithTag("board").fetchSemanticsNodes().isNotEmpty() }
+        rule.activityRule.scenario.onActivity {
+            assertSame(model, ViewModelProvider(it)[GameViewModel::class.java])
+        }
+        assertSame(before.session, model.uiState.value.session)
+        assertEquals(before.selection, model.uiState.value.selection)
+        rule.onNodeWithTag("reserve-status").performScrollTo().assertTextEquals("Dealt · 0 remaining")
+        rule.onAllNodes(hasClickAction()).assertCountEquals(0)
     }
 }
