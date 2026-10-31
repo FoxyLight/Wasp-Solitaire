@@ -1,39 +1,32 @@
 package org.example.waspsolitaire
 
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import org.example.waspsolitaire.board.GameBoardHost
+import org.example.waspsolitaire.game.GameSessionOwner
+import org.example.waspsolitaire.game.GameViewModel
+import org.example.waspsolitaire.game.GameViewModelFactory
 
-/** Phase 2 setup screen only. Game-board work begins in a later approved milestone. */
+/** Volatile process-owned repository, without process-death recovery. */
+class WaspApplication : Application() {
+    val sessions = GameSessionOwner()
+}
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent { SetupScreen() }
-    }
-}
-
-@Composable
-internal fun SetupScreen() {
-    MaterialTheme {
-        Surface(modifier = Modifier.fillMaxSize()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(
-                    text = "Wasp Solitaire\nProject setup only",
-                    style = MaterialTheme.typography.titleLarge,
-                    textAlign = TextAlign.Center,
-                )
-            }
+        lifecycleScope.launch {
+            val repository = (application as WaspApplication).sessions.repository
+            val factory = GameViewModelFactory.open(repository)
+            val model = ViewModelProvider(this@MainActivity, factory)[GameViewModel::class.java]
+            setContent { GameBoardHost(model) }
         }
     }
 }
