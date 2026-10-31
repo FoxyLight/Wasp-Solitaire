@@ -6,9 +6,9 @@ This repository is the source of truth for **Wasp Solitaire Android**.
 
 The project owner approved the Phase 1 specifications and authorized Phase 2 setup. Stabilization merged in [PR #8](https://github.com/FoxyLight/Wasp-Solitaire/pull/8); a fresh [baseline run](https://github.com/FoxyLight/Wasp-Solitaire/actions/runs/41229459279) passed Android compilation, JVM tests and Android 35 instrumentation on 2026-10-31. Required PR/CI protection is now configured and independently tested; see [governance](docs/repository-governance.md).
 
-The Classic Wasp engine merged in [PR #11](https://github.com/FoxyLight/Wasp-Solitaire/pull/11), and Phase 4A GameViewModel/StateFlow merged in [PR #18](https://github.com/FoxyLight/Wasp-Solitaire/pull/18). This branch implements the separately owner-authorized Phase 4B read-only adaptive board, proposed in [PR #19](https://github.com/FoxyLight/Wasp-Solitaire/pull/19). See [components, scope and evidence](docs/phase4b-board.md).
+The Classic Wasp engine merged in PR #11, Phase 4A GameViewModel/StateFlow in PR #18, and the owner-approved Phase 4B board in PR #19. This feature branch proposes separately owner-authorized Phase 4C gameplay in [PR #20](https://github.com/FoxyLight/Wasp-Solitaire/pull/20): explicit tap and whole-tail drag, Undo, Hint, Deal 3, confirmed Restart/New Game and in-place victory. See [implementation, verification and limitations](docs/phase4c-gameplay.md).
 
-The board displays the engine session through the retained ViewModel. Interactive gameplay (4C), expanded inspection (4D), durable saves and timer/statistics (5) remain later milestones. No merge or publication is authorized.
+Phase 4C is not merged. Expanded inspection/accessibility (4D), durable saves and timer/statistics (5) remain separately gated. There is no process-death recovery or publication authorization.
 
 ## Project structure
 
