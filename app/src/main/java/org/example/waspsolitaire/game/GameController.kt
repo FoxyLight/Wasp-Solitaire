@@ -1,6 +1,7 @@
 package org.example.waspsolitaire.game
 
 import java.util.Collections
+import java.security.SecureRandom
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +17,8 @@ import org.example.waspsolitaire.engine.TableauCard
 import org.example.waspsolitaire.engine.Transition
 
 data class CardSelection(val column: Int, val cardIndex: Int)
+enum class ResetKind { RESTART, NEW_GAME }
+data class PendingReset(val kind: ResetKind, val revision: Long)
 
 /** Immutable UI projection. Selected cards and hints are NOT game actions. */
 data class GameUiState(
@@ -24,6 +27,7 @@ data class GameUiState(
     val selection: CardSelection? = null,
     val legalDestinations: Set<Int> = emptySet(),
     val hintedAction: GameAction? = null,
+    val pendingReset: PendingReset? = null,
 ) {
     val board get() = session.state
     val selectedTail: List<TableauCard>
@@ -37,15 +41,19 @@ sealed interface GameIntent {
     data object CancelSelection : GameIntent
     data class MoveTo(val destination: Int) : GameIntent
     /** Also used by drag/drop. Still validated by the authoritative engine. */
-    data class Move(val source: Int, val cardIndex: Int, val destination: Int) : GameIntent
+    data class Move(val source: Int, val cardIndex: Int, val destination: Int, val expectedRevision: Long? = null) : GameIntent
     data object DealReserve : GameIntent
     data object Undo : GameIntent
     data object Hint : GameIntent
     /** Explicit retry after another controller commits the shared session. */
     data object Refresh : GameIntent
+    data object RequestRestart : GameIntent
+    data object RequestNewGame : GameIntent
+    data class ConfirmReset(val revision: Long) : GameIntent
+    data object CancelReset : GameIntent
 }
 
-enum class InputError { INVALID_SELECTION, NO_SELECTION }
+enum class InputError { INVALID_SELECTION, NO_SELECTION, NO_CONFIRMATION }
 
 sealed interface IntentResult {
     data object NoChange : IntentResult
@@ -54,6 +62,7 @@ sealed interface IntentResult {
     data class InvalidInput(val reason: InputError) : IntentResult
     data class EngineRejected(val reason: Rejection) : IntentResult
     data object StaleRevision : IntentResult
+    data object NoAvailableHint : IntentResult
     data class StorageFailure(val message: String) : IntentResult
 }
 
@@ -65,6 +74,7 @@ sealed interface IntentResult {
 class GameController private constructor(
     private val repository: SessionRepository,
     initial: SessionRecord,
+    private val newSeed: () -> Long,
 ) {
     private val lock = Mutex()
     private val mutableState = MutableStateFlow(GameUiState(initial.session, initial.revision))
@@ -73,6 +83,27 @@ class GameController private constructor(
     suspend fun dispatch(intent: GameIntent): IntentResult = lock.withLock {
         val screen = mutableState.value
         when (intent) {
+            GameIntent.RequestRestart, GameIntent.RequestNewGame -> {
+                val kind = if (intent == GameIntent.RequestRestart) ResetKind.RESTART else ResetKind.NEW_GAME
+                val needsConfirmation = if (kind == ResetKind.NEW_GAME) screen.board.status == GameStatus.IN_PROGRESS
+                    else screen.board.actionCount > 0 || screen.session.history.isNotEmpty()
+                if (needsConfirmation) {
+                    mutableState.value = screen.copy(pendingReset = PendingReset(kind, screen.revision))
+                    IntentResult.UiChanged
+                } else reset(kind)
+            }
+            is GameIntent.ConfirmReset -> {
+                val pending = screen.pendingReset
+                when {
+                    pending == null -> IntentResult.InvalidInput(InputError.NO_CONFIRMATION)
+                    pending.revision != intent.revision || screen.revision != intent.revision -> IntentResult.StaleRevision
+                    else -> reset(pending.kind)
+                }
+            }
+            GameIntent.CancelReset -> {
+                mutableState.value = screen.copy(pendingReset = null)
+                IntentResult.UiChanged
+            }
             is GameIntent.Select -> {
                 val card = screen.board.tableau.getOrNull(intent.column)
                     ?.getOrNull(intent.cardIndex)
@@ -114,14 +145,14 @@ class GameController private constructor(
                 if (chosen == null) IntentResult.InvalidInput(InputError.NO_SELECTION)
                 else commit(GameAction.Move(chosen.column, chosen.cardIndex, intent.destination))
             }
-            is GameIntent.Move -> commit(
-                GameAction.Move(intent.source, intent.cardIndex, intent.destination),
-            )
+            is GameIntent.Move -> if (intent.expectedRevision != null && intent.expectedRevision != screen.revision)
+                IntentResult.StaleRevision else commit(GameAction.Move(intent.source, intent.cardIndex, intent.destination))
             GameIntent.DealReserve -> commit(GameAction.DealReserve)
             GameIntent.Undo -> commit(GameAction.Undo)
             GameIntent.Hint -> {
                 val hint = ClassicWasp.hint(screen.board)
-                if (screen.hintedAction == hint) IntentResult.NoChange
+                if (hint == null) IntentResult.NoAvailableHint
+                else if (screen.hintedAction == hint) IntentResult.NoChange
                 else {
                     mutableState.value = screen.copy(hintedAction = hint)
                     IntentResult.UiChanged
@@ -149,39 +180,58 @@ class GameController private constructor(
         val current = mutableState.value
         return when (val transition = ClassicWasp.apply(current.session, action)) {
             is Transition.Rejected -> IntentResult.EngineRejected(transition.reason)
-            is Transition.Accepted -> {
-                if (current.revision == Long.MAX_VALUE) {
-                    return IntentResult.StorageFailure("Session revision overflow")
-                }
-                val next = SessionRecord(
-                    revision = current.revision + 1L,
-                    session = transition.session,
-                )
-                val stored = try {
-                    repository.commit(current.revision, next)
-                } catch (cancelled: CancellationException) {
-                    throw cancelled
-                } catch (error: Exception) {
-                    CommitResult.Failure(error.message ?: "Unable to commit session")
-                }
-                when (stored) {
-                    CommitResult.Stored -> {
-                        mutableState.value = GameUiState(next.session, next.revision)
-                        IntentResult.Committed(next.revision)
-                    }
-                    CommitResult.Conflict -> IntentResult.StaleRevision
-                    is CommitResult.Failure -> IntentResult.StorageFailure(stored.message)
-                }
+            is Transition.Accepted -> store(transition.session)
+        }
+    }
+
+    private suspend fun reset(kind: ResetKind): IntentResult {
+        val current = mutableState.value
+        val next = when (kind) {
+            ResetKind.RESTART -> {
+                val initial = current.session.history.firstOrNull() ?: current.board
+                if (initial.actionCount != 0L) return IntentResult.StorageFailure("Initial deal snapshot is missing; restart was not applied")
+                GameSession.restore(initial)
             }
+            ResetKind.NEW_GAME -> {
+                val candidate = newSeed()
+                ClassicWasp.newGame(if (candidate == current.board.seed) candidate xor 1L else candidate)
+            }
+        }
+        return store(next)
+    }
+
+    private suspend fun store(session: GameSession): IntentResult {
+        val current = mutableState.value
+        if (current.revision == Long.MAX_VALUE) {
+            return IntentResult.StorageFailure("Session revision overflow")
+        }
+        val next = SessionRecord(
+            revision = current.revision + 1L,
+            session = session,
+        )
+        val stored = try {
+            repository.commit(current.revision, next)
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (error: Exception) {
+            CommitResult.Failure(error.message ?: "Unable to commit session")
+        }
+        return when (stored) {
+            CommitResult.Stored -> {
+                mutableState.value = GameUiState(next.session, next.revision)
+                IntentResult.Committed(next.revision)
+            }
+            CommitResult.Conflict -> IntentResult.StaleRevision
+            is CommitResult.Failure -> IntentResult.StorageFailure(stored.message)
         }
     }
 
     companion object {
         /** Caller performs the suspending initial load before creating the ViewModel. */
-        suspend fun open(repository: SessionRepository): GameController {
+        suspend fun open(repository: SessionRepository, newSeed: () -> Long = { SecureRandom().nextLong() }): GameController {
             val initial = repository.load()
             check(initial.schemaVersion == SESSION_SCHEMA_VERSION)
-            return GameController(repository, initial)
+            return GameController(repository, initial, newSeed)
         }
     }
 }
