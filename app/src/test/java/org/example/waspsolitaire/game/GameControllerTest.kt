@@ -20,7 +20,7 @@ class GameControllerTest {
     private fun firstMove(controller: GameController): GameAction.Move =
         ClassicWasp.legalMoves(controller.uiState.value.board).first()
 
-    @Test fun initialStateExposesImmutableEngineSessionAndNoEphemeralSelection() = runBlocking {
+    @Test fun initialStateExposesImmutableEngineSessionAndNoEphemeralSelection() = runBlocking<Unit> {
         val (controller, repo) = create(123)
         val ui = controller.uiState.value
         assertEquals(ClassicWasp.newGame(123).state, ui.board)
@@ -34,7 +34,7 @@ class GameControllerTest {
         assertEquals(0, repo.load().session.history.size)
     }
 
-    @Test fun selectingAnExposedCardPublishesOnlyUiStateWithExactlyLegalTargets() = runBlocking {
+    @Test fun selectingAnExposedCardPublishesOnlyUiStateWithExactlyLegalTargets() = runBlocking<Unit> {
         val (controller, repo) = create()
         val original = controller.uiState.value
         val move = firstMove(controller)
@@ -62,7 +62,7 @@ class GameControllerTest {
         }
     }
 
-    @Test fun selectionSwitchCancelAndToggleDoNotCommitActions() = runBlocking {
+    @Test fun selectionSwitchCancelAndToggleDoNotCommitActions() = runBlocking<Unit> {
         val (controller, repo) = create()
         val original = controller.uiState.value
         val left = GameIntent.Select(0, 3)
@@ -79,7 +79,7 @@ class GameControllerTest {
         assertEquals(0L, repo.load().revision)
     }
 
-    @Test fun hiddenAndOutOfBoundsSelectionAreRejectedWithoutEmission() = runBlocking {
+    @Test fun hiddenAndOutOfBoundsSelectionAreRejectedWithoutEmission() = runBlocking<Unit> {
         val (controller, repo) = create()
         val before = controller.uiState.value
         for (selection in listOf(
@@ -95,7 +95,7 @@ class GameControllerTest {
         assertEquals(0L, repo.load().revision)
     }
 
-    @Test fun tapDestinationCommitsExactlyOneMoveAndClearsSelection() = runBlocking {
+    @Test fun tapDestinationCommitsExactlyOneMoveAndClearsSelection() = runBlocking<Unit> {
         val (controller, repo) = create()
         val move = firstMove(controller)
         val original = controller.uiState.value
@@ -112,7 +112,7 @@ class GameControllerTest {
         assertSame(updated.session, repo.load().session)
     }
 
-    @Test fun invalidExplicitDestinationPreservesSelectionAndUndoHistory() = runBlocking {
+    @Test fun invalidExplicitDestinationPreservesSelectionAndUndoHistory() = runBlocking<Unit> {
         val (controller, repo) = create()
         val move = firstMove(controller)
         controller.dispatch(GameIntent.Select(move.source, move.cardIndex))
@@ -130,7 +130,7 @@ class GameControllerTest {
         )
     }
 
-    @Test fun dragMoveWorksWithoutSelectionAndIsEngineValidated() = runBlocking {
+    @Test fun dragMoveWorksWithoutSelectionAndIsEngineValidated() = runBlocking<Unit> {
         val (controller, _) = create()
         val move = firstMove(controller)
         assertEquals(
@@ -145,7 +145,7 @@ class GameControllerTest {
         assertSame(beforeRejected, controller.uiState.value)
     }
 
-    @Test fun reserveDealAndUndoRestoreExactBoardWhileRevisionKeepsIncreasing() = runBlocking {
+    @Test fun reserveDealAndUndoRestoreExactBoardWhileRevisionKeepsIncreasing() = runBlocking<Unit> {
         val (controller, repo) = create()
         val original = controller.uiState.value.board
         assertEquals(IntentResult.Committed(1), controller.dispatch(GameIntent.DealReserve))
@@ -164,7 +164,7 @@ class GameControllerTest {
         )
     }
 
-    @Test fun hintsNeverCommitAndRepeatedHintHasNoExtraPublication() = runBlocking {
+    @Test fun hintsNeverCommitAndRepeatedHintHasNoExtraPublication() = runBlocking<Unit> {
         val (controller, repo) = create()
         val before = controller.uiState.value
         val expected = ClassicWasp.hint(before.board)
@@ -178,7 +178,7 @@ class GameControllerTest {
         assertNull(controller.uiState.value.hintedAction)
     }
 
-    @Test fun storeFailureDoesNotPublishAnAcceptedButUnsavedMove() = runBlocking {
+    @Test fun storeFailureDoesNotPublishAnAcceptedButUnsavedMove() = runBlocking<Unit> {
         val delegate = InMemorySessionRepository(55)
         val failing = object : SessionRepository {
             override suspend fun load() = delegate.load()
@@ -196,7 +196,7 @@ class GameControllerTest {
         assertEquals(0L, delegate.load().revision)
     }
 
-    @Test fun concurrentControllersRejectStaleCommitsUntilExplicitRefresh() = runBlocking {
+    @Test fun concurrentControllersRejectStaleCommitsUntilExplicitRefresh() = runBlocking<Unit> {
         val repo = InMemorySessionRepository(91)
         val first = GameController.open(repo)
         val second = GameController.open(repo)
@@ -214,7 +214,7 @@ class GameControllerTest {
         assertEquals(2L, repo.load().revision)
     }
 
-    @Test fun controllerCanOpenExistingSessionWithFullUndoHistory() = runBlocking {
+    @Test fun controllerCanOpenExistingSessionWithFullUndoHistory() = runBlocking<Unit> {
         val repo = InMemorySessionRepository(2)
         val before = GameController.open(repo)
         val original = before.uiState.value.board
@@ -226,7 +226,7 @@ class GameControllerTest {
         assertEquals(original, reopened.uiState.value.board)
     }
 
-    @Test fun viewModelExposesSameStateFlowAndDeliversTypedResults() = runBlocking {
+    @Test fun viewModelExposesSameStateFlowAndDeliversTypedResults() = runBlocking<Unit> {
         val (controller, _) = create()
         val viewModel = GameViewModel(controller)
         assertSame(controller.uiState, viewModel.uiState)
