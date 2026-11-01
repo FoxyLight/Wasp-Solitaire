@@ -306,8 +306,8 @@ private fun TableauColumn(index: Int, cards: List<TableauCard>, state: GameUiSta
                 source?.let {
                     val top = offsets[it.cardIndex].dp.toPx()
                     val bottom = geometry.columnHeight(cards.map { item -> item.faceUp }).dp.toPx()
-                    drawRoundRect(Gold, Offset(1.dp.toPx(), top + 1.dp.toPx()), androidx.compose.ui.geometry.Size(size.width - 2.dp.toPx(), bottom - top - 2.dp.toPx()), CornerRadius(5.dp.toPx()), style = Stroke(3.dp.toPx()))
-                    drawRoundRect(DeepGreen, Offset(4.dp.toPx(), top + 4.dp.toPx()), androidx.compose.ui.geometry.Size(size.width - 8.dp.toPx(), bottom - top - 8.dp.toPx()), CornerRadius(3.dp.toPx()), style = Stroke(1.5.dp.toPx()))
+                    drawRoundRect(Gold, Offset(0f, top), androidx.compose.ui.geometry.Size(size.width, bottom - top), CornerRadius(5.dp.toPx()), style = Stroke(3.dp.toPx()))
+                    drawRoundRect(DeepGreen, Offset(1.dp.toPx(), top + 1.dp.toPx()), androidx.compose.ui.geometry.Size(size.width - 2.dp.toPx(), bottom - top - 2.dp.toPx()), CornerRadius(4.dp.toPx()), style = Stroke(1.dp.toPx()))
                 }
             }) {
             if (cards.isEmpty()) Text("—", color = Ivory, modifier = Modifier.align(Alignment.TopCenter).padding(top = 16.dp).clearAndSetSemantics { })
