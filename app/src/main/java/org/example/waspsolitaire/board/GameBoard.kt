@@ -291,8 +291,6 @@ private fun TableauColumn(index: Int, cards: List<TableauCard>, state: GameUiSta
                 else -> false
             }
         }.focusable(playable), horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(if (target) "↓ ${index + 1}" else "${index + 1}", color = Ivory, fontSize = 12.sp,
-            modifier = Modifier.padding(bottom = 6.dp).clearAndSetSemantics { })
         Box(Modifier.fillMaxWidth().height(surfaceHeight.dp).bringIntoViewRequester(bring)
             .testTag("column-surface-$index")
             .then(if (send != null && state.selection != null) Modifier.clickable(onClickLabel = if (target) "Move selected tail to column ${index + 1}" else "Clear selection; illegal destination") { send(GameIntent.MoveTo(index)) } else Modifier)

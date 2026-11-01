@@ -15,8 +15,11 @@ data class BoardGeometry(val cardWidth: Float, val cardHeight: Float, val faceSt
             val rankSize = (width * .30f).coerceIn(14f, maxRankSize)
             val stacked = rankSize * fontScale * 2.35f + 8f > width
             val header = rankSize * fontScale * (if (stacked) 2.2f else 1.3f) + 10f
-            val faceStep = maxOf(40f, header)
-            return BoardGeometry(width, maxOf(width * 1.44f, faceStep + 12f), faceStep, 8f, rankSize)
+            val previousStep = maxOf(40f, header)
+            // Keep the indices intact and reclaim half the blank strip below them.
+            val indicesHeight = rankSize * fontScale * (if (stacked) 2.1f else 1.2f) + 4f
+            val faceStep = indicesHeight + (previousStep - indicesHeight).coerceAtLeast(0f) / 2f
+            return BoardGeometry(width, maxOf(width * 1.44f, previousStep + 12f), faceStep, 8f, rankSize)
         }
     }
 }
