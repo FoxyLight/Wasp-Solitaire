@@ -1,0 +1,50 @@
+[
+  {
+    "role": "Card rank, black",
+    "foreground": "#192327",
+    "background": "#F7F4EB",
+    "ratio": 14.56
+  },
+  {
+    "role": "Card rank, red",
+    "foreground": "#B4232C",
+    "background": "#F7F4EB",
+    "ratio": 5.93
+  },
+  {
+    "role": "Table text",
+    "foreground": "#F7F4EB",
+    "background": "#165443",
+    "ratio": 8.01
+  },
+  {
+    "role": "Secondary table text",
+    "foreground": "#D4E1D6",
+    "background": "#165443",
+    "ratio": 6.52
+  },
+  {
+    "role": "Button text",
+    "foreground": "#F7F4EB",
+    "background": "#263B62",
+    "ratio": 10.13
+  },
+  {
+    "role": "Table accent",
+    "foreground": "#FFD782",
+    "background": "#165443",
+    "ratio": 6.42
+  },
+  {
+    "role": "Selection gold on ivory",
+    "foreground": "#FFD782",
+    "background": "#F7F4EB",
+    "ratio": 1.25
+  },
+  {
+    "role": "Selection inner edge",
+    "foreground": "#103C31",
+    "background": "#F7F4EB",
+    "ratio": 11.15
+  }
+]

@@ -1,5 +1,9 @@
 # Architecture and product decision log
 
+## Phase 4D design review — PROPOSED, not accepted (2026-10-31)
+
+The owner authorized audit/design Stages 1–3, with an explicit stop before application implementation. [4D-UX-01–08 and layouts](design/phase4d/README.md) propose board-first chrome, persistent controls, full-card inspection, explicit legal destinations, readable cards, adaptive arrangements, complete non-drag semantics and high-contrast/system-aware presentation. They refine UX-DEC-01–07 without changing accepted rules or adding Phase 5 functionality. **Approval date: none. Approver: pending.** Record explicit owner design approval before changing these entries to Accepted; future application PR merge remains a separate gate. Phase 4A/4B/4C are already merged through PRs #18–20; Issue #15 remains open.
+
 **Status:** RULE-01–06, MVP-DEC-01–08, ARCH-DEC-01–08, UX-DEC-01–08 and REL-DEC-01–08 **Accepted** by project owner on 2026-10-29. Provisional app identity and real-world account, trademark, package, asset and release verification remain outstanding.  
 **Created:** 2026-10-29  
 **Last updated:** 2026-10-29  

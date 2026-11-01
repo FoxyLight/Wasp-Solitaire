@@ -1,9 +1,9 @@
 # Development roadmap and risk register
 
-**Status:** Phases 1–2 complete; Phase 3 pure Kotlin rules engine merged in PR #11 on 2026-10-31 after passing required CI. GitHub branch protection is enforced. Phase 4A merged through PR #18. Phase 4B merged through owner-approved PR #19. Phase 4C is separately owner-authorized and proposed in PR #20; Phase 4D and Phase 5 remain gated. Actual Play Console account and other release prerequisites remain outstanding.
+**Status:** Phases 1–2 complete; Phase 3 pure Kotlin rules engine merged in PR #11 on 2026-10-31 after passing required CI. GitHub branch protection is enforced. Phase 4A merged through PR #18. Phase 4B merged through owner-approved PR #19. Phase 4C merged through owner-approved PR #20 at `6c64b6a4899bb3e0fa7790ff1422470608810b83`; Issue #14 is closed. Phase 4D audit/design is owner-authorized; its [revised proposal](design/phase4d/README.md) awaits explicit design approval before application implementation. Phase 5 remains gated. Actual Play Console account and other release prerequisites remain outstanding.
 **Last reviewed:** 2026-10-31
 
-Phase 4A is merged through owner-approved PR #18. Phase 4B rendering merged through owner-approved [PR #19](https://github.com/FoxyLight/Wasp-Solitaire/pull/19); see [board implementation and evidence](phase4b-board.md). Phase 4C gameplay is proposed in [PR #20](https://github.com/FoxyLight/Wasp-Solitaire/pull/20), with [implementation/evidence notes](phase4c-gameplay.md). Phase 4D and Phase 5 remain separately gated; no merge or publishing authorization is implied.
+Phase 4A is merged through owner-approved PR #18. Phase 4B rendering merged through owner-approved [PR #19](https://github.com/FoxyLight/Wasp-Solitaire/pull/19); see [board implementation and evidence](phase4b-board.md). Phase 4C gameplay is merged through [PR #20](https://github.com/FoxyLight/Wasp-Solitaire/pull/20), with [implementation/evidence notes](phase4c-gameplay.md). Phase 4D [design decisions 4D-UX-01–08](design/phase4d/README.md) are proposed, not accepted. Its implementation and subsequent merge each require separate owner approval; Phase 5 and publication remain gated.
 
 ## Overall approach
 

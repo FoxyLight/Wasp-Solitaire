@@ -1,7 +1,8 @@
 # UI/UX specification: approved Version 1.0 baseline
 
-**Status:** **UX-DEC-01–08 Accepted** on 2026-10-29, alongside RULE-01–06, MVP-DEC-01–08 and ARCH-DEC-01–08. REL-DEC-01–08 now approve the free/ad-free release strategy and provisional identity-validation process. Final branding/package/assets, account verification and permission for later implementation milestones remain pending. **Phase 2 setup and stabilization were separately authorized and merged (PRs #7–8); Phase 3 engine PR #11 was owner-approved and merged on 2026-10-31. These approvals do not authorize Phase 4 board implementation or publication.**  
-**Last reviewed:** 2026-10-31  
+**Status:** **UX-DEC-01–08 Accepted** on 2026-10-29, alongside RULE-01–06, MVP-DEC-01–08 and ARCH-DEC-01–08. REL-DEC-01–08 now approve the free/ad-free release strategy and provisional identity-validation process. Final branding/package/assets, account verification and permission for later implementation milestones remain pending. **Phase 2 setup and stabilization were separately authorized and merged (PRs #7–8); Phase 3 engine PR #11 was owner-approved and merged on 2026-10-31. These approvals do not authorize Phase 4 board implementation or publication.**
+**Current delivery status (2026-10-31):** Phase 4A/4B/4C are merged (PRs #18–20). The owner authorized Phase 4D audit/design only. [Modern classic proposal 4D-UX-01–08](design/phase4d/README.md) refines this accepted baseline and remains **unapproved**; its application implementation and future merge require separate approval. Phase 5 timer/settings/statistics/persistence remain deferred.
+**Last reviewed:** 2026-10-31
 **Approval record:** [decisions.md](decisions.md)
 
 ## Experience goals
