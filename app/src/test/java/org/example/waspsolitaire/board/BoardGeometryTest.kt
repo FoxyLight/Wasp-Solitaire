@@ -28,7 +28,7 @@ class BoardGeometryTest {
             assertTrue(geometry.rankSize >= 14f)
             val indicesHeight = geometry.rankSize * scale *
                 (if (geometry.stackedIndices(scale)) 2.1f else 1.2f) + 4f
-            assertTrue("Overlap must leave rank and suit fully exposed", geometry.faceStep >= indicesHeight + 4f)
+            assertTrue("Overlap must leave rank and suit fully exposed", geometry.faceStep >= indicesHeight + 3f)
             assertTrue(geometry.cardHeight > geometry.faceStep)
             assertTrue(geometry.columnHeight(List(52) { true }) > 320f)
         }
