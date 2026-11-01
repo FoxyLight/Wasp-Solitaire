@@ -98,6 +98,10 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
         BoxWithConstraints(modifier.fillMaxSize().background(Felt).clipToBounds().testTag("game-screen")
             .onGloballyPositioned { drag.origin = it.positionInRoot() }) {
             val shortWindow = maxHeight < 480.dp
+            val insets = WindowInsets.safeDrawing.asPaddingValues()
+            val safeHeight = maxHeight - insets.calculateTopPadding() - insets.calculateBottomPadding()
+            val inlineControls = shortWindow && maxWidth >= 480.dp && safeHeight < 224.dp
+            val rail = shortWindow && maxWidth >= 600.dp && !inlineControls
             LaunchedEffect(maxWidth, maxHeight) { drag.active = null }
             val selectionMessage = state.selection?.let { "${state.selectedTail.first().card.spokenName()}, ${state.selectedTail.size}-card tail selected. Choose a legal column." }
             val message = when {
@@ -108,7 +112,7 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
                 else -> feedback
             }
             Column(Modifier.fillMaxSize().safeDrawingPadding()) {
-                UtilityRow(state, dispatch, drag.active == null) { help = true }
+                UtilityRow(state, dispatch, drag.active == null, inlineControls) { help = true }
                 val quiet = message == selectionMessage || message == "Selection cleared; no move made." || message == "Action completed."
                 if (message != null) Text(message, color = if (quiet) Felt else Ivory, fontSize = 14.sp,
                     modifier = Modifier.fillMaxWidth().then(if (quiet) Modifier.height(1.dp) else Modifier.padding(horizontal = 12.dp, vertical = 4.dp))
@@ -138,9 +142,9 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
                                     .padding(8.dp).zIndex(11f).testTag("drag-status"))
                         }
                     }
-                    if (shortWindow && dispatch != null) PlayControls(state, drag.active == null, true, dispatch)
+                    if (rail && dispatch != null) PlayControls(state, drag.active == null, true, dispatch)
                 }
-                if (!shortWindow && dispatch != null) PlayControls(state, drag.active == null, false, dispatch)
+                if (!rail && !inlineControls && dispatch != null) PlayControls(state, drag.active == null, false, dispatch)
             }
             drag.active?.let { lifted ->
                 val position = lifted.pointer - lifted.grab - drag.origin
@@ -174,7 +178,7 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
 }
 
 @Composable
-private fun UtilityRow(state: GameUiState, send: ((GameIntent) -> Unit)?, enabled: Boolean, help: () -> Unit) {
+private fun UtilityRow(state: GameUiState, send: ((GameIntent) -> Unit)?, enabled: Boolean, inlineControls: Boolean, help: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     Row(Modifier.fillMaxWidth().padding(start = 12.dp, end = 4.dp, top = 4.dp, bottom = 4.dp), verticalAlignment = Alignment.CenterVertically) {
         Row(Modifier.weight(1f).testTag("reserve"), verticalAlignment = Alignment.CenterVertically) {
@@ -187,6 +191,7 @@ private fun UtilityRow(state: GameUiState, send: ((GameIntent) -> Unit)?, enable
             Text(if (state.board.reserve.isEmpty()) "Reserve dealt" else "3 reserve", color = Ivory, fontSize = 16.sp,
                 modifier = Modifier.testTag("reserve-status"))
         }
+        if (send != null && inlineControls) PlayControls(state, enabled, false, send, inline = true)
         if (send != null) Box {
             TextButton({ expanded = true }, Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp).testTag("more"), enabled = enabled,
                 contentPadding = PaddingValues(8.dp)) { Text("⋮", color = Ivory, fontSize = 28.sp, modifier = Modifier.clearAndSetSemantics { contentDescription = "Menu" }) }
@@ -200,7 +205,7 @@ private fun UtilityRow(state: GameUiState, send: ((GameIntent) -> Unit)?, enable
 }
 
 @Composable
-private fun PlayControls(state: GameUiState, enabled: Boolean, rail: Boolean, send: (GameIntent) -> Unit) {
+private fun PlayControls(state: GameUiState, enabled: Boolean, rail: Boolean, send: (GameIntent) -> Unit, inline: Boolean = false) {
     @Composable fun Action(deal: Boolean, modifier: Modifier) {
         Button(onClick = { send(if (deal) GameIntent.DealReserve else GameIntent.Undo) },
             modifier = modifier.heightIn(min = 56.dp).testTag(if (deal) "deal" else "undo"),
@@ -213,7 +218,8 @@ private fun PlayControls(state: GameUiState, enabled: Boolean, rail: Boolean, se
     }
     if (rail) Column(Modifier.widthIn(min = 96.dp, max = 128.dp).fillMaxHeight().padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom)) {
         Action(false, Modifier.fillMaxWidth()); Action(true, Modifier.fillMaxWidth())
-    } else Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+    } else Row((if (inline) Modifier.width(220.dp) else Modifier.fillMaxWidth())
+        .padding(horizontal = if (inline) 4.dp else 12.dp, vertical = 8.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         Action(false, Modifier.weight(1f)); Action(true, Modifier.weight(1f))
     }
 }
