@@ -1,0 +1,20 @@
+{
+  "source_code_sha": "dd7f98c2a74fe02a1abdf74b940d1d5e96fe8719",
+  "image": "selected-tail.png",
+  "method": "Unmodified native Pixel screenshot; standard-library PNG decoding and every-other-pixel fill sampling. sRGB contrast calculated from opaque intended fills, not antialiased edges.",
+  "sample_counts": {
+    "#F7F4EB": 101231,
+    "#B4232C": 10278,
+    "#192327": 11262,
+    "#080B14": 5360,
+    "#4BDCD3": 546,
+    "#E6DCD8": 0
+  },
+  "contrast": {
+    "normal_black_on_ivory": 14.56,
+    "normal_red_on_ivory": 5.93,
+    "inverted_red_on_dark": 11.68,
+    "inverted_black_on_dark": 14.6
+  },
+  "limits": "The red inverted destination and its dark face are confirmed in this screenshot. Inverted black is a calculated palette pair; this selected fixture does not contain that fill. Not a blanket accessibility certification."
+}
