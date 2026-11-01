@@ -99,15 +99,17 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
             .onGloballyPositioned { drag.origin = it.positionInRoot() }) {
             val shortWindow = maxHeight < 480.dp
             LaunchedEffect(maxWidth, maxHeight) { drag.active = null }
+            val selectionMessage = state.selection?.let { "${state.selectedTail.first().card.spokenName()}, ${state.selectedTail.size}-card tail selected. Choose a legal column." }
             val message = when {
                 state.board.status == GameStatus.WON -> "You won! All four suited runs remain on the table. Undo or start a New Game."
                 drag.notice != null -> drag.notice
-                state.selection != null -> "${state.selectedTail.first().card.spokenName()}, ${state.selectedTail.size}-card tail selected. Choose a legal column."
+                feedback?.startsWith("Could not") == true || feedback?.startsWith("The board changed") == true -> feedback
+                state.selection != null -> selectionMessage
                 else -> feedback
             }
             Column(Modifier.fillMaxSize().safeDrawingPadding()) {
                 UtilityRow(state, dispatch, drag.active == null) { help = true }
-                val quiet = state.selection != null || message == "Selection cleared; no move made." || message == "Action completed."
+                val quiet = message == selectionMessage || message == "Selection cleared; no move made." || message == "Action completed."
                 if (message != null) Text(message, color = if (quiet) Felt else Ivory, fontSize = 14.sp,
                     modifier = Modifier.fillMaxWidth().then(if (quiet) Modifier.height(1.dp) else Modifier.padding(horizontal = 12.dp, vertical = 4.dp))
                         .testTag(if (state.board.status == GameStatus.WON) "victory" else "action-feedback")
@@ -308,7 +310,7 @@ private fun TableauColumn(index: Int, cards: List<TableauCard>, state: GameUiSta
                 PlayingCard(item, geometry, selected, stateLabel, Modifier.offset(y = offsets[cardIndex].dp).testTag("card-$index-$cardIndex")
                     .onGloballyPositioned { drag.cards[chosen] = Rect(it.positionInRoot(), it.size.toSize()) }
                     .alpha(if (drag.active?.source?.let { it.column == index && cardIndex >= it.cardIndex } == true) .25f else 1f)
-                    .then(if (focused && cursor == cardIndex) Modifier.border(2.dp, Ivory) else Modifier).then(interaction), index, cardIndex)
+                    .then(if (focused && cursor == cardIndex) Modifier.border(2.dp, DeepGreen) else Modifier).then(interaction), index, cardIndex)
             }
         }
     }

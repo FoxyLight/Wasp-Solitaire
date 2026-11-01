@@ -257,7 +257,11 @@ class GameplayTest {
         cases.forEach { (name, viewport, scale) ->
             rule.runOnIdle { size = viewport; fontScale = scale }; rule.waitForIdle()
             val before = model.uiState.value.session
-            for (tag in listOf("undo","deal")) rule.onNodeWithTag(tag).assertIsDisplayed().assertHeightIsAtLeast(48.dp)
+            snapshot("controls-$name")
+            for (tag in listOf("undo","deal")) {
+                try { rule.onNodeWithTag(tag).assertIsDisplayed().assertHeightIsAtLeast(48.dp) }
+                catch (error: AssertionError) { throw AssertionError("$name / $tag: ${error.message}", error) }
+            }
             val compact = rule.onAllNodesWithTag("more").fetchSemanticsNodes().isNotEmpty()
             if (compact) click("more")
             for (tag in listOf("restart","new-game")) rule.onNodeWithTag(tag).assertIsDisplayed().assertHeightIsAtLeast(48.dp)
