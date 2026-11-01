@@ -22,8 +22,8 @@ class BoardAccessibilityTest {
         rule.runOnIdle { assertTrue(selected.action()) }
         rule.waitForIdle()
     }
-    private fun open(seed: Long = 123) {
-        model = GameViewModel(runBlocking { GameController.open(InMemorySessionRepository(seed)) })
+    private fun open(session: GameSession = ClassicWasp.newGame(123)) {
+        model = GameViewModel(runBlocking { GameController.open(InMemorySessionRepository(session)) })
         rule.setContent { GameBoardHost(model) }
     }
 
@@ -75,5 +75,23 @@ class BoardAccessibilityTest {
         assertEquals(expected.state, model.uiState.value.board)
         rule.onNodeWithTag("undo").performClick(); rule.waitForIdle()
         assertEquals(before.state, model.uiState.value.board)
+    }
+
+    @Test fun longColumnOffersEveryExposedSourceAndCanMoveDeepUnorderedTailToEmptyColumn() {
+        val dealt = ClassicWasp.newGame(123).state
+        val cards = dealt.tableau.flatten().map { TableauCard(it.card) } + dealt.reserve.map { TableauCard(it) }
+        val session = GameSession.restore(GameState.restore(listOf(cards) + List(6) { emptyList() }, emptyList(), 123))
+        open(session)
+        val actions = rule.onNodeWithTag("column-0").fetchSemanticsNode().config[SemanticsActions.CustomActions]
+        assertEquals(52, actions.size)
+        val start = 35
+        val card = cards[start].card
+        action(0, "Select ${card.rank.name.lowercase()} of ${card.suit.name.lowercase()} and")
+        assertEquals(cards.drop(start), model.uiState.value.selectedTail)
+        action(2, "Move ")
+        assertEquals(cards.drop(start), model.uiState.value.board.tableau[2])
+        assertEquals(cards.take(start), model.uiState.value.board.tableau[0])
+        rule.onNodeWithTag("undo").performClick(); rule.waitForIdle()
+        assertEquals(session.state, model.uiState.value.board)
     }
 }
