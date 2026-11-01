@@ -1,5 +1,7 @@
 # Development roadmap and risk register
 
+**Phase 4D owner amendment (2026-11-01):** [Final approved design and implementation record](phase4d-interface.md) supersedes earlier Hint/expanded-inspection/control-layout proposals. Hint is removed (MVP-08 / MVP-DEC-03); no separate Inspect screen, title or completion display. Two-tap moves use whole-tail selection and explicit destination; illegal destination taps clear selection without a game action. Primary controls are Undo and Deal 3. Full non-drag access remains through direct board accessibility actions. Owner design approval authorizes implementation; merge and publication remain separate gates. Phases 4A–4C are merged through PRs #18–20. Historical text below must be read with this amendment.
+
 **Status:** Phases 1–2 complete; Phase 3 pure Kotlin rules engine merged in PR #11 on 2026-10-31 after passing required CI. GitHub branch protection is enforced. Phase 4A merged through PR #18. Phase 4B merged through owner-approved PR #19. Phase 4C is separately owner-authorized and proposed in PR #20; Phase 4D and Phase 5 remain gated. Actual Play Console account and other release prerequisites remain outstanding.
 **Last reviewed:** 2026-10-31
 

@@ -57,7 +57,7 @@ class BoardRenderingTest {
         }
         rule.onAllNodes(SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Face down")).assertCountEquals(12)
         rule.onAllNodes(SemanticsMatcher("Face up and attached count") { it.config.getOrElse(SemanticsProperties.StateDescription) { "" }.startsWith("Face up,") }).assertCountEquals(37)
-        rule.onNodeWithTag("reserve-status").performScrollTo().assertTextEquals("Ready Â· 3 cards remaining")
+        rule.onNodeWithTag("reserve-status").assertTextEquals("3 reserve")
         repeat(3) { rule.onNodeWithTag("reserve-card-$it", useUnmergedTree = true).assertExists() }
         assertTrue(state.session.history.isEmpty())
     }
@@ -76,7 +76,7 @@ class BoardRenderingTest {
         state.legalDestinations.forEach {
             rule.onNodeWithTag("column-surface-$it").assert(SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Legal destination"))
         }
-        rule.onNodeWithText("Hint Â·", substring = true).assertExists()
+        rule.onNodeWithTag("hint").assertDoesNotExist()
         rule.onAllNodes(hasClickAction()).assertCountEquals(0)
         assertSame(original, repository.load().session)
         assertSame(original, controller.uiState.value.session)
@@ -91,7 +91,7 @@ class BoardRenderingTest {
             repeat(13) { rule.onNodeWithTag("card-$column-$it").assertExists() }
         }
         rule.onNodeWithTag("progress").assertDoesNotExist()
-        rule.onNodeWithTag("reserve-status").performScrollTo().assertTextEquals("Dealt Â· 0 remaining")
+        rule.onNodeWithTag("reserve-status").assertTextEquals("Reserve dealt")
         assertEquals(52, session.state.tableau.flatten().size)
         snapshot("completed-runs")
     }

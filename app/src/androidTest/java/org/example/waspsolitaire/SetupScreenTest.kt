@@ -58,7 +58,7 @@ class SetupScreenTest {
         rule.activityRule.scenario.onActivity { assertSame(model, ViewModelProvider(it)[GameViewModel::class.java]) }
         assertSame(before.session, model.uiState.value.session)
         assertEquals(before.selection, model.uiState.value.selection)
-        rule.onNodeWithTag("reserve-status").performScrollTo().assertTextEquals("Dealt Â· 0 remaining")
+        rule.onNodeWithTag("reserve-status").assertTextEquals("Reserve dealt")
         rule.onNodeWithTag("undo").assertIsDisplayed().assertIsEnabled()
     }
 }

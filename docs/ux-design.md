@@ -1,5 +1,7 @@
 # UI/UX specification: approved Version 1.0 baseline
 
+**Phase 4D owner amendment (2026-11-01):** [Final approved design and implementation record](phase4d-interface.md) supersedes earlier Hint/expanded-inspection/control-layout proposals. Hint is removed (MVP-08 / MVP-DEC-03); no separate Inspect screen, title or completion display. Two-tap moves use whole-tail selection and explicit destination; illegal destination taps clear selection without a game action. Primary controls are Undo and Deal 3. Full non-drag access remains through direct board accessibility actions. Owner design approval authorizes implementation; merge and publication remain separate gates. Phases 4A–4C are merged through PRs #18–20. Historical text below must be read with this amendment.
+
 **Status:** **UX-DEC-01–08 Accepted** on 2026-10-29, alongside RULE-01–06, MVP-DEC-01–08 and ARCH-DEC-01–08. REL-DEC-01–08 now approve the free/ad-free release strategy and provisional identity-validation process. Final branding/package/assets, account verification and permission for later implementation milestones remain pending. **Phase 2 setup and stabilization were separately authorized and merged (PRs #7–8); Phase 3 engine PR #11 was owner-approved and merged on 2026-10-31. These approvals do not authorize Phase 4 board implementation or publication.**  
 **Last reviewed:** 2026-10-31  
 **Approval record:** [decisions.md](decisions.md)

@@ -128,10 +128,10 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
                                 }
                             }
                         }
-                        if (scroll.maxValue > 0) Text("â†•", color = Ivory, modifier = Modifier.align(Alignment.CenterEnd)
+                        if (scroll.maxValue > 0) Text("↕", color = Ivory, modifier = Modifier.align(Alignment.CenterEnd)
                             .background(DeepGreen).clearAndSetSemantics { })
                         drag.active?.let { lifted ->
-                            Text("Dragging ${lifted.cards.size} cards Â· ${drag.target()?.let { "Column ${it + 1}" } ?: "Choose a column"}",
+                            Text("Dragging ${lifted.cards.size} cards · ${drag.target()?.let { "Column ${it + 1}" } ?: "Choose a column"}",
                                 color = Ivory, modifier = Modifier.align(Alignment.BottomCenter).background(DeepGreen)
                                     .padding(8.dp).zIndex(11f).testTag("drag-status"))
                         }
@@ -187,7 +187,7 @@ private fun UtilityRow(state: GameUiState, send: ((GameIntent) -> Unit)?, enable
         }
         if (send != null) Box {
             TextButton({ expanded = true }, Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp).testTag("more"), enabled = enabled,
-                contentPadding = PaddingValues(8.dp)) { Text("â‹®", color = Ivory, fontSize = 28.sp, modifier = Modifier.clearAndSetSemantics { contentDescription = "Menu" }) }
+                contentPadding = PaddingValues(8.dp)) { Text("⋮", color = Ivory, fontSize = 28.sp, modifier = Modifier.clearAndSetSemantics { contentDescription = "Menu" }) }
             DropdownMenu(expanded, { expanded = false }, containerColor = Ivory) {
                 DropdownMenuItem(text = { Text("Restart", color = Ink) }, onClick = { expanded = false; send(GameIntent.RequestRestart) }, modifier = Modifier.heightIn(min = 48.dp).testTag("restart"))
                 DropdownMenuItem(text = { Text("New Game", color = Ink) }, onClick = { expanded = false; send(GameIntent.RequestNewGame) }, modifier = Modifier.heightIn(min = 48.dp).testTag("new-game"))
@@ -271,7 +271,7 @@ private fun TableauColumn(index: Int, cards: List<TableauCard>, state: GameUiSta
                 else -> false
             }
         }.focusable(playable), horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(if (target) "â†“ ${index + 1}" else "${index + 1}", color = Ivory, fontSize = 12.sp,
+        Text(if (target) "↓ ${index + 1}" else "${index + 1}", color = Ivory, fontSize = 12.sp,
             modifier = Modifier.padding(bottom = 6.dp).clearAndSetSemantics { })
         Box(Modifier.fillMaxWidth().height(surfaceHeight.dp).bringIntoViewRequester(bring)
             .testTag("column-surface-$index")
@@ -288,7 +288,7 @@ private fun TableauColumn(index: Int, cards: List<TableauCard>, state: GameUiSta
                     drawRoundRect(DeepGreen, Offset(4.dp.toPx(), top + 4.dp.toPx()), androidx.compose.ui.geometry.Size(size.width - 8.dp.toPx(), bottom - top - 8.dp.toPx()), CornerRadius(3.dp.toPx()), style = Stroke(1.5.dp.toPx()))
                 }
             }) {
-            if (cards.isEmpty()) Text("â€”", color = Ivory, modifier = Modifier.align(Alignment.TopCenter).padding(top = 16.dp).clearAndSetSemantics { })
+            if (cards.isEmpty()) Text("—", color = Ivory, modifier = Modifier.align(Alignment.TopCenter).padding(top = 16.dp).clearAndSetSemantics { })
             cards.forEachIndexed { cardIndex, item ->
                 val selected = source != null && cardIndex >= source.cardIndex
                 val chosen = CardSelection(index, cardIndex)
@@ -365,4 +365,3 @@ private fun SuitMark(suit: Suit, color: Color, modifier: Modifier) {
         }
     }
 }
-

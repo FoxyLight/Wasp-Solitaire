@@ -140,17 +140,11 @@ class GameController private constructor(
                 val chosen = screen.selection
                 if (chosen == null) IntentResult.InvalidInput(InputError.NO_SELECTION)
                 else {
-                    val result = commit(GameAction.Move(chosen.column, chosen.cardIndex, intent.destination))
-                    // Owner-approved two-tap behavior: an illegal destination only dismisses
-                    // selection. Engine validation runs first; no repository write occurs.
-                    if (result == IntentResult.EngineRejected(Rejection.INVALID_MOVE)) {
-                        mutableState.value = screen.copy(selection = null, legalDestinations = emptySet())
-                    }
-                    result
+                    move(GameAction.Move(chosen.column, chosen.cardIndex, intent.destination))
                 }
             }
             is GameIntent.Move -> if (intent.expectedRevision != null && intent.expectedRevision != screen.revision)
-                IntentResult.StaleRevision else commit(GameAction.Move(intent.source, intent.cardIndex, intent.destination))
+                IntentResult.StaleRevision else move(GameAction.Move(intent.source, intent.cardIndex, intent.destination))
             GameIntent.DealReserve -> commit(GameAction.DealReserve)
             GameIntent.Undo -> commit(GameAction.Undo)
             GameIntent.Refresh -> {
@@ -169,6 +163,17 @@ class GameController private constructor(
                 }
             }
         }
+    }
+
+    private suspend fun move(action: GameAction.Move): IntentResult {
+        val screen = mutableState.value
+        val result = commit(action)
+        // An illegal destination only dismisses selection. Engine validation runs
+        // first; no repository write occurs. Failures/conflicts retain selection.
+        if (result == IntentResult.EngineRejected(Rejection.INVALID_MOVE) && screen.selection != null) {
+            mutableState.value = screen.copy(selection = null, legalDestinations = emptySet())
+        }
+        return result
     }
 
     private suspend fun commit(action: GameAction): IntentResult {
