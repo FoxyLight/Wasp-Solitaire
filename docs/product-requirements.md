@@ -36,11 +36,11 @@ A polished, trustworthy, offline-first implementation of Classic Wasp Solitaire 
 | MVP-05 | Undo, restart, new game | **Unlimited Undo within the current deal**, including undoing reserve dealing and automatic reveals; Undo restores the full preceding logical state. Restart repeats the initial deal; New Game uses a new seed, with discard confirmation when applicable (MVP-DEC-02) |
 | MVP-06 | Win detection | Four suited King-to-Ace tableau runs recognized **without removing them** (RULE-02) |
 | MVP-07 | Autosave and resume | Offline automatic save after every committed action and safe lifecycle restoration; exact tableau, seed, reserve, Undo history and active-play clock resume after process death/rotation. Completed runs remain on tableau (MVP-DEC-07) |
-| MVP-08 | Hint | Highlight one currently legal tableau move; if none and reserve remains, suggest dealing it. No best-move/solvability guarantee or game-state mutation; zero moves must not trigger defeat (MVP-DEC-03, RULE-06) |
+| MVP-08 | Hint — removed | Owner removed the feature and reserve suggestions during Phase 4D review, approved 2026-11-01. ID retained for traceability; supersedes MVP-DEC-03. |
 | MVP-09 | Basic statistics | Exactly four displayed records at launch: unique games started, games won (including Undo), best winning active-play time, and fewest successful actions in a win. No abandonment/loss rate or streaks in v1.0 (MVP-DEC-04) |
 | MVP-10 | Layout | Support portrait and landscape phone layouts plus an adaptive tablet layout; verify on representative narrow and large screens (MVP-DEC-05) |
 | MVP-11 | Accessibility | All essential actions possible without dragging; readable cards, labeled controls, accessible alternatives to small overlapping card targets, contrast and reduced-motion checks (MVP-DEC-01, 05, 06) |
-| MVP-12 | Tutorial and controls | Clear How to Play, New Game, Restart, Undo, Hint, Settings, and completed-game flow |
+| MVP-12 | Tutorial and controls | Clear How to Play, New Game, Restart, Undo, Settings, and completed-game flow |
 | MVP-13 | Offline | All core gameplay, saves, statistics, and settings work without network access; no account required for play (MVP-DEC-07). REL-DEC-01/04 also approve a free, ad-free, no-tracking launch policy |
 | MVP-14 | Preferences | One green-table visual direction with ivory faces/blue card backs and optional sound/haptic/reduced-motion controls (MVP-DEC-06, UX-DEC-01, 02, 07); exact art asset/license remains unselected |
 | MVP-15 | No automatic defeat | Zero currently available tableau moves does not auto-declare a loss; player can deal remaining reserve or use Undo/Restart/New Game (RULE-06) |
@@ -61,7 +61,7 @@ A polished, trustworthy, offline-first implementation of Classic Wasp Solitaire 
 | --- | --- | --- |
 | MVP-DEC-01 | Support both drag-and-drop and tap-to-move | Every legal group move works with either input. Tap selection exposes valid destinations and destination choice is explicit; invalid moves never mutate the state. |
 | MVP-DEC-02 | Unlimited Undo, including reserve actions | Undo history is unbounded by an arbitrary move-count limit **within the current deal**; each action restores exact prior board, reserve, flips and state. Restart/New Game start a new history. |
-| MVP-DEC-03 | Basic legal-move Hint | Display at least one legal tableau move when available, or suggest the undealt reserve when appropriate. No strategic ranking, win guarantee or automatic game loss. |
+| MVP-DEC-03 | Hint removed | Original 2026-10-29 Hint decision superseded by explicit owner removal and final Phase 4D approval on 2026-11-01. Legal destination highlighting after selection remains. |
 | MVP-DEC-04 | Four simple statistics only | Unique games started, games won, best winning active-play time and fewest successful actions in a winning game; exclude win rate, abandon counts and streaks from Version 1.0. |
 | MVP-DEC-05 | Portrait/landscape phones and adaptive tablets | Essential game controls and card selection remain usable in each layout, including smaller phone windows. |
 | MVP-DEC-06 | One theme, optional feedback controls | Ship one usable appearance with sound, haptics and reduced-motion preferences; defer additional themes. |
@@ -81,7 +81,7 @@ A polished, trustworthy, offline-first implementation of Classic Wasp Solitaire 
 1. Randomized, seeded deals respect all 52-card identity and face-state invariants in [game-rules.md](game-rules.md).
 2. Arbitrary face-up attached tails can be moved to valid same-suit destinations or empty columns with **both** touch methods.
 3. Undo restores board and reserve state after any sequence of moves, the three-card reserve deal, and automatic card reveal; no fixed Undo depth, including after saved-game resume.
-4. A Hint is legal in the current state, does not apply a move, and suggests the undealt reserve where no tableau moves exist.
+4. No Hint feature or reserve suggestion is exposed. Selecting a group still highlights its engine-confirmed legal destinations.
 5. Completing four suited King→Ace tableau runs records a win without removing cards; Undo-assisted wins count normally.
 6. No tableau moves, whether reserve remains or not, never automatically marks a defeat.
 7. Autosave and restore preserve the exact active board, seed, reserve status, Undo history and gameplay clock across process death/rotation.

@@ -35,7 +35,7 @@ The project owner accepted the following on **2026-10-29**. The scope and testab
 | --- | --- | --- | --- |
 | MVP-DEC-01 | Input methods | Drag/drop plus explicit tap-to-move, both supporting all legal moves | **Accepted** |
 | MVP-DEC-02 | Undo | Unlimited within a deal, including reserve actions and automatic card reveals | **Accepted** |
-| MVP-DEC-03 | Hint | Highlight one legal move; suggest reserve when applicable; no solver guarantee | **Accepted** |
+| MVP-DEC-03 | Hint | Removed by explicit owner instruction and final Phase 4D design approval; destination highlighting remains | **Superseded 2026-11-01** |
 | MVP-DEC-04 | Statistics | Four only: unique games started, games won, best time, fewest moves | **Accepted** |
 | MVP-DEC-05 | Devices | Portrait and landscape phones; adaptive tablet layout | **Accepted** |
 | MVP-DEC-06 | Customization | One initial visual theme; optional sound, haptic feedback, reduced motion | **Accepted** |
@@ -69,10 +69,10 @@ The project owner accepted **UX-DEC-01 through UX-DEC-08** on **2026-10-29**, af
 | --- | --- | --- | --- |
 | UX-DEC-01 | Visual direction | Classic green felt-inspired table, warm ivory faces and blue card backs; final contrast-adjusted colors may vary | **Accepted 2026-10-29** |
 | UX-DEC-02 | Artwork | Traditional readable rank/suit graphics; original scalable or explicitly licensed assets, license verification required | **Accepted 2026-10-29** |
-| UX-DEC-03 | Layout | Seven-column overview, expanded accessible column inspection, portrait/landscape phones and adaptive tablet layout | **Accepted 2026-10-29** |
-| UX-DEC-04 | Interaction | Explicit card/tail selection and legal destination highlight; drag/drop; cancel/switch selection; invalid drops leave state unchanged | **Accepted 2026-10-29** |
-| UX-DEC-05 | Navigation | Compact Undo/Hint/Deal 3, six core screens, confirmations when Restart/New Game discard in-progress work | **Accepted 2026-10-29** |
-| UX-DEC-06 | Accessibility | TalkBack semantics, complete non-drag play, accessible inspection, high contrast and large toolbar touch targets | **Accepted 2026-10-29** |
+| UX-DEC-03 | Layout | Seven-column overview, readable strips/shared scrolling and direct board accessibility actions; no separate inspection screen | **Accepted 2026-10-29; revised 2026-11-01** |
+| UX-DEC-04 | Interaction | Whole-tail selection then legal destination tap; illegal tap clears only selection; engine-validated drag remains | **Accepted 2026-10-29; revised 2026-11-01** |
+| UX-DEC-05 | Navigation | Persistent Undo/Deal 3; Menu for Restart/New Game/Help with confirmations. No Hint, title or completion display | **Accepted 2026-10-29; revised 2026-11-01** |
+| UX-DEC-06 | Accessibility | TalkBack source/destination actions on the board, complete non-drag play, high contrast, large standalone controls and keyboard support | **Accepted 2026-10-29; revised 2026-11-01** |
 | UX-DEC-07 | Feedback | Brief unobtrusive animations, optional sound/haptics and system-aware reduced motion | **Accepted 2026-10-29** |
 | UX-DEC-08 | Timer UX | First committed move/reserve starts timer; pause in background or blocking screen/dialog; stop on win | **Accepted 2026-10-29** |
 

@@ -2,10 +2,10 @@
 
 **Phase 4D owner amendment (2026-11-01):** [Final approved design and implementation record](phase4d-interface.md) supersedes earlier Hint/expanded-inspection/control-layout proposals. Hint is removed (MVP-08 / MVP-DEC-03); no separate Inspect screen, title or completion display. Two-tap moves use whole-tail selection and explicit destination; illegal destination taps clear selection without a game action. Primary controls are Undo and Deal 3. Full non-drag access remains through direct board accessibility actions. Owner design approval authorizes implementation; merge and publication remain separate gates. Phases 4A–4C are merged through PRs #18–20. Historical text below must be read with this amendment.
 
-**Status:** Phases 1–2 complete; Phase 3 pure Kotlin rules engine merged in PR #11 on 2026-10-31 after passing required CI. GitHub branch protection is enforced. Phase 4A merged through PR #18. Phase 4B merged through owner-approved PR #19. Phase 4C is separately owner-authorized and proposed in PR #20; Phase 4D and Phase 5 remain gated. Actual Play Console account and other release prerequisites remain outstanding.
+**Status:** Phases 1–3 and 4A–4C are merged (PRs #11, #18–20). Phase 4C merge: `6c64b6a4899bb3e0fa7790ff1422470608810b83`; Issue #14 closed. Owner approved the final Phase 4D design on 2026-11-01; [implementation PR #22](https://github.com/FoxyLight/Wasp-Solitaire/pull/22) remains unmerged pending separate review. Issue #15 stays open. Phase 5 and release remain gated.
 **Last reviewed:** 2026-10-31
 
-Phase 4A is merged through owner-approved PR #18. Phase 4B rendering merged through owner-approved [PR #19](https://github.com/FoxyLight/Wasp-Solitaire/pull/19); see [board implementation and evidence](phase4b-board.md). Phase 4C gameplay is proposed in [PR #20](https://github.com/FoxyLight/Wasp-Solitaire/pull/20), with [implementation/evidence notes](phase4c-gameplay.md). Phase 4D and Phase 5 remain separately gated; no merge or publishing authorization is implied.
+Phase 4A/4B/4C are merged through owner-approved PRs #18–20. See [Phase 4C evidence](phase4c-gameplay.md) and [approved Phase 4D design and validation](phase4d-interface.md).
 
 ## Overall approach
 
@@ -31,7 +31,7 @@ The [Phase 4 delivery plan](phase4-delivery-plan.md) is the execution checklist 
 - **4A:** GameViewModel + StateFlow, single-source-of-truth session/selection/intents, and a persistence-ready boundary ([issue #12](https://github.com/FoxyLight/Wasp-Solitaire/issues/12)).
 - **4B:** Responsive seven-column Compose rendering using the engine state and original or verified-licensed provisional card symbols ([issue #13](https://github.com/FoxyLight/Wasp-Solitaire/issues/13)).
 - **4C:** Explicit tap/drag moves and controls including Undo, Hint, Deal 3, Restart/New Game and win indication ([issue #14](https://github.com/FoxyLight/Wasp-Solitaire/issues/14)).
-- **4D:** Expanded column inspection, non-drag accessibility, TalkBack and representative phone/landscape/tablet verification ([issue #15](https://github.com/FoxyLight/Wasp-Solitaire/issues/15)).
+- **4D:** [Approved modern classic interface](phase4d-interface.md), direct non-drag board actions, TalkBack and representative device validation ([issue #15](https://github.com/FoxyLight/Wasp-Solitaire/issues/15)).
 
 **Architecture-forward constraint:** 4A defines the repository interface and snapshot/version/Undo contract, but **does not claim durable saves**. Phase 5A must implement Room atomic state+history writes, migrations/recovery and interruption tests before the app claims offline autosave or exact resume. Phase 5B implements the approved active-only timer, exactly four statistics, DataStore settings and remaining feedback/polish.
 
@@ -85,7 +85,7 @@ Six rules decisions and **all four sets of eight** MVP, architecture, UX and rel
 
 Phase 3 engine scope, API choices, verification and the next milestone are tracked in [phase3-engine.md](phase3-engine.md). The Android board, persistence, clock and statistics integration remain future work.
 
-Phase 3's rules engine is merged and its unit tests passed. Do not begin Phase 4 application code, create external accounts, or publish without the required separate owner authorization. This documentation PR remains unmerged pending review.
+Phase 3 and Phase 4A–4C are merged. Final Phase 4D design approval authorizes the implementation in PR #22; its merge requires separate owner approval. No external account or publication authorization is implied.
 
 ## Milestone quality gates
 
