@@ -76,7 +76,7 @@ class GameplayTest {
     private fun snapshot(name: String) {
         // Native popup/ripple animations are not all driven by Compose's test clock.
         android.os.SystemClock.sleep(500)
-        val directory = File(requireNotNull(InstrumentationRegistry.getArguments().getString("additionalTestOutputDir")), "phase4c-evidence")
+        val directory = File(requireNotNull(InstrumentationRegistry.getArguments().getString("additionalTestOutputDir")), "phase4d-evidence")
         directory.mkdirs()
         File(directory, "$name.png").outputStream().use {
             val bitmap = if (name.contains("confirmation")) InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
@@ -119,27 +119,25 @@ class GameplayTest {
         val before = model.uiState.value.session
         dragTo(0, 1, 0)
         assertSame(before, model.uiState.value.session)
-        rule.onNodeWithTag("action-feedback").assertTextContains("not allowed", substring = true)
+        rule.onNodeWithTag("action-feedback").assertTextContains("Selection cleared", substring = true)
         dragTo(0, 1, null)
         assertSame(before, model.uiState.value.session)
         assertEquals(0L, model.uiState.value.revision)
         rule.onNodeWithTag("action-feedback").assertTextContains("Drop cancelled", substring = true)
     }
 
-    @Test fun selectionSwitchToggleCancelAndInvalidDestinationNeverEnterHistory() {
+    @Test fun illegalTapClearsSelectionWithoutSelectingTheTappedCard() {
         prepare(); render()
         val before = model.uiState.value.session
         tapCard(0, 1)
         tapCard(0, 2)
-        assertEquals(CardSelection(0, 2), model.uiState.value.selection)
+        assertNull(model.uiState.value.selection)
         tapCard(0, 2)
+        assertEquals(CardSelection(0, 2), model.uiState.value.selection)
+        pressBack(); rule.waitForIdle()
         assertNull(model.uiState.value.selection)
-        tapCard(0, 1)
-        click("cancel-selection")
+        tapCard(0, 1); tapCard(6, 0)
         assertNull(model.uiState.value.selection)
-        tapCard(0, 1)
-        // Tapping an invalid destination card switches selection, never commits.
-        tapCard(0, 3)
         assertSame(before, model.uiState.value.session)
         assertEquals(0L, model.uiState.value.revision)
     }
@@ -156,12 +154,11 @@ class GameplayTest {
         assertEquals(before.state, model.uiState.value.board)
     }
 
-    @Test fun reserveAndHintControlsWorkWhileTableauMovesExistAndUndoRestoresReserve() {
+    @Test fun reserveWorksWhileTableauMovesExistAndUndoRestoresReserve() {
         prepare(); render()
         val before = model.uiState.value.session
         assertTrue(ClassicWasp.legalMoves(before.state).isNotEmpty())
-        click("hint")
-        assertEquals(ClassicWasp.hint(before.state), model.uiState.value.hintedAction)
+        rule.onNodeWithTag("hint").assertDoesNotExist()
         assertSame(before, model.uiState.value.session)
         click("deal"); revision(1)
         assertTrue(model.uiState.value.board.reserve.isEmpty())
@@ -200,8 +197,8 @@ class GameplayTest {
         tapCard(4, 0); destination(3); revision(1)
         assertEquals(GameStatus.WON, model.uiState.value.board.status)
         assertEquals(52, model.uiState.value.board.tableau.flatten().size)
-        repeat(4) { rule.onNodeWithTag("complete-$it").assertExists() }
-        rule.onNodeWithTag("victory").performScrollTo().assertIsDisplayed()
+        assertEquals(4, model.uiState.value.board.completedRuns.size)
+        rule.onNodeWithTag("victory").assertIsDisplayed()
         snapshot("victory-runs-retained")
         click("undo"); revision(2)
         assertEquals(GameStatus.IN_PROGRESS, model.uiState.value.board.status)
@@ -225,25 +222,23 @@ class GameplayTest {
         return GameSession.restore(GameState.restore(columns, reserve, 51))
     }
 
-    @Test fun hintSuggestsAvailableReserveWhenThereAreNoTableauMoves() {
+    @Test fun reserveRemainsExplicitWithNoTableauMovesAndNoHintFeature() {
         prepare(noMoves(true)); render()
         val before = model.uiState.value.session
-        click("hint")
-        assertEquals(GameAction.DealReserve, model.uiState.value.hintedAction)
-        assertSame(before, model.uiState.value.session)
-        rule.onNodeWithText("Hint · Reserve available").assertExists()
+        rule.onNodeWithTag("hint").assertDoesNotExist()
+        assertTrue(ClassicWasp.legalMoves(before.state).isEmpty())
         click("deal"); revision(1)
         click("undo"); revision(2)
         assertEquals(before.state, model.uiState.value.board)
     }
 
-    @Test fun noMovesHintNeverDeclaresALossOrChangesHistory() {
+    @Test fun noMovesDoesNotDeclareLossOrDisableSecondaryActions() {
         prepare(noMoves(false)); render()
         val before = model.uiState.value.session
-        click("hint")
-        rule.onNodeWithTag("action-feedback").assertTextContains("No available tableau moves", substring = true)
         assertEquals(GameStatus.IN_PROGRESS, model.uiState.value.board.status)
         assertSame(before, model.uiState.value.session)
+        rule.onNodeWithTag("hint").assertDoesNotExist()
+        click("more")
         rule.onNodeWithTag("restart").assertIsEnabled()
         rule.onNodeWithTag("new-game").assertIsEnabled()
     }
@@ -262,7 +257,7 @@ class GameplayTest {
         cases.forEach { (name, viewport, scale) ->
             rule.runOnIdle { size = viewport; fontScale = scale }; rule.waitForIdle()
             val before = model.uiState.value.session
-            for (tag in listOf("undo","hint","deal")) rule.onNodeWithTag(tag).assertIsDisplayed().assertHeightIsAtLeast(48.dp)
+            for (tag in listOf("undo","deal")) rule.onNodeWithTag(tag).assertIsDisplayed().assertHeightIsAtLeast(48.dp)
             val compact = rule.onAllNodesWithTag("more").fetchSemanticsNodes().isNotEmpty()
             if (compact) click("more")
             for (tag in listOf("restart","new-game")) rule.onNodeWithTag(tag).assertIsDisplayed().assertHeightIsAtLeast(48.dp)

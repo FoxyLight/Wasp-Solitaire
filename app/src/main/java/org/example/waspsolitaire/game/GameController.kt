@@ -20,13 +20,12 @@ data class CardSelection(val column: Int, val cardIndex: Int)
 enum class ResetKind { RESTART, NEW_GAME }
 data class PendingReset(val kind: ResetKind, val revision: Long)
 
-/** Immutable UI projection. Selected cards and hints are NOT game actions. */
+/** Immutable UI projection. Selecting cards is not a game action. */
 data class GameUiState(
     val session: GameSession,
     val revision: Long,
     val selection: CardSelection? = null,
     val legalDestinations: Set<Int> = emptySet(),
-    val hintedAction: GameAction? = null,
     val pendingReset: PendingReset? = null,
 ) {
     val board get() = session.state
@@ -44,7 +43,6 @@ sealed interface GameIntent {
     data class Move(val source: Int, val cardIndex: Int, val destination: Int, val expectedRevision: Long? = null) : GameIntent
     data object DealReserve : GameIntent
     data object Undo : GameIntent
-    data object Hint : GameIntent
     /** Explicit retry after another controller commits the shared session. */
     data object Refresh : GameIntent
     data object RequestRestart : GameIntent
@@ -62,14 +60,13 @@ sealed interface IntentResult {
     data class InvalidInput(val reason: InputError) : IntentResult
     data class EngineRejected(val reason: Rejection) : IntentResult
     data object StaleRevision : IntentResult
-    data object NoAvailableHint : IntentResult
     data class StorageFailure(val message: String) : IntentResult
 }
 
 /**
  * Serializes all user intents, validates via ClassicWasp and never publishes an
  * accepted game state until the repository confirms its atomic revision write.
- * UI-only state (selection, destinations, Hint) is not written to the repository.
+ * UI-only state (selection and destinations) is not written to the repository.
  */
 class GameController private constructor(
     private val repository: SessionRepository,
@@ -113,7 +110,7 @@ class GameController private constructor(
                     val nextSelection = CardSelection(intent.column, intent.cardIndex)
                     if (screen.selection == nextSelection) {
                         mutableState.value = screen.copy(
-                            selection = null, legalDestinations = emptySet(), hintedAction = null,
+                            selection = null, legalDestinations = emptySet(),
                         )
                     } else {
                         val destinations = ClassicWasp.legalMoves(screen.board)
@@ -124,18 +121,17 @@ class GameController private constructor(
                         mutableState.value = screen.copy(
                             selection = nextSelection,
                             legalDestinations = Collections.unmodifiableSet(destinations),
-                            hintedAction = null,
                         )
                     }
                     IntentResult.UiChanged
                 }
             }
             GameIntent.CancelSelection -> {
-                if (screen.selection == null && screen.hintedAction == null) {
+                if (screen.selection == null) {
                     IntentResult.NoChange
                 } else {
                     mutableState.value = screen.copy(
-                        selection = null, legalDestinations = emptySet(), hintedAction = null,
+                        selection = null, legalDestinations = emptySet(),
                     )
                     IntentResult.UiChanged
                 }
@@ -143,21 +139,20 @@ class GameController private constructor(
             is GameIntent.MoveTo -> {
                 val chosen = screen.selection
                 if (chosen == null) IntentResult.InvalidInput(InputError.NO_SELECTION)
-                else commit(GameAction.Move(chosen.column, chosen.cardIndex, intent.destination))
+                else {
+                    val result = commit(GameAction.Move(chosen.column, chosen.cardIndex, intent.destination))
+                    // Owner-approved two-tap behavior: an illegal destination only dismisses
+                    // selection. Engine validation runs first; no repository write occurs.
+                    if (result == IntentResult.EngineRejected(Rejection.INVALID_MOVE)) {
+                        mutableState.value = screen.copy(selection = null, legalDestinations = emptySet())
+                    }
+                    result
+                }
             }
             is GameIntent.Move -> if (intent.expectedRevision != null && intent.expectedRevision != screen.revision)
                 IntentResult.StaleRevision else commit(GameAction.Move(intent.source, intent.cardIndex, intent.destination))
             GameIntent.DealReserve -> commit(GameAction.DealReserve)
             GameIntent.Undo -> commit(GameAction.Undo)
-            GameIntent.Hint -> {
-                val hint = ClassicWasp.hint(screen.board)
-                if (hint == null) IntentResult.NoAvailableHint
-                else if (screen.hintedAction == hint) IntentResult.NoChange
-                else {
-                    mutableState.value = screen.copy(hintedAction = hint)
-                    IntentResult.UiChanged
-                }
-            }
             GameIntent.Refresh -> {
                 try {
                     val latest = repository.load()

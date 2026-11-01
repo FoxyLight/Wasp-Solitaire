@@ -20,6 +20,7 @@ internal class BoardDrag {
     val cards = mutableMapOf<CardSelection, Rect>()
     val columns = mutableMapOf<Int, Rect>()
     var tableau = Rect.Zero
+    var viewport = Rect.Zero
     var origin = Offset.Zero
     var active by mutableStateOf<DragTail?>(null)
     var notice by mutableStateOf<String?>(null)
@@ -38,7 +39,7 @@ internal class BoardDrag {
     /** Full tableau height for every column permits horizontal drops beside long/empty tails. */
     fun target(): Int? = active?.pointer?.let { point ->
         columns.entries.firstOrNull { (_, rect) ->
-            point.x >= rect.left && point.x < rect.right && point.y >= tableau.top && point.y < tableau.bottom
+            viewport.contains(point) && point.x >= rect.left && point.x < rect.right && point.y >= tableau.top && point.y < tableau.bottom
         }?.key
     }
 

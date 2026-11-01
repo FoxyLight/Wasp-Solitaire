@@ -21,7 +21,7 @@ class SetupScreenTest {
 
     @Test fun entryRendersBoardAndRecreationRetainsViewModelAndSession() {
         rule.waitUntil(10_000) { rule.onAllNodesWithTag("board").fetchSemanticsNodes().isNotEmpty() }
-        rule.onNodeWithText("WASP").assertIsDisplayed()
+        rule.onNodeWithTag("more").assertIsDisplayed()
         lateinit var model: GameViewModel
         rule.activityRule.scenario.onActivity { model = ViewModelProvider(it)[GameViewModel::class.java] }
         // Install a deterministic fixture through the real repository contract, then use UI controls.
@@ -58,7 +58,7 @@ class SetupScreenTest {
         rule.activityRule.scenario.onActivity { assertSame(model, ViewModelProvider(it)[GameViewModel::class.java]) }
         assertSame(before.session, model.uiState.value.session)
         assertEquals(before.selection, model.uiState.value.selection)
-        rule.onNodeWithTag("reserve-status").performScrollTo().assertTextEquals("Dealt · 0 remaining")
+        rule.onNodeWithTag("reserve-status").performScrollTo().assertTextEquals("Dealt Â· 0 remaining")
         rule.onNodeWithTag("undo").assertIsDisplayed().assertIsEnabled()
     }
 }
