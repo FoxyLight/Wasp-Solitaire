@@ -47,7 +47,8 @@ class GameplayTest {
         rule.onNodeWithTag(tag).performClick(); rule.waitForIdle()
     }
     private fun tapCard(column: Int, index: Int) {
-        rule.onNodeWithTag("card-$column-$index").performScrollTo().performTouchInput { click(Offset(width / 2f, 4f)) }
+        rule.onNodeWithTag("card-header-$column-$index", useUnmergedTree = true).performScrollTo()
+        rule.onNodeWithTag("card-$column-$index").performTouchInput { click(Offset(width / 2f, 4f)) }
         rule.waitForIdle()
     }
     private fun destination(column: Int) {

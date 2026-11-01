@@ -98,7 +98,7 @@ class BoardRenderingTest {
         snapshot("completed-runs")
     }
 
-    @Test fun viewportAndFontChangesKeepSevenColumnsAndReserveReachableWithoutChangingSession() {
+    @Test(timeout = 120_000) fun viewportAndFontChangesKeepSevenColumnsAndReserveReachableWithoutChangingSession() {
         val session = ClassicWasp.newGame(123)
         var viewport by mutableStateOf(DpSize(320.dp, 640.dp))
         var fontScale by mutableFloatStateOf(1f)
@@ -119,6 +119,7 @@ class BoardRenderingTest {
             rule.waitForIdle()
             rule.onNodeWithTag("reserve-status", useUnmergedTree = true).assertIsDisplayed()
             snapshot("$name-top")
+            android.util.Log.i("WaspLayoutTest", "$name: top viewport captured")
             val root = rule.onNodeWithTag("board").fetchSemanticsNode().boundsInRoot
             var previous = Float.NEGATIVE_INFINITY
             repeat(7) { column ->
@@ -126,7 +127,11 @@ class BoardRenderingTest {
                 assertTrue("$name column $column stays in width", bounds.left >= root.left && bounds.right <= root.right + 1)
                 assertTrue(bounds.left > previous)
                 previous = bounds.left
-                rule.onNodeWithTag("card-$column-6").performScrollTo().assertIsDisplayed()
+                // Width-driven readable cards may be taller than a heavily inset
+                // short window. The exposed rank/suit header is the touch target;
+                // asking ScrollTo to fit an oversized full card can never finish.
+                android.util.Log.i("WaspLayoutTest", "$name: revealing column $column header")
+                rule.onNodeWithTag("card-header-$column-6", useUnmergedTree = true).performScrollTo().assertIsDisplayed()
             }
             rule.onNodeWithTag("reserve-status", useUnmergedTree = true).assertIsDisplayed()
             snapshot("$name-reserve")

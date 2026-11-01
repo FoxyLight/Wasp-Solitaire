@@ -344,10 +344,12 @@ private fun PlayingCard(item: TableauCard, geometry: BoardGeometry, isSelected: 
             @Composable fun RankText() { Text(rankLabel(item.card.rank), color = color, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif,
                 fontSize = geometry.rankSize.sp, lineHeight = (geometry.rankSize * 1.2f).sp, maxLines = 1, modifier = Modifier.clearAndSetSemantics { }) }
             val markSize = (geometry.rankSize * scale * .9f).dp
-            if (stacked) Column(Modifier.padding(4.dp), horizontalAlignment = Alignment.Start) {
-                RankText(); SuitMark(item.card.suit, color, Modifier.size(markSize))
-            } else Row(Modifier.fillMaxWidth().padding(4.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                RankText(); SuitMark(item.card.suit, color, Modifier.size(markSize))
+            Box(Modifier.fillMaxWidth().height(geometry.faceStep.dp).testTag("card-header-$column-$index")) {
+                if (stacked) Column(Modifier.padding(4.dp), horizontalAlignment = Alignment.Start) {
+                    RankText(); SuitMark(item.card.suit, color, Modifier.size(markSize))
+                } else Row(Modifier.fillMaxWidth().padding(4.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                    RankText(); SuitMark(item.card.suit, color, Modifier.size(markSize))
+                }
             }
             if (!stacked) SuitMark(item.card.suit, color, Modifier.align(Alignment.BottomEnd).padding(6.dp).size((geometry.cardWidth * .36f).dp))
         } else Canvas(Modifier.fillMaxSize().padding(4.dp)) {
