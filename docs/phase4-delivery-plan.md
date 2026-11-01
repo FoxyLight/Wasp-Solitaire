@@ -1,5 +1,7 @@
 # Phase 4 delivery plan: from engine to accessible playable board
 
+**Delivery reconciliation (2026-10-31):** 4A, 4B and 4C are merged through owner-approved PRs #18–20. Current main is `6c64b6a4899bb3e0fa7790ff1422470608810b83`; Issue #14 is closed. The owner authorized 4D audit/design Stages 1–3. The [modern classic design package](design/phase4d/README.md), decisions 4D-UX-01–08 and [acceptance matrix](design/phase4d/validation.md) are **proposed, not accepted**. Stop for explicit design approval before 4D application implementation, then retain a separate implementation PR/merge gate. Issue #15 remains open. Earlier authorization language below describes the plan's original gate, not the present status of merged milestones.
+
 **Status:** Proposed execution refinement for review, 2026-10-31. No new product/rules decisions, code changes, implementation authorization, merge approval or release authorization are implied.
 **Dependencies:** Phase 3's owner-approved [PR #11](https://github.com/FoxyLight/Wasp-Solitaire/pull/11) merged on 2026-10-31 with required CI green. Beginning Phase 4 application code requires separate owner authorization. The accepted [rules](game-rules.md), [MVP](product-requirements.md), [architecture](architecture.md) and [UX](ux-design.md) remain authoritative.
 

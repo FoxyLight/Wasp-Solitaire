@@ -1,6 +1,6 @@
 # Phase 4C: interactive Classic Wasp gameplay
 
-Owner-authorized 2026-10-31, proposed in [PR #20](https://github.com/FoxyLight/Wasp-Solitaire/pull/20), tracking [Issue #14](https://github.com/FoxyLight/Wasp-Solitaire/issues/14). The PR must remain open until separate owner review and merge approval; Issue #14 stays open until the accepted milestone is merged. Phase 4D, Phase 5 and publication are not authorized.
+Owner-authorized and merged through [PR #20](https://github.com/FoxyLight/Wasp-Solitaire/pull/20) on 2026-10-31, merge commit `6c64b6a4899bb3e0fa7790ff1422470608810b83`; tracking [Issue #14](https://github.com/FoxyLight/Wasp-Solitaire/issues/14) is closed. The owner subsequently authorized the Phase 4D audit/design stages only; see the [unapproved design package](design/phase4d/README.md). Phase 4D application implementation requires explicit design approval. Phase 5 and publication remain gated.
 
 ## Baseline and approved requirements
 

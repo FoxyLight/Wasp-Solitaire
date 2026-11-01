@@ -1,0 +1,532 @@
+[
+  {
+    "text": "Undo",
+    "content-desc": "",
+    "bounds": "[127,148][256,226]"
+  },
+  {
+    "text": "Hint",
+    "content-desc": "",
+    "bounds": "[488,148][591,226]"
+  },
+  {
+    "text": "Deal 3",
+    "content-desc": "",
+    "bounds": "[812,148][966,226]"
+  },
+  {
+    "text": "Restart",
+    "content-desc": "",
+    "bounds": "[189,286][369,364]"
+  },
+  {
+    "text": "New Game",
+    "content-desc": "",
+    "bounds": "[669,286][935,364]"
+  },
+  {
+    "text": "Tap to select. Hold a card to drag its tail.",
+    "content-desc": "",
+    "bounds": "[23,394][1057,580]"
+  },
+  {
+    "text": "Touch and hold to drag. Swipe normally to scroll.",
+    "content-desc": "",
+    "bounds": "[23,580][1057,612]"
+  },
+  {
+    "text": "1",
+    "content-desc": "",
+    "bounds": "[79,667][105,757]"
+  },
+  {
+    "text": "",
+    "content-desc": "Face-down card, column 1, card 1",
+    "bounds": "[23,774][161,802]"
+  },
+  {
+    "text": "",
+    "content-desc": "Face-down card, column 1, card 2",
+    "bounds": "[23,802][161,829]"
+  },
+  {
+    "text": "",
+    "content-desc": "Face-down card, column 1, card 3",
+    "bounds": "[23,829][161,857]"
+  },
+  {
+    "text": "",
+    "content-desc": "four of hearts, column 1, card 4",
+    "bounds": "[23,857][161,1056]"
+  },
+  {
+    "text": "4",
+    "content-desc": "",
+    "bounds": "[35,866][63,924]"
+  },
+  {
+    "text": "",
+    "content-desc": "king of diamonds, column 1, card 5",
+    "bounds": "[23,981][161,1180]"
+  },
+  {
+    "text": "K",
+    "content-desc": "",
+    "bounds": "[32,990][69,1048]"
+  },
+  {
+    "text": "",
+    "content-desc": "jack of spades, column 1, card 6",
+    "bounds": "[23,1106][161,1305]"
+  },
+  {
+    "text": "J",
+    "content-desc": "",
+    "bounds": "[39,1115][58,1173]"
+  },
+  {
+    "text": "",
+    "content-desc": "seven of hearts, column 1, card 7",
+    "bounds": "[23,1231][161,1430]"
+  },
+  {
+    "text": "7",
+    "content-desc": "",
+    "bounds": "[35,1240][63,1298]"
+  },
+  {
+    "text": "2",
+    "content-desc": "",
+    "bounds": "[229,667][255,757]"
+  },
+  {
+    "text": "",
+    "content-desc": "Face-down card, column 2, card 1",
+    "bounds": "[173,774][311,802]"
+  },
+  {
+    "text": "",
+    "content-desc": "Face-down card, column 2, card 2",
+    "bounds": "[173,802][311,829]"
+  },
+  {
+    "text": "",
+    "content-desc": "Face-down card, column 2, card 3",
+    "bounds": "[173,829][311,857]"
+  },
+  {
+    "text": "",
+    "content-desc": "seven of diamonds, column 2, card 4",
+    "bounds": "[173,857][311,1056]"
+  },
+  {
+    "text": "7",
+    "content-desc": "",
+    "bounds": "[185,866][213,924]"
+  },
+  {
+    "text": "",
+    "content-desc": "six of hearts, column 2, card 5",
+    "bounds": "[173,981][311,1180]"
+  },
+  {
+    "text": "6",
+    "content-desc": "",
+    "bounds": "[185,990][213,1048]"
+  },
+  {
+    "text": "",
+    "content-desc": "king of clubs, column 2, card 6",
+    "bounds": "[173,1106][311,1305]"
+  },
+  {
+    "text": "K",
+    "content-desc": "",
+    "bounds": "[182,1115][219,1173]"
+  },
+  {
+    "text": "",
+    "content-desc": "three of diamonds, column 2, card 7",
+    "bounds": "[173,1231][311,1430]"
+  },
+  {
+    "text": "3",
+    "content-desc": "",
+    "bounds": "[185,1240][213,1298]"
+  },
+  {
+    "text": "3",
+    "content-desc": "",
+    "bounds": "[379,667][405,757]"
+  },
+  {
+    "text": "",
+    "content-desc": "Face-down card, column 3, card 1",
+    "bounds": "[323,774][461,802]"
+  },
+  {
+    "text": "",
+    "content-desc": "Face-down card, column 3, card 2",
+    "bounds": "[323,802][461,829]"
+  },
+  {
+    "text": "",
+    "content-desc": "Face-down card, column 3, card 3",
+    "bounds": "[323,829][461,857]"
+  },
+  {
+    "text": "",
+    "content-desc": "eight of hearts, column 3, card 4",
+    "bounds": "[323,857][461,1056]"
+  },
+  {
+    "text": "8",
+    "content-desc": "",
+    "bounds": "[335,866][363,924]"
+  },
+  {
+    "text": "",
+    "content-desc": "six of spades, column 3, card 5",
+    "bounds": "[323,981][461,1180]"
+  },
+  {
+    "text": "6",
+    "content-desc": "",
+    "bounds": "[335,990][363,1048]"
+  },
+  {
+    "text": "",
+    "content-desc": "seven of clubs, column 3, card 6",
+    "bounds": "[323,1106][461,1305]"
+  },
+  {
+    "text": "7",
+    "content-desc": "",
+    "bounds": "[335,1115][363,1173]"
+  },
+  {
+    "text": "",
+    "content-desc": "nine of hearts, column 3, card 7",
+    "bounds": "[323,1231][461,1430]"
+  },
+  {
+    "text": "9",
+    "content-desc": "",
+    "bounds": "[335,1240][363,1298]"
+  },
+  {
+    "text": "4",
+    "content-desc": "",
+    "bounds": "[529,667][555,757]"
+  },
+  {
+    "text": "",
+    "content-desc": "Face-down card, column 4, card 1",
+    "bounds": "[473,774][611,802]"
+  },
+  {
+    "text": "",
+    "content-desc": "Face-down card, column 4, card 2",
+    "bounds": "[473,802][611,829]"
+  },
+  {
+    "text": "",
+    "content-desc": "Face-down card, column 4, card 3",
+    "bounds": "[473,829][611,857]"
+  },
+  {
+    "text": "",
+    "content-desc": "five of spades, column 4, card 4",
+    "bounds": "[473,857][611,1056]"
+  },
+  {
+    "text": "5",
+    "content-desc": "",
+    "bounds": "[485,866][513,924]"
+  },
+  {
+    "text": "",
+    "content-desc": "five of hearts, column 4, card 5",
+    "bounds": "[473,981][611,1180]"
+  },
+  {
+    "text": "5",
+    "content-desc": "",
+    "bounds": "[485,990][513,1048]"
+  },
+  {
+    "text": "",
+    "content-desc": "king of hearts, column 4, card 6",
+    "bounds": "[473,1106][611,1305]"
+  },
+  {
+    "text": "K",
+    "content-desc": "",
+    "bounds": "[482,1115][519,1173]"
+  },
+  {
+    "text": "",
+    "content-desc": "queen of hearts, column 4, card 7",
+    "bounds": "[473,1231][611,1430]"
+  },
+  {
+    "text": "Q",
+    "content-desc": "",
+    "bounds": "[482,1240][522,1298]"
+  },
+  {
+    "text": "5",
+    "content-desc": "",
+    "bounds": "[679,667][705,757]"
+  },
+  {
+    "text": "",
+    "content-desc": "two of diamonds, column 5, card 1",
+    "bounds": "[623,774][761,973]"
+  },
+  {
+    "text": "2",
+    "content-desc": "",
+    "bounds": "[635,783][663,841]"
+  },
+  {
+    "text": "",
+    "content-desc": "nine of diamonds, column 5, card 2",
+    "bounds": "[623,899][761,1098]"
+  },
+  {
+    "text": "9",
+    "content-desc": "",
+    "bounds": "[635,908][663,966]"
+  },
+  {
+    "text": "",
+    "content-desc": "ace of hearts, column 5, card 3",
+    "bounds": "[623,1023][761,1222]"
+  },
+  {
+    "text": "A",
+    "content-desc": "",
+    "bounds": "[632,1032][670,1090]"
+  },
+  {
+    "text": "",
+    "content-desc": "five of diamonds, column 5, card 4",
+    "bounds": "[623,1148][761,1347]"
+  },
+  {
+    "text": "5",
+    "content-desc": "",
+    "bounds": "[635,1157][663,1215]"
+  },
+  {
+    "text": "",
+    "content-desc": "ace of clubs, column 5, card 5",
+    "bounds": "[623,1273][761,1472]"
+  },
+  {
+    "text": "A",
+    "content-desc": "",
+    "bounds": "[632,1282][670,1340]"
+  },
+  {
+    "text": "",
+    "content-desc": "eight of clubs, column 5, card 6",
+    "bounds": "[623,1398][761,1597]"
+  },
+  {
+    "text": "8",
+    "content-desc": "",
+    "bounds": "[635,1407][663,1465]"
+  },
+  {
+    "text": "",
+    "content-desc": "jack of clubs, column 5, card 7",
+    "bounds": "[623,1522][761,1721]"
+  },
+  {
+    "text": "J",
+    "content-desc": "",
+    "bounds": "[639,1531][658,1589]"
+  },
+  {
+    "text": "6",
+    "content-desc": "",
+    "bounds": "[829,667][855,757]"
+  },
+  {
+    "text": "",
+    "content-desc": "ten of diamonds, column 6, card 1",
+    "bounds": "[773,774][911,973]"
+  },
+  {
+    "text": "10",
+    "content-desc": "",
+    "bounds": "[782,783][839,841]"
+  },
+  {
+    "text": "",
+    "content-desc": "three of clubs, column 6, card 2",
+    "bounds": "[773,899][911,1098]"
+  },
+  {
+    "text": "3",
+    "content-desc": "",
+    "bounds": "[785,908][813,966]"
+  },
+  {
+    "text": "",
+    "content-desc": "queen of clubs, column 6, card 3",
+    "bounds": "[773,1023][911,1222]"
+  },
+  {
+    "text": "Q",
+    "content-desc": "",
+    "bounds": "[782,1032][822,1090]"
+  },
+  {
+    "text": "",
+    "content-desc": "nine of clubs, column 6, card 4",
+    "bounds": "[773,1148][911,1347]"
+  },
+  {
+    "text": "9",
+    "content-desc": "",
+    "bounds": "[785,1157][813,1215]"
+  },
+  {
+    "text": "",
+    "content-desc": "eight of diamonds, column 6, card 5",
+    "bounds": "[773,1273][911,1472]"
+  },
+  {
+    "text": "8",
+    "content-desc": "",
+    "bounds": "[785,1282][813,1340]"
+  },
+  {
+    "text": "",
+    "content-desc": "two of clubs, column 6, card 6",
+    "bounds": "[773,1398][911,1597]"
+  },
+  {
+    "text": "2",
+    "content-desc": "",
+    "bounds": "[785,1407][813,1465]"
+  },
+  {
+    "text": "",
+    "content-desc": "seven of spades, column 6, card 7",
+    "bounds": "[773,1522][911,1721]"
+  },
+  {
+    "text": "7",
+    "content-desc": "",
+    "bounds": "[785,1531][813,1589]"
+  },
+  {
+    "text": "7",
+    "content-desc": "",
+    "bounds": "[977,667][1003,757]"
+  },
+  {
+    "text": "",
+    "content-desc": "queen of spades, column 7, card 1",
+    "bounds": "[923,774][1057,973]"
+  },
+  {
+    "text": "Q",
+    "content-desc": "",
+    "bounds": "[932,783][972,841]"
+  },
+  {
+    "text": "",
+    "content-desc": "two of hearts, column 7, card 2",
+    "bounds": "[923,899][1057,1098]"
+  },
+  {
+    "text": "2",
+    "content-desc": "",
+    "bounds": "[935,908][963,966]"
+  },
+  {
+    "text": "",
+    "content-desc": "ace of diamonds, column 7, card 3",
+    "bounds": "[923,1023][1057,1222]"
+  },
+  {
+    "text": "A",
+    "content-desc": "",
+    "bounds": "[932,1032][970,1090]"
+  },
+  {
+    "text": "",
+    "content-desc": "six of clubs, column 7, card 4",
+    "bounds": "[923,1148][1057,1347]"
+  },
+  {
+    "text": "6",
+    "content-desc": "",
+    "bounds": "[935,1157][963,1215]"
+  },
+  {
+    "text": "",
+    "content-desc": "three of spades, column 7, card 5",
+    "bounds": "[923,1273][1057,1472]"
+  },
+  {
+    "text": "3",
+    "content-desc": "",
+    "bounds": "[935,1282][963,1340]"
+  },
+  {
+    "text": "",
+    "content-desc": "jack of diamonds, column 7, card 6",
+    "bounds": "[923,1398][1057,1597]"
+  },
+  {
+    "text": "J",
+    "content-desc": "",
+    "bounds": "[939,1407][958,1465]"
+  },
+  {
+    "text": "",
+    "content-desc": "six of diamonds, column 7, card 7",
+    "bounds": "[923,1522][1057,1721]"
+  },
+  {
+    "text": "6",
+    "content-desc": "",
+    "bounds": "[935,1531][963,1589]"
+  },
+  {
+    "text": "RESERVE",
+    "content-desc": "",
+    "bounds": "[23,1767][251,1857]"
+  },
+  {
+    "text": "",
+    "content-desc": "Face-down reserve card",
+    "bounds": "[23,1880][95,1984]"
+  },
+  {
+    "text": "",
+    "content-desc": "Face-down reserve card",
+    "bounds": "[104,1880][176,1984]"
+  },
+  {
+    "text": "",
+    "content-desc": "Face-down reserve card",
+    "bounds": "[185,1880][257,1984]"
+  },
+  {
+    "text": "Ready · 3 cards remaining",
+    "content-desc": "",
+    "bounds": "[292,1888][1057,1976]"
+  },
+  {
+    "text": "Select any face-up card and move its whole tail.",
+    "content-desc": "",
+    "bounds": "[23,2030][1057,2216]"
+  }
+]
