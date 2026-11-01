@@ -33,7 +33,9 @@ class BoardRenderingTest {
         val directory = File(output, "board-evidence")
         directory.mkdirs()
         File(directory, "$name.png").outputStream().use {
-            rule.onNodeWithTag("board").captureToImage().asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 100, it)
+            // Native viewport capture avoids waiting for a PixelCopy draw on an
+            // otherwise idle API-35 emulator. Behavior assertions stay independent.
+            InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot().compress(Bitmap.CompressFormat.PNG, 100, it)
         }
     }
 

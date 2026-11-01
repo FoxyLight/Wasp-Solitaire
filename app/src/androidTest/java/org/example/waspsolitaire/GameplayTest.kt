@@ -79,8 +79,7 @@ class GameplayTest {
         val directory = File(requireNotNull(InstrumentationRegistry.getArguments().getString("additionalTestOutputDir")), "phase4d-evidence")
         directory.mkdirs()
         File(directory, "$name.png").outputStream().use {
-            val bitmap = if (name.contains("confirmation")) InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
-                else rule.onNodeWithTag("game-screen").captureToImage().asAndroidBitmap()
+            val bitmap = InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
         }
     }
