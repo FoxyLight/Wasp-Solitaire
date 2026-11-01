@@ -98,9 +98,10 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
         BoxWithConstraints(modifier.fillMaxSize().background(Felt).clipToBounds().testTag("game-screen")
             .onGloballyPositioned { drag.origin = it.positionInRoot() }) {
             val shortWindow = maxHeight < 480.dp
+            val fontScale = LocalDensity.current.fontScale
             val insets = WindowInsets.safeDrawing.asPaddingValues()
             val safeHeight = maxHeight - insets.calculateTopPadding() - insets.calculateBottomPadding()
-            val inlineControls = shortWindow && maxWidth >= 480.dp && safeHeight < 224.dp
+            val inlineControls = shortWindow && maxWidth >= 480.dp && (safeHeight < 224.dp || fontScale >= 1.75f)
             val rail = shortWindow && maxWidth >= 600.dp && !inlineControls
             LaunchedEffect(maxWidth, maxHeight) { drag.active = null }
             val selectionMessage = state.selection?.let { "${state.selectedTail.first().card.spokenName()}, ${state.selectedTail.size}-card tail selected. Choose a legal column." }
@@ -121,10 +122,11 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
                 Row(Modifier.weight(1f).fillMaxWidth()) {
                     BoxWithConstraints(Modifier.weight(1f).fillMaxHeight()
                         .onGloballyPositioned { drag.viewport = Rect(it.positionInRoot(), it.size.toSize()) }) {
-                        val geometry = BoardGeometry.fit(maxWidth.value - 16f, LocalDensity.current.fontScale)
+                        val geometry = BoardGeometry.fit(maxWidth.value - 16f, fontScale,
+                            maxRankSize = if (shortWindow && fontScale >= 1.75f) 14f else if (shortWindow) 17f else 22f)
                         val height = state.board.tableau.maxOf { geometry.columnHeight(it.map { card -> card.faceUp }) }
                         Column(Modifier.fillMaxSize().verticalScroll(scroll, enabled = drag.active == null)
-                            .padding(horizontal = 8.dp, vertical = 8.dp).testTag("board")) {
+                            .padding(horizontal = 8.dp, vertical = if (inlineControls) 4.dp else 8.dp).testTag("board")) {
                             Row(Modifier.fillMaxWidth().onGloballyPositioned { drag.tableau = Rect(it.positionInRoot(), it.size.toSize()) },
                                 horizontalArrangement = Arrangement.spacedBy(BoardGeometry.GUTTER.dp, Alignment.CenterHorizontally)) {
                                 state.board.tableau.forEachIndexed { index, cards ->
@@ -200,7 +202,11 @@ private fun UtilityRow(state: GameUiState, send: ((GameIntent) -> Unit)?, enable
         if (send != null && inlineControls) PlayControls(state, enabled, false, send, inline = true)
         if (send != null) Box {
             TextButton({ expanded = true }, Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp).testTag("more"), enabled = enabled,
-                contentPadding = PaddingValues(8.dp)) { Text("⋮", color = Ivory, fontSize = 28.sp, modifier = Modifier.clearAndSetSemantics { contentDescription = "Menu" }) }
+                contentPadding = PaddingValues(8.dp)) {
+                    Canvas(Modifier.size(24.dp).clearAndSetSemantics { contentDescription = "Menu" }) {
+                        for (y in listOf(4f, 12f, 20f)) drawCircle(Ivory, 2.dp.toPx(), Offset(size.width / 2, y.dp.toPx()))
+                    }
+                }
             DropdownMenu(expanded, { expanded = false }, containerColor = Ivory) {
                 DropdownMenuItem(text = { Text("Restart", color = Ink) }, onClick = { expanded = false; send(GameIntent.RequestRestart) }, modifier = Modifier.heightIn(min = 48.dp).testTag("restart"))
                 DropdownMenuItem(text = { Text("New Game", color = Ink) }, onClick = { expanded = false; send(GameIntent.RequestNewGame) }, modifier = Modifier.heightIn(min = 48.dp).testTag("new-game"))
@@ -224,8 +230,8 @@ private fun PlayControls(state: GameUiState, enabled: Boolean, rail: Boolean, se
     }
     if (rail) Column(Modifier.widthIn(min = 96.dp, max = 128.dp).fillMaxHeight().padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom)) {
         Action(false, Modifier.fillMaxWidth()); Action(true, Modifier.fillMaxWidth())
-    } else Row((if (inline) Modifier.width(220.dp) else Modifier.fillMaxWidth())
-        .padding(horizontal = if (inline) 4.dp else 12.dp, vertical = 8.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+    } else Row((if (inline) Modifier.width(280.dp) else Modifier.fillMaxWidth())
+        .padding(horizontal = if (inline) 4.dp else 12.dp, vertical = if (inline) 4.dp else 8.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         Action(false, Modifier.weight(1f)); Action(true, Modifier.weight(1f))
     }
 }

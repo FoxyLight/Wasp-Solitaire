@@ -278,7 +278,7 @@ class GameplayTest {
         rule.onNodeWithTag("new-game").assertIsEnabled()
     }
 
-    @Test fun interactiveControlsAndMovesWorkAcrossSizesAndLargeText() {
+    @Test(timeout = 120_000) fun interactiveControlsAndMovesWorkAcrossSizesAndLargeText() {
         prepare(ClassicWasp.newGame(123))
         var size by mutableStateOf(DpSize(320.dp, 640.dp))
         var fontScale by mutableFloatStateOf(1f)
@@ -288,7 +288,8 @@ class GameplayTest {
             }
         }
         val cases = listOf(Triple("narrow", DpSize(320.dp,640.dp),1f), Triple("portrait",DpSize(390.dp,780.dp),1f),
-            Triple("landscape",DpSize(640.dp,320.dp),1f), Triple("tablet",DpSize(800.dp,1000.dp),1f), Triple("large-text",DpSize(320.dp,640.dp),2f))
+            Triple("landscape",DpSize(640.dp,320.dp),1f), Triple("tablet",DpSize(800.dp,1000.dp),1f), Triple("large-text",DpSize(320.dp,640.dp),2f),
+            Triple("landscape-large-text",DpSize(700.dp,360.dp),2f), Triple("short-large-text",DpSize(640.dp,320.dp),2f))
         cases.forEach { (name, viewport, scale) ->
             rule.runOnIdle { size = viewport; fontScale = scale }; rule.waitForIdle()
             val before = model.uiState.value.session
