@@ -21,23 +21,29 @@ The owner explicitly removed **Hint as a feature**, including reserve suggestion
 
 The owner subsequently requested removal of visible column headings and tighter exposed-card spacing; those details supersede the concept. The image is an AI-generated design illustration, not an application screenshot or imported runtime card pack. It is the owner's accepted visual direction; platform typography, responsive spacing and actual rendered evidence are validated separately. The concept has no title, Hint, Inspect, completion display or extra selection toolbar.
 
-## Owner-requested spacing refinement (2026-11-01)
+## Owner-approved corner-index refinement (2026-11-01)
 
-Visible column numbers and their heading row are removed; column identifiers remain in accessibility descriptions/actions. Each face-up overlap reclaims half the unused space below the rank/suit, preserving the existing rank/suit sizes, system text scaling and whole-card dimensions. The legal-destination dashed border remains. Selected outlines, drag previews and hit bounds share the same geometry. Long columns still scroll.
+After reviewing the revised mockup, the owner authorized implementation: larger rank in the upper left, larger suit in the upper right, and the next card starting immediately below that row with a small gap. Visible column headings remain removed; column identifiers remain in accessibility descriptions/actions. The legal-destination dashed border and whole-tail outlines remain.
 
-At 360dp of board space and 130% font, the exposed step decreases from 51.18dp to 47.25dp, saving 3.94dp per face-up overlap in addition to the removed heading row. This is a geometry calculation, not a measured human performance gain.
+Base rank and suit sizes increase 20% over the prior design. Normal text layouts use a single row, four dp above the indices and two dp below. A measured rank is condensed horizontally only if necessary to fit its allocated space (particularly 10), preserving its height and full identity. The unused decorative lower suit is removed to match the approved mockup. At 200% text on narrow cards, the readable stacked fallback remains; system text scaling is respected. All presentation bounds and previews share the same geometry, and long columns still scroll.
+
+![Approved corner indices and tight overlap concept](evidence/phase4d/approved-corner-indices.png)
+
+This generated illustration is a design reference, not a tested application screenshot. Actual evidence and current test results are recorded below.
 
 ## Implementation contract
 
 The existing GameController, ViewModel/StateFlow, immutable GameSession and atomic repository contract remain authoritative. Invalid tap destinations are validated by the engine before clearing transient selection; failed writes and stale revisions do not fabricate successful moves. Direct explicit `Select` remains available to accessibility and drag inputs; the visual two-tap path always treats its second card/column tap as a destination, including the source column. Back cancels selection. Whole-tail long-press drag remains supported; no auto-scroll dependency is introduced.
 
-Cards use original Compose suit paths, not the generated image artwork. Width determines card size (maximum 104dp), ranks never shrink below a 14sp base to fit height, and exposed overlap grows for system text scale. All seven columns share a scroll surface. Empty columns remain visible destinations. Large standalone menu/play controls target at least 48dp; narrow overview strips are not falsely described as 48dp targets.
+Cards use original Compose suit paths, not the generated image artwork. Width determines card size (maximum 104dp), ranks never shrink below a 16.8sp base to fit height, and exposed overlap grows for system text scale. All seven columns share a scroll surface. Empty columns remain visible destinations. Large standalone menu/play controls target at least 48dp; narrow overview strips are not falsely described as 48dp targets.
 
 Each column exposes native custom accessibility actions for every exposed card, naming rank/suit and attached count. After selection, legal columns expose an explicit Move action, with Cancel selection also available. Card semantics distinguish selected start from attached cards and never reveal hidden identities. Keyboard: Tab to a column, Up/Down chooses an exposed source, Enter/Space selects or commits to the focused column, Escape cancels. A focus cursor scrolls into view. These are direct board actions, not a replacement Inspect screen. TalkBack listening and Switch Access must be reported only when actually exercised.
 
 Normal selection, illegal-tap cancellation and success feedback have a polite live region without a visible selection toolbar. Storage errors, stale-state notices and victory are readable visible feedback. Confirmations retain existing reset predicates and use explicit Restart / New Game action labels.
 
-## Verified implementation and test results
+## Previous verified implementation and test results
+
+The following records the previous spacing build; the new corner-index revision is undergoing fresh CI/device validation.
 
 Application/test code head **`7e2fb38e20ddd85787d6b6e849950a26a8b3bea8`** passed [CI run 41327874017](https://github.com/FoxyLight/Wasp-Solitaire/actions/runs/41327874017):
 

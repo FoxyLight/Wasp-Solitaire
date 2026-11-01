@@ -29,6 +29,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -123,7 +127,7 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
                     BoxWithConstraints(Modifier.weight(1f).fillMaxHeight()
                         .onGloballyPositioned { drag.viewport = Rect(it.positionInRoot(), it.size.toSize()) }) {
                         val geometry = BoardGeometry.fit(maxWidth.value - 16f, fontScale,
-                            maxRankSize = if (shortWindow && fontScale >= 1.75f) 14f else if (shortWindow) 17f else 22f)
+                            maxRankSize = if (shortWindow && fontScale >= 1.75f) 16.8f else if (shortWindow) 20.4f else 26.4f)
                         val height = state.board.tableau.maxOf { geometry.columnHeight(it.map { card -> card.faceUp }) }
                         Column(Modifier.fillMaxSize().verticalScroll(scroll, enabled = drag.active == null)
                             .padding(horizontal = 8.dp, vertical = if (inlineControls) 4.dp else 8.dp).testTag("board")) {
@@ -345,17 +349,30 @@ private fun PlayingCard(item: TableauCard, geometry: BoardGeometry, isSelected: 
         }) {
         if (item.faceUp) {
             val color = if (item.card.suit == Suit.HEARTS || item.card.suit == Suit.DIAMONDS) Red else Ink
-            @Composable fun RankText() { Text(rankLabel(item.card.rank), color = color, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif,
-                fontSize = geometry.rankSize.sp, lineHeight = (geometry.rankSize * 1.2f).sp, maxLines = 1, modifier = Modifier.clearAndSetSemantics { }) }
-            val markSize = (geometry.rankSize * scale * .9f).dp
-            Box(Modifier.fillMaxWidth().height(geometry.faceStep.dp).testTag("card-header-$column-$index")) {
-                if (stacked) Column(Modifier.padding(4.dp), horizontalAlignment = Alignment.Start) {
-                    RankText(); SuitMark(item.card.suit, color, Modifier.size(markSize))
-                } else Row(Modifier.fillMaxWidth().padding(4.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    RankText(); SuitMark(item.card.suit, color, Modifier.size(markSize))
+            val textMeasurer = rememberTextMeasurer()
+            val rank = textMeasurer.measure(rankLabel(item.card.rank), style = TextStyle(
+                color = color, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif,
+                fontSize = geometry.rankSize.sp, lineHeight = (geometry.rankSize * 1.2f).sp), maxLines = 1)
+            @Composable fun RankText(modifier: Modifier) {
+                Canvas(modifier.height((geometry.rankSize * scale * 1.2f).dp)) {
+                    // Only condense horizontally when a two-digit rank needs room;
+                    // preserve the enlarged height and full rank instead of clipping.
+                    scale(scaleX = minOf(1f, size.width / rank.size.width), scaleY = 1f, pivot = Offset.Zero) {
+                        drawText(rank)
+                    }
                 }
             }
-            if (!stacked) SuitMark(item.card.suit, color, Modifier.align(Alignment.BottomEnd).padding(6.dp).size((geometry.cardWidth * .36f).dp))
+            val markSize = (geometry.rankSize * scale * .9f).dp
+            Box(Modifier.fillMaxWidth().height(geometry.faceStep.dp).testTag("card-header-$column-$index")) {
+                if (stacked) Column(Modifier.padding(start = 2.dp, top = 4.dp), horizontalAlignment = Alignment.Start) {
+                    RankText(Modifier.width((geometry.cardWidth - 4f).dp))
+                    SuitMark(item.card.suit, color, Modifier.size(markSize))
+                } else Row(Modifier.fillMaxWidth().padding(start = 2.dp, end = 2.dp, top = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(2.dp), verticalAlignment = Alignment.Top) {
+                    RankText(Modifier.weight(1f))
+                    SuitMark(item.card.suit, color, Modifier.size(markSize))
+                }
+            }
         } else Canvas(Modifier.fillMaxSize().padding(4.dp)) {
             drawRoundRect(Ivory.copy(alpha = .65f), style = Stroke(.7.dp.toPx()))
             var x = -size.height
