@@ -173,6 +173,21 @@ class GameplayTest {
         assertEquals(before.state, model.uiState.value.board)
     }
 
+    @Test fun everySeededLegalMoveIsReachableByPhysicalTapAndMatchesEngine() {
+        prepare(ClassicWasp.newGame(123)); render()
+        val before = model.uiState.value.session
+        var expectedRevision = 0L
+        for (move in ClassicWasp.legalMoves(before.state)) {
+            tapCard(move.source, move.cardIndex); destination(move.destination); revision(++expectedRevision)
+            val expected = (ClassicWasp.apply(before, move) as Transition.Accepted).session
+            assertEquals(expected.state, model.uiState.value.board)
+            assertEquals(expected.history, model.uiState.value.session.history)
+            click("undo"); revision(++expectedRevision)
+            assertEquals(before.state, model.uiState.value.board)
+            assertTrue(model.uiState.value.session.history.isEmpty())
+        }
+    }
+
     @Test fun reserveWorksWhileTableauMovesExistAndUndoRestoresReserve() {
         prepare(); render()
         val before = model.uiState.value.session
