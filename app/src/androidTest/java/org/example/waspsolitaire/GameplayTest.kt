@@ -170,6 +170,7 @@ class GameplayTest {
         tapCard(3, 4); destination(6); revision(1)
         assertEquals(before.state.tableau[6] + before.state.tableau[3].drop(4), model.uiState.value.board.tableau[6])
         snapshot("whole-tail-moved")
+        rule.onNodeWithText("Drag cancelled", substring = true).assertDoesNotExist()
         click("undo"); revision(2)
         assertEquals(before.state, model.uiState.value.board)
     }

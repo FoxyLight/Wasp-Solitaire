@@ -43,7 +43,13 @@ internal class BoardDrag {
         }?.key
     }
 
-    fun cancel() { active = null; notice = "Drag cancelled. Cards have not moved." }
+    fun cancel() {
+        // Pointer-input handlers also dispose after a committed tap/revision.
+        // Only an actual active drag can produce cancellation feedback.
+        if (active == null) return
+        active = null
+        notice = "Drag cancelled. Cards have not moved."
+    }
 
     fun finish(state: GameUiState, send: (GameIntent) -> Unit) {
         val drag = active ?: return

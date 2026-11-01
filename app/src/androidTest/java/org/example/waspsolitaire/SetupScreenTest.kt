@@ -60,5 +60,13 @@ class SetupScreenTest {
         assertEquals(before.selection, model.uiState.value.selection)
         rule.onNodeWithTag("reserve-status").assertTextEquals("Reserve dealt")
         rule.onNodeWithTag("undo").assertIsDisplayed().assertIsEnabled()
+        rule.onNodeWithTag("board").performTouchInput { swipeDown() }
+        rule.waitForIdle()
+        val output = java.io.File(requireNotNull(androidx.test.platform.app.InstrumentationRegistry.getArguments().getString("additionalTestOutputDir")), "phase4d-evidence")
+        output.mkdirs()
+        java.io.File(output, "physical-landscape.png").outputStream().use {
+            androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
+                .compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it)
+        }
     }
 }
