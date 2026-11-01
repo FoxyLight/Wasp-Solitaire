@@ -301,7 +301,10 @@ private fun TableauColumn(index: Int, cards: List<TableauCard>, state: GameUiSta
             .semantics { stateDescription = if (target) "Legal destination" else if (state.selection != null) "Illegal destination" else if (cards.isEmpty()) "Empty column" else "Tableau column ${index + 1}" }
             .drawWithContent {
                 drawContent()
-                if (target || cards.isEmpty()) drawRoundRect(Ivory, cornerRadius = CornerRadius(5.dp.toPx()),
+                if (target && cards.isNotEmpty()) drawRoundRect(Ivory,
+                    topLeft = Offset(0f, offsets.last().dp.toPx()),
+                    size = androidx.compose.ui.geometry.Size(size.width, geometry.cardHeight.dp.toPx()),
+                    cornerRadius = CornerRadius(5.dp.toPx()),
                     style = Stroke(2.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(5.dp.toPx(), 4.dp.toPx()))))
                 source?.let {
                     val top = offsets[it.cardIndex].dp.toPx()
