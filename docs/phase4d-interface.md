@@ -10,7 +10,7 @@ Owner explicitly approved the final design in the Work conversation on **2026-11
 | 4D-UX-02 | Compact reserve/menu row. Exactly two persistent play controls: Undo and Deal 3. Restart, New Game and Help in Menu; destructive confirmations retained. |
 | 4D-UX-03 | **Revised by owner:** remove the separate Inspect screen and button. Readable exposed strips, board scrolling and direct accessibility actions replace inspection. |
 | 4D-UX-04 | Tap a face-up card selects that card and its whole attached tail. Tap legal column commits that group. Tap illegal column clears selection only: board, revision and Undo stay unchanged. No separate visible destination chooser or selection toolbar. |
-| 4D-UX-05 | Warm ivory faces, original traditional suit artwork, restrained blue backs, continuous gold/dark selected-group outline; legal columns have a dashed edge. Completed suits stay on the board; no top completion display. |
+| 4D-UX-05 | Warm ivory faces, original traditional suit artwork, restrained blue backs, continuous gold/dark selected-group outline; legal non-empty destinations outline only their bottom exposed card; empty slots have no outline. Completed suits stay on the board; no top completion display. |
 | 4D-UX-06 | Portrait bottom controls, short-window side controls, centered width-capped tablet cards. Large text stacks indices and grows overlap; no height-driven tiny type. |
 | 4D-UX-07 | Every exposed source and legal destination available through board accessibility actions, native selected/start/attached-tail semantics and keyboard controls. No second tableau or rule implementation. |
 | 4D-UX-08 | High-contrast palette, safe insets, non-color state cues and immediate feedback without required motion. No new preference settings. |
@@ -23,13 +23,17 @@ The owner subsequently requested removal of visible column headings and tighter 
 
 ## Owner-approved corner-index refinement (2026-11-01)
 
-After reviewing the revised mockup, the owner authorized implementation: larger rank in the upper left, larger suit in the upper right, and the next card starting immediately below that row with a small gap. Visible column headings remain removed; column identifiers remain in accessibility descriptions/actions. The legal-destination dashed border and whole-tail outlines remain.
+After reviewing the revised mockup, the owner authorized implementation: larger rank in the upper left, larger suit in the upper right, and the next card starting immediately below that row with a small gap. Visible column headings remain removed; column identifiers remain in accessibility descriptions/actions. A later owner refinement restricts the legal-destination dotted outline to the bottom exposed card and removes all empty-slot outlines. Whole-tail source outlines remain.
 
 Base rank and suit sizes increase 20% over the prior design. Normal text layouts use a single row, four dp above the indices and two dp below. A measured rank is condensed horizontally only if necessary to fit its allocated space (particularly 10), preserving its height and full identity. The unused decorative lower suit is removed to match the approved mockup. At 200% text on narrow cards, the readable stacked fallback remains; system text scaling is respected. All presentation bounds and previews share the same geometry, and long columns still scroll.
 
 ![Approved corner indices and tight overlap concept](evidence/phase4d/approved-corner-indices.png)
 
 This generated illustration is a design reference, not a tested application screenshot. Actual evidence and current test results are recorded below.
+
+## Destination-outline refinement
+
+The owner requested a dotted outline around only the single bottom exposed card of a legal non-empty destination, followed by removal of empty-slot outlines completely. The outline uses that card’s existing stack offset and card height. Empty columns retain their dash marker, tap/drop hit area and native move actions, without any perimeter outline. Move legality, source-group outlining and interaction dispatch are unchanged. Code `b01128739ca03f32b33db5d381d9c07ab8fc542f` compiled and passed all 41 JVM tests in CI. On the same Pixel configuration below, three focused instrumentation tests passed in 9.683 seconds: selected whole-tail legal/illegal taps and Undo; empty-column tap/drag and repeated Undo; retained victory runs and Undo. Native selected/victory screenshots were captured and visually reviewed. The final PR head and both required full CI results are recorded in [PR #22](https://github.com/FoxyLight/Wasp-Solitaire/pull/22); earlier full-suite/device results below remain attributed to their original build.
 
 ## Implementation contract
 
@@ -75,7 +79,7 @@ Visual review found and corrected undersized controls in inset-heavy short windo
 
 ## Actual screenshot evidence and before/after review
 
-All seven application images below are unmodified native captures from the tested final code head on the Pixel, and were visually inspected. The portrait selected example uses seed 123: **8♦ + 5♦ + 2♦**, legal onto Column 7's **9♦**. The moved image shows that whole group in the destination. The landscape image is an actual rotated Activity (2400×1080px), not a size override. Large-text/tablet captures use Compose configuration overrides on the Pixel; white letterboxing outside the forced app window is the test harness, not wasted application space. CI provides separate emulator captures in its board-rendering-evidence artifact.
+All seven application images below are unmodified native Pixel captures and were visually inspected. Selected-tail and victory images are from the destination-outline refinement `b011287`; the remaining five are from the earlier fully tested corner-index build `b34eb2c`. The latter predate removal of empty outlines (visible behind the restart dialog); consult the current victory capture for empty-slot appearance. The portrait selected example uses seed 123: **8♦ + 5♦ + 2♦**, legal onto Column 7's **9♦**. The moved image shows that whole group in the destination. The landscape image is an actual rotated Activity (2400×1080px), not a size override. Large-text/tablet captures use Compose configuration overrides on the Pixel; white letterboxing outside the forced app window is the test harness, not wasted application space. CI provides separate emulator captures in its board-rendering-evidence artifact.
 
 | Earlier Phase 4C | Phase 4D actual result | Review finding |
 | --- | --- | --- |
