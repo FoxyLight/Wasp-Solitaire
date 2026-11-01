@@ -134,8 +134,14 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
                                 }
                             }
                         }
-                        if (scroll.maxValue > 0) Text("↕", color = Ivory, modifier = Modifier.align(Alignment.CenterEnd)
-                            .background(DeepGreen).clearAndSetSemantics { })
+                        if (scroll.maxValue > 0) Canvas(Modifier.align(Alignment.CenterEnd).width(3.dp).fillMaxHeight()
+                            .padding(vertical = 12.dp).clearAndSetSemantics { }) {
+                            val total = scroll.viewportSize.toFloat() + scroll.maxValue
+                            val thumb = (size.height * scroll.viewportSize / total).coerceIn(24.dp.toPx().coerceAtMost(size.height), size.height)
+                            drawRoundRect(Ivory.copy(alpha = .25f), cornerRadius = CornerRadius(2.dp.toPx()))
+                            drawRoundRect(Ivory, topLeft = Offset(0f, (size.height - thumb) * scroll.value / scroll.maxValue),
+                                size = androidx.compose.ui.geometry.Size(size.width, thumb), cornerRadius = CornerRadius(2.dp.toPx()))
+                        }
                         drag.active?.let { lifted ->
                             Text("Dragging ${lifted.cards.size} cards · ${drag.target()?.let { "Column ${it + 1}" } ?: "Choose a column"}",
                                 color = Ivory, modifier = Modifier.align(Alignment.BottomCenter).background(DeepGreen)

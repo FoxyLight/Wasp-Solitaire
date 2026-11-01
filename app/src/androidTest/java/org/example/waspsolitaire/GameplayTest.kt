@@ -153,6 +153,26 @@ class GameplayTest {
         assertEquals(before.state, model.uiState.value.board)
     }
 
+    @Test fun approvedThreeCardTailMovesByTwoTapsAndIllegalTapOnlyClearsHighlight() {
+        prepare(ClassicWasp.newGame(123)); render()
+        val before = model.uiState.value.session
+        tapCard(3, 4)
+        assertEquals(CardSelection(3, 4), model.uiState.value.selection)
+        assertEquals(before.state.tableau[3].drop(4), model.uiState.value.selectedTail)
+        snapshot("selected-tail")
+        tapCard(0, 3)
+        assertNull(model.uiState.value.selection)
+        assertTrue(model.uiState.value.legalDestinations.isEmpty())
+        assertSame(before, model.uiState.value.session)
+        assertEquals(0L, model.uiState.value.revision)
+        snapshot("selection-cancelled")
+        tapCard(3, 4); destination(6); revision(1)
+        assertEquals(before.state.tableau[6] + before.state.tableau[3].drop(4), model.uiState.value.board.tableau[6])
+        snapshot("whole-tail-moved")
+        click("undo"); revision(2)
+        assertEquals(before.state, model.uiState.value.board)
+    }
+
     @Test fun reserveWorksWhileTableauMovesExistAndUndoRestoresReserve() {
         prepare(); render()
         val before = model.uiState.value.session
