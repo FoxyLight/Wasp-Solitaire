@@ -10,7 +10,7 @@ Owner explicitly approved the final design in the Work conversation on **2026-11
 | 4D-UX-02 | Compact reserve/menu row. Exactly two persistent play controls: Undo and Deal 3. Restart, New Game and Help in Menu; destructive confirmations retained. |
 | 4D-UX-03 | **Revised by owner:** remove the separate Inspect screen and button. Readable exposed strips, board scrolling and direct accessibility actions replace inspection. |
 | 4D-UX-04 | Tap a face-up card selects that card and its whole attached tail. Tap legal column commits that group. Tap illegal column clears selection only: board, revision and Undo stay unchanged. No separate visible destination chooser or selection toolbar. |
-| 4D-UX-05 | Warm ivory faces, original traditional suit artwork, restrained blue backs, continuous gold/dark selected-group outline; legal non-empty destinations outline only their bottom exposed card; empty slots have no outline. Completed suits stay on the board; no top completion display. |
+| 4D-UX-05 | Warm ivory faces, original traditional suit artwork, restrained blue backs, continuous gold/dark selected-group outline; legal non-empty destinations invert only their bottom exposed card, without a dotted outline; empty slots have no outline. Completed suits stay on the board; no top completion display. |
 | 4D-UX-06 | Portrait bottom controls, short-window side controls, centered width-capped tablet cards. Large text stacks indices and grows overlap; no height-driven tiny type. |
 | 4D-UX-07 | Every exposed source and legal destination available through board accessibility actions, native selected/start/attached-tail semantics and keyboard controls. No second tableau or rule implementation. |
 | 4D-UX-08 | High-contrast palette, safe insets, non-color state cues and immediate feedback without required motion. No new preference settings. |
@@ -21,7 +21,17 @@ The owner explicitly removed **Hint as a feature**, including reserve suggestion
 
 The owner subsequently requested removal of visible column headings and tighter exposed-card spacing; those details supersede the concept. The image is an AI-generated design illustration, not an application screenshot or imported runtime card pack. It is the owner's accepted visual direction; platform typography, responsive spacing and actual rendered evidence are validated separately. The concept has no title, Hint, Inspect, completion display or extra selection toolbar.
 
-## Owner-approved corner-index refinement (2026-11-01)
+## Current owner-approved inversion and typography refinement (2026-11-01)
+
+The owner supplied a compact classic-card reference, reviewed a generated mockup, and explicitly approved implementation. Dotted destination highlighting is removed. Only each legal non-empty destination’s bottom card inverts its face and symbol RGB colors: ivory becomes near-black, red becomes light teal and black becomes pale ivory. The source-group gold/dark outline remains; empty slots remain unoutlined with their dash marker and legal input/actions. Native card descriptions identify legal destinations as well as the existing column actions.
+
+Card spacing and enlarged bold sans-serif ranks/suits follow the approved reference. Rank glyphs are centered using their visible ink bounds inside a consistent upper-left slot, sharing a baseline; this corrects J’s bearing and keeps 10 visible. Clubs use three distinct lobes with clear notches, a taller top lobe and flared stem. Horizontal gutters increase to 5dp; exposed strips use a compact ink-height header with 2dp above/below. Narrow 200% text keeps the readable stacked fallback. No rule, card identity, ordering or state architecture changes.
+
+![Approved inverted destination and centered ranks concept](evidence/phase4d/approved-inverted-destination.png)
+
+This is the owner-approved generated illustration, not an actual application capture. Earlier concepts/feedback records below are historical and superseded where they conflict with this amendment. Fresh CI/device evidence is recorded with the final PR head.
+
+## Earlier corner-index refinement (2026-11-01)
 
 After reviewing the revised mockup, the owner authorized implementation: larger rank in the upper left, larger suit in the upper right, and the next card starting immediately below that row with a small gap. Visible column headings remain removed; column identifiers remain in accessibility descriptions/actions. A later owner refinement restricts the legal-destination dotted outline to the bottom exposed card and removes all empty-slot outlines. Whole-tail source outlines remain.
 
@@ -31,7 +41,7 @@ Base rank and suit sizes increase 20% over the prior design. Normal text layouts
 
 This generated illustration is a design reference, not a tested application screenshot. Actual evidence and current test results are recorded below.
 
-## Destination-outline refinement
+## Earlier destination-outline refinement (superseded)
 
 The owner requested a dotted outline around only the single bottom exposed card of a legal non-empty destination, followed by removal of empty-slot outlines completely. The outline uses that card’s existing stack offset and card height. Empty columns retain their dash marker, tap/drop hit area and native move actions, without any perimeter outline. Move legality, source-group outlining and interaction dispatch are unchanged. Code `b01128739ca03f32b33db5d381d9c07ab8fc542f` compiled and passed all 41 JVM tests in CI. On the same Pixel configuration below, three focused instrumentation tests passed in 9.683 seconds: selected whole-tail legal/illegal taps and Undo; empty-column tap/drag and repeated Undo; retained victory runs and Undo. Native selected/victory screenshots were captured and visually reviewed. The final PR head and both required full CI results are recorded in [PR #22](https://github.com/FoxyLight/Wasp-Solitaire/pull/22); earlier full-suite/device results below remain attributed to their original build.
 
@@ -39,7 +49,7 @@ The owner requested a dotted outline around only the single bottom exposed card 
 
 The existing GameController, ViewModel/StateFlow, immutable GameSession and atomic repository contract remain authoritative. Invalid tap destinations are validated by the engine before clearing transient selection; failed writes and stale revisions do not fabricate successful moves. Direct explicit `Select` remains available to accessibility and drag inputs; the visual two-tap path always treats its second card/column tap as a destination, including the source column. Back cancels selection. Whole-tail long-press drag remains supported; no auto-scroll dependency is introduced.
 
-Cards use original Compose suit paths, not the generated image artwork. Width determines card size (maximum 104dp), ranks never shrink below a 16.8sp base to fit height, and exposed overlap grows for system text scale. All seven columns share a scroll surface. Empty columns remain visible destinations. Large standalone menu/play controls target at least 48dp; narrow overview strips are not falsely described as 48dp targets.
+Cards use original Compose suit paths, not the generated image artwork. Width determines card size (maximum 104dp), ranks never shrink below an 18.4sp base to fit height, and exposed overlap grows for system text scale. All seven columns share a scroll surface. Empty columns remain visible destinations. Large standalone menu/play controls target at least 48dp; narrow overview strips are not falsely described as 48dp targets.
 
 Each column exposes native custom accessibility actions for every exposed card, naming rank/suit and attached count. After selection, legal columns expose an explicit Move action, with Cancel selection also available. Card semantics distinguish selected start from attached cards and never reveal hidden identities. Keyboard: Tab to a column, Up/Down chooses an exposed source, Enter/Space selects or commits to the focused column, Escape cancels. A focus cursor scrolls into view. These are direct board actions, not a replacement Inspect screen. TalkBack listening and Switch Access must be reported only when actually exercised.
 

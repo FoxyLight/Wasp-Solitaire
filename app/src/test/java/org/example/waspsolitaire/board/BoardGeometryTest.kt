@@ -25,9 +25,9 @@ class BoardGeometryTest {
     @Test fun readableIndicesAndLongTailsUseScrollingRatherThanShrinking() {
         for (scale in listOf(1f, 1.3f, 2f)) {
             val geometry = BoardGeometry.fit(304f, scale)
-            assertTrue(geometry.rankSize >= 16.8f)
+            assertTrue(geometry.rankSize >= 18.4f)
             val indicesHeight = geometry.rankSize * scale *
-                (if (geometry.stackedIndices(scale)) 2.1f else 1.2f) + 4f
+                (if (geometry.stackedIndices(scale)) 1.63f else .85f) + 2f
             assertTrue("Overlap must leave rank and suit fully exposed", geometry.faceStep >= indicesHeight + 1.9f)
             assertTrue(geometry.cardHeight > geometry.faceStep)
             assertTrue(geometry.columnHeight(List(52) { true }) > 320f)

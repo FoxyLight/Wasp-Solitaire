@@ -27,12 +27,10 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.scale
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.drawText
-import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -41,7 +39,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.*
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
@@ -127,7 +124,7 @@ fun GameBoard(state: GameUiState, modifier: Modifier = Modifier,
                     BoxWithConstraints(Modifier.weight(1f).fillMaxHeight()
                         .onGloballyPositioned { drag.viewport = Rect(it.positionInRoot(), it.size.toSize()) }) {
                         val geometry = BoardGeometry.fit(maxWidth.value - 16f, fontScale,
-                            maxRankSize = if (shortWindow && fontScale >= 1.75f) 16.8f else if (shortWindow) 20.4f else 26.4f)
+                            maxRankSize = if (shortWindow && fontScale >= 1.75f) 18.4f else if (shortWindow) 24.4f else 32.3f)
                         val height = state.board.tableau.maxOf { geometry.columnHeight(it.map { card -> card.faceUp }) }
                         Column(Modifier.fillMaxSize().verticalScroll(scroll, enabled = drag.active == null)
                             .padding(horizontal = 8.dp, vertical = if (inlineControls) 4.dp else 8.dp).testTag("board")) {
@@ -301,11 +298,6 @@ private fun TableauColumn(index: Int, cards: List<TableauCard>, state: GameUiSta
             .semantics { stateDescription = if (target) "Legal destination" else if (state.selection != null) "Illegal destination" else if (cards.isEmpty()) "Empty column" else "Tableau column ${index + 1}" }
             .drawWithContent {
                 drawContent()
-                if (target && cards.isNotEmpty()) drawRoundRect(Ivory,
-                    topLeft = Offset(0f, offsets.last().dp.toPx()),
-                    size = androidx.compose.ui.geometry.Size(size.width, geometry.cardHeight.dp.toPx()),
-                    cornerRadius = CornerRadius(5.dp.toPx()),
-                    style = Stroke(2.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(5.dp.toPx(), 4.dp.toPx()))))
                 source?.let {
                     val top = offsets[it.cardIndex].dp.toPx()
                     val bottom = geometry.columnHeight(cards.map { item -> item.faceUp }).dp.toPx()
@@ -333,7 +325,7 @@ private fun TableauColumn(index: Int, cards: List<TableauCard>, state: GameUiSta
                 PlayingCard(item, geometry, selected, stateLabel, Modifier.offset(y = offsets[cardIndex].dp).testTag("card-$index-$cardIndex")
                     .onGloballyPositioned { drag.cards[chosen] = Rect(it.positionInRoot(), it.size.toSize()) }
                     .alpha(if (drag.active?.source?.let { it.column == index && cardIndex >= it.cardIndex } == true) .25f else 1f)
-                    .then(if (focused && cursor == cardIndex) Modifier.border(2.dp, DeepGreen) else Modifier).then(interaction), index, cardIndex)
+                    .then(if (focused && cursor == cardIndex) Modifier.border(2.dp, DeepGreen) else Modifier).then(interaction), index, cardIndex, isDestination = target && cardIndex == cards.lastIndex)
             }
         }
     }
@@ -341,36 +333,52 @@ private fun TableauColumn(index: Int, cards: List<TableauCard>, state: GameUiSta
 
 @Composable
 private fun PlayingCard(item: TableauCard, geometry: BoardGeometry, isSelected: Boolean, stateLabel: String,
-    modifier: Modifier, column: Int, index: Int) {
+    modifier: Modifier, column: Int, index: Int, isDestination: Boolean = false) {
     val scale = LocalDensity.current.fontScale
     val stacked = geometry.stackedIndices(scale)
     val shape = RoundedCornerShape(4.dp)
+    val inverted = item.faceUp && isDestination
+    val faceColor = if (inverted) Ivory.inverted() else if (item.faceUp) Ivory else Blue
     val label = if (item.faceUp) "${item.card.spokenName()}, column ${column + 1}, card ${index + 1}" else "Face-down card, column ${column + 1}, card ${index + 1}"
-    Box(modifier.size(geometry.cardWidth.dp, geometry.cardHeight.dp).clip(shape).background(if (item.faceUp) Ivory else Blue)
-        .border(1.dp, Ink.copy(alpha = .5f), shape).semantics(mergeDescendants = true) {
-            contentDescription = label; stateDescription = stateLabel; selected = isSelected
+    Box(modifier.size(geometry.cardWidth.dp, geometry.cardHeight.dp).clip(shape).background(faceColor)
+        .border(1.dp, (if (inverted) Ivory else Ink).copy(alpha = .5f), shape).semantics(mergeDescendants = true) {
+            contentDescription = label; stateDescription = if (inverted) "Legal destination, $stateLabel" else stateLabel; selected = isSelected
         }) {
         if (item.faceUp) {
-            val color = if (item.card.suit == Suit.HEARTS || item.card.suit == Suit.DIAMONDS) Red else Ink
-            val textMeasurer = rememberTextMeasurer()
-            val rank = textMeasurer.measure(rankLabel(item.card.rank), style = TextStyle(
-                color = color, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif,
-                fontSize = geometry.rankSize.sp, lineHeight = (geometry.rankSize * 1.2f).sp), maxLines = 1)
+            val normalColor = if (item.card.suit == Suit.HEARTS || item.card.suit == Suit.DIAMONDS) Red else Ink
+            val color = if (inverted) normalColor.inverted() else normalColor
+            val density = LocalDensity.current
+            val rankPx = with(density) { geometry.rankSize.sp.toPx() }
+            val rankText = rankLabel(item.card.rank)
+            val paint = remember(rankPx, color) { android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+                textSize = rankPx
+                typeface = android.graphics.Typeface.create("sans-serif", android.graphics.Typeface.BOLD)
+                this.color = color.toArgb()
+            } }
+            val ink = remember(rankPx, rankText) { android.graphics.Rect().also { paint.getTextBounds(rankText, 0, rankText.length, it) } }
+            val lineInk = remember(rankPx) { android.graphics.Rect().also { paint.getTextBounds("AKQJ1098765432", 0, 14, it) } }
             @Composable fun RankText(modifier: Modifier) {
-                Canvas(modifier.height((geometry.rankSize * scale * 1.2f).dp)) {
-                    // Only condense horizontally when a two-digit rank needs room;
-                    // preserve the enlarged height and full rank instead of clipping.
-                    scale(scaleX = minOf(1f, size.width / rank.size.width), scaleY = 1f, pivot = Offset.Zero) {
-                        drawText(rank)
+                Canvas(modifier.height(with(density) { (rankPx * .85f).toDp() })) {
+                    val fit = minOf(1f, size.width / ink.width())
+                    // Center visible ink, not the font's advance/bearing (notably J).
+                    val x = (size.width - ink.width() * fit) / 2f - ink.left * fit
+                    val baseline = (size.height - lineInk.height()) / 2f - lineInk.top
+                    drawIntoCanvas { canvas ->
+                        val native = canvas.nativeCanvas
+                        native.save()
+                        native.translate(x, baseline)
+                        native.scale(fit, 1f)
+                        native.drawText(rankText, 0f, 0f, paint)
+                        native.restore()
                     }
                 }
             }
-            val markSize = (geometry.rankSize * scale * .9f).dp
+            val markSize = with(density) { (rankPx * .78f).toDp() }
             Box(Modifier.fillMaxWidth().height(geometry.faceStep.dp).testTag("card-header-$column-$index")) {
-                if (stacked) Column(Modifier.padding(start = 2.dp, top = 4.dp), horizontalAlignment = Alignment.Start) {
+                if (stacked) Column(Modifier.padding(start = 2.dp, top = 2.dp), horizontalAlignment = Alignment.Start) {
                     RankText(Modifier.width((geometry.cardWidth - 4f).dp))
                     SuitMark(item.card.suit, color, Modifier.size(markSize))
-                } else Row(Modifier.fillMaxWidth().padding(start = 2.dp, end = 2.dp, top = 4.dp),
+                } else Row(Modifier.fillMaxWidth().padding(start = 2.dp, end = 2.dp, top = 2.dp),
                     horizontalArrangement = Arrangement.spacedBy(2.dp), verticalAlignment = Alignment.Top) {
                     RankText(Modifier.weight(1f))
                     SuitMark(item.card.suit, color, Modifier.size(markSize))
@@ -385,6 +393,8 @@ private fun PlayingCard(item: TableauCard, geometry: BoardGeometry, isSelected: 
         }
     }
 }
+
+private fun Color.inverted() = Color(1f - red, 1f - green, 1f - blue, alpha)
 
 internal fun rankLabel(rank: Rank): String = when (rank) {
     Rank.ACE -> "A"; Rank.JACK -> "J"; Rank.QUEEN -> "Q"; Rank.KING -> "K"; else -> rank.value.toString()
@@ -401,7 +411,18 @@ private fun SuitMark(suit: Suit, color: Color, modifier: Modifier) {
             Suit.DIAMONDS -> { path.moveTo(w/2, 0f); path.lineTo(w, h/2); path.lineTo(w/2, h); path.lineTo(0f, h/2); path.close(); drawPath(path, color) }
             Suit.HEARTS -> { path.moveTo(w/2, h); path.cubicTo(-w*.3f, h*.4f, 0f, -h*.3f, w/2, h*.2f); path.cubicTo(w, -h*.3f, w*1.3f, h*.4f, w/2, h); drawPath(path, color) }
             Suit.SPADES -> { path.moveTo(w/2, 0f); path.cubicTo(-w*.4f, h*.65f, 0f, h, w/2, h*.65f); path.cubicTo(w, h, w*1.4f, h*.65f, w/2, 0f); drawPath(path, color); drawLine(color, Offset(w/2,h*.55f),Offset(w/2,h),w*.16f) }
-            Suit.CLUBS -> { drawCircle(color,w*.26f,Offset(w/2,h*.27f)); drawCircle(color,w*.26f,Offset(w*.27f,h*.60f)); drawCircle(color,w*.26f,Offset(w*.73f,h*.60f)); drawLine(color,Offset(w/2,h*.5f),Offset(w/2,h),w*.16f) }
+            Suit.CLUBS -> {
+                // Distinct trefoil notches, a tall top lobe and flared stem.
+                drawOval(color, Offset(w*.32f, 0f), androidx.compose.ui.geometry.Size(w*.36f, h*.48f))
+                drawOval(color, Offset(0f, h*.34f), androidx.compose.ui.geometry.Size(w*.46f, h*.46f))
+                drawOval(color, Offset(w*.54f, h*.34f), androidx.compose.ui.geometry.Size(w*.46f, h*.46f))
+                drawCircle(color, w*.13f, Offset(w*.5f, h*.53f))
+                path.moveTo(w*.47f, h*.59f); path.lineTo(w*.53f, h*.59f)
+                path.cubicTo(w*.54f, h*.85f, w*.6f, h*.93f, w*.7f, h)
+                path.lineTo(w*.3f, h)
+                path.cubicTo(w*.4f, h*.93f, w*.46f, h*.85f, w*.47f, h*.59f)
+                path.close(); drawPath(path, color)
+            }
         }
     }
 }

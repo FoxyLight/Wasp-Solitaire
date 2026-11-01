@@ -160,12 +160,18 @@ class GameplayTest {
         tapCard(3, 4)
         assertEquals(CardSelection(3, 4), model.uiState.value.selection)
         assertEquals(before.state.tableau[3].drop(4), model.uiState.value.selectedTail)
+        rule.onNodeWithTag("card-6-6").assert(SemanticsMatcher.expectValue(
+            androidx.compose.ui.semantics.SemanticsProperties.StateDescription, "Legal destination, Face up, 1-card tail"))
+        rule.onNodeWithTag("card-6-5").assert(SemanticsMatcher.expectValue(
+            androidx.compose.ui.semantics.SemanticsProperties.StateDescription, "Face up, 2-card tail"))
         snapshot("selected-tail")
         tapCard(0, 3)
         assertNull(model.uiState.value.selection)
         assertTrue(model.uiState.value.legalDestinations.isEmpty())
         assertSame(before, model.uiState.value.session)
         assertEquals(0L, model.uiState.value.revision)
+        rule.onNodeWithTag("card-6-6").assert(SemanticsMatcher.expectValue(
+            androidx.compose.ui.semantics.SemanticsProperties.StateDescription, "Face up, 1-card tail"))
         snapshot("selection-cancelled")
         tapCard(3, 4); destination(6); revision(1)
         assertEquals(before.state.tableau[6] + before.state.tableau[3].drop(4), model.uiState.value.board.tableau[6])
