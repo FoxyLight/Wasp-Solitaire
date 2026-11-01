@@ -26,7 +26,6 @@ class GameResetTest {
         assertEquals(initial, restarted.board)
         assertNotEquals(ClassicWasp.newGame(12).state, restarted.board)
         assertNull(restarted.selection)
-        assertNull(restarted.hintedAction)
         assertNull(restarted.pendingReset)
         assertTrue(restarted.session.history.isEmpty())
         assertEquals(IntentResult.EngineRejected(Rejection.NOTHING_TO_UNDO), controller.dispatch(GameIntent.Undo))

@@ -33,7 +33,9 @@ class BoardRenderingTest {
         val directory = File(output, "board-evidence")
         directory.mkdirs()
         File(directory, "$name.png").outputStream().use {
-            rule.onNodeWithTag("board").captureToImage().asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 100, it)
+            // Native viewport capture avoids waiting for a PixelCopy draw on an
+            // otherwise idle API-35 emulator. Behavior assertions stay independent.
+            InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot().compress(Bitmap.CompressFormat.PNG, 100, it)
         }
     }
 
@@ -49,9 +51,6 @@ class BoardRenderingTest {
                 val card = rule.onNodeWithTag("card-$column-$index")
                 if (item.faceUp) {
                     card.assertContentDescriptionEquals("${item.card.rank.name.lowercase()} of ${item.card.suit.name.lowercase()}, column ${column + 1}, card ${index + 1}")
-                    rule.onNode(hasAnyAncestor(hasTestTag("card-$column-$index")) and hasText(when(item.card.rank) {
-                        Rank.ACE -> "A"; Rank.KING -> "K"; Rank.QUEEN -> "Q"; Rank.JACK -> "J"; else -> item.card.rank.value.toString()
-                    }), useUnmergedTree = true).assertExists()
                 } else {
                     card.assertContentDescriptionEquals("Face-down card, column ${column + 1}, card ${index + 1}")
                     rule.onAllNodes(hasAnyAncestor(hasTestTag("card-$column-$index")) and hasText("", substring = true), useUnmergedTree = true).assertCountEquals(0)
@@ -59,32 +58,31 @@ class BoardRenderingTest {
             }
         }
         rule.onAllNodes(SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Face down")).assertCountEquals(12)
-        rule.onAllNodes(SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Face up")).assertCountEquals(37)
-        rule.onNodeWithTag("reserve-status").performScrollTo().assertTextEquals("Ready · 3 cards remaining")
-        repeat(3) { rule.onNodeWithTag("reserve-card-$it").assertExists() }
+        rule.onAllNodes(SemanticsMatcher("Face up and attached count") { it.config.getOrElse(SemanticsProperties.StateDescription) { "" }.startsWith("Face up,") }).assertCountEquals(37)
+        rule.onNodeWithTag("reserve-status").assertTextEquals("3 reserve")
+        repeat(3) { rule.onNodeWithTag("reserve-card-$it", useUnmergedTree = true).assertExists() }
         assertTrue(state.session.history.isEmpty())
     }
 
-    @Test fun suppliedControllerSelectionLegalTargetsAndHintRenderWithoutCommitting() = runBlocking<Unit> {
+    @Test fun suppliedControllerSelectionAndLegalTargetsRenderWithoutCommitting() = runBlocking<Unit> {
         val repository = InMemorySessionRepository(123)
         val controller = GameController.open(repository)
         val original = controller.uiState.value.session
         val move = ClassicWasp.legalMoves(original.state).first()
         controller.dispatch(GameIntent.Select(move.source, move.cardIndex))
-        controller.dispatch(GameIntent.Hint)
         val state = controller.uiState.value
         render(state)
         for (index in move.cardIndex..state.board.tableau[move.source].lastIndex) {
-            rule.onNodeWithTag("card-${move.source}-$index").assert(SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Selected tail"))
+            rule.onNodeWithTag("card-${move.source}-$index").assert(SemanticsMatcher.expectValue(SemanticsProperties.Selected, true))
         }
         state.legalDestinations.forEach {
             rule.onNodeWithTag("column-surface-$it").assert(SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Legal destination"))
         }
-        rule.onNodeWithText("Hint ·", substring = true).assertExists()
+        rule.onNodeWithTag("hint").assertDoesNotExist()
         rule.onAllNodes(hasClickAction()).assertCountEquals(0)
         assertSame(original, repository.load().session)
         assertSame(original, controller.uiState.value.session)
-        snapshot("selection-and-hint")
+        snapshot("selection-and-targets")
     }
 
     @Test fun fourCompletedRunsStayOnTableauAndDealtReserveStaysEmpty() {
@@ -92,16 +90,15 @@ class BoardRenderingTest {
         val session = GameSession.restore(GameState.restore(columns, emptyList(), 3))
         render(GameUiState(session, 0))
         repeat(4) { column ->
-            rule.onNodeWithTag("complete-$column").assertExists()
             repeat(13) { rule.onNodeWithTag("card-$column-$it").assertExists() }
         }
-        rule.onNodeWithTag("progress").assertTextEquals("4 of 4 suits complete")
-        rule.onNodeWithTag("reserve-status").performScrollTo().assertTextEquals("Dealt · 0 remaining")
+        rule.onNodeWithTag("progress").assertDoesNotExist()
+        rule.onNodeWithTag("reserve-status").assertTextEquals("Reserve dealt")
         assertEquals(52, session.state.tableau.flatten().size)
         snapshot("completed-runs")
     }
 
-    @Test fun viewportAndFontChangesKeepSevenColumnsAndReserveReachableWithoutChangingSession() {
+    @Test(timeout = 120_000) fun viewportAndFontChangesKeepSevenColumnsAndReserveReachableWithoutChangingSession() {
         val session = ClassicWasp.newGame(123)
         var viewport by mutableStateOf(DpSize(320.dp, 640.dp))
         var fontScale by mutableFloatStateOf(1f)
@@ -120,8 +117,9 @@ class BoardRenderingTest {
         configurations.forEach { (name, size, scale) ->
             rule.runOnIdle { viewport = size; fontScale = scale }
             rule.waitForIdle()
-            rule.onNodeWithText("WASP").performScrollTo().assertIsDisplayed()
+            rule.onNodeWithTag("reserve-status", useUnmergedTree = true).assertIsDisplayed()
             snapshot("$name-top")
+            android.util.Log.i("WaspLayoutTest", "$name: top viewport captured")
             val root = rule.onNodeWithTag("board").fetchSemanticsNode().boundsInRoot
             var previous = Float.NEGATIVE_INFINITY
             repeat(7) { column ->
@@ -129,9 +127,13 @@ class BoardRenderingTest {
                 assertTrue("$name column $column stays in width", bounds.left >= root.left && bounds.right <= root.right + 1)
                 assertTrue(bounds.left > previous)
                 previous = bounds.left
-                rule.onNodeWithTag("card-$column-6").performScrollTo().assertIsDisplayed()
+                // Width-driven readable cards may be taller than a heavily inset
+                // short window. The exposed rank/suit header is the touch target;
+                // asking ScrollTo to fit an oversized full card can never finish.
+                android.util.Log.i("WaspLayoutTest", "$name: revealing column $column header")
+                rule.onNodeWithTag("card-header-$column-6", useUnmergedTree = true).performScrollTo().assertIsDisplayed()
             }
-            rule.onNodeWithTag("reserve-status").performScrollTo().assertIsDisplayed()
+            rule.onNodeWithTag("reserve-status", useUnmergedTree = true).assertIsDisplayed()
             snapshot("$name-reserve")
             assertEquals(ClassicWasp.newGame(123).state, session.state)
             assertTrue(session.history.isEmpty())

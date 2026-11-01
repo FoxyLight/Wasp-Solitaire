@@ -29,7 +29,6 @@ class GameControllerTest {
         assertEquals(0L, ui.revision)
         assertNull(ui.selection)
         assertTrue(ui.legalDestinations.isEmpty())
-        assertNull(ui.hintedAction)
         assertEquals(SESSION_SCHEMA_VERSION, repo.load().schemaVersion)
         assertEquals(0, repo.load().session.history.size)
     }
@@ -104,7 +103,6 @@ class GameControllerTest {
         val updated = controller.uiState.value
         assertNull(updated.selection)
         assertTrue(updated.legalDestinations.isEmpty())
-        assertNull(updated.hintedAction)
         assertEquals(1L, updated.board.actionCount)
         assertEquals(1L, updated.revision)
         assertEquals(1, updated.session.history.size)
@@ -112,7 +110,7 @@ class GameControllerTest {
         assertSame(updated.session, repo.load().session)
     }
 
-    @Test fun invalidExplicitDestinationPreservesSelectionAndUndoHistory() = runBlocking<Unit> {
+    @Test fun invalidExplicitDestinationClearsOnlySelectionAndPreservesUndoHistory() = runBlocking<Unit> {
         val (controller, repo) = create()
         val move = firstMove(controller)
         controller.dispatch(GameIntent.Select(move.source, move.cardIndex))
@@ -121,7 +119,9 @@ class GameControllerTest {
             IntentResult.EngineRejected(Rejection.INVALID_MOVE),
             controller.dispatch(GameIntent.MoveTo(move.source)),
         )
-        assertSame(before, controller.uiState.value)
+        assertSame(before.session, controller.uiState.value.session)
+        assertNull(controller.uiState.value.selection)
+        assertTrue(controller.uiState.value.legalDestinations.isEmpty())
         assertEquals(0L, repo.load().revision)
         assertEquals(0, repo.load().session.history.size)
         assertEquals(
@@ -164,18 +164,23 @@ class GameControllerTest {
         )
     }
 
-    @Test fun hintsNeverCommitAndRepeatedHintHasNoExtraPublication() = runBlocking<Unit> {
-        val (controller, repo) = create()
-        val before = controller.uiState.value
-        val expected = ClassicWasp.hint(before.board)
-        assertNotNull(expected)
-        assertEquals(IntentResult.UiChanged, controller.dispatch(GameIntent.Hint))
-        assertEquals(expected, controller.uiState.value.hintedAction)
-        assertEquals(IntentResult.NoChange, controller.dispatch(GameIntent.Hint))
-        assertSame(before.session, controller.uiState.value.session)
-        assertEquals(0L, repo.load().revision)
-        assertEquals(IntentResult.UiChanged, controller.dispatch(GameIntent.CancelSelection))
-        assertNull(controller.uiState.value.hintedAction)
+    @Test fun allIllegalTapDestinationsClearOnlySelectionAcrossSeeds() = runBlocking<Unit> {
+        for (seed in 0L..19L) {
+            val (controller, repo) = create(seed)
+            val initial = controller.uiState.value.session
+            for (move in ClassicWasp.legalMoves(initial.state)) {
+                val legal = ClassicWasp.legalMoves(initial.state).filter { it.source == move.source && it.cardIndex == move.cardIndex }.map { it.destination }
+                for (destination in (0..6).filterNot { it in legal }) {
+                    controller.dispatch(GameIntent.Select(move.source, move.cardIndex))
+                    assertEquals(IntentResult.EngineRejected(Rejection.INVALID_MOVE), controller.dispatch(GameIntent.MoveTo(destination)))
+                    assertNull(controller.uiState.value.selection)
+                    assertTrue(controller.uiState.value.legalDestinations.isEmpty())
+                    assertSame(initial, controller.uiState.value.session)
+                    assertSame(initial, repo.load().session)
+                    assertEquals(0L, repo.load().revision)
+                }
+            }
+        }
     }
 
     @Test fun storeFailureDoesNotPublishAnAcceptedButUnsavedMove() = runBlocking<Unit> {

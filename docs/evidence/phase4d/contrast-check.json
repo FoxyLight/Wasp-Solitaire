@@ -1,0 +1,71 @@
+{
+  "method": "sRGB fill-pair contrast; 2px grid sampling confirms rendered colors in actual Pixel selected-tail capture; antialiased edge pixels are not used as text fill.",
+  "source_code_head": "dec32f8ec231683a9ccd29893e0b499856edc47a",
+  "certification": "Not a blanket WCAG or screen-reader certification. Native UI and actual task checks are reported separately.",
+  "pairs": [
+    {
+      "role": "Black ranks",
+      "foreground": "#192327",
+      "background": "#F7F4EB",
+      "ratio": 14.56,
+      "foreground_sample_count": 8532,
+      "background_sample_count": 182266
+    },
+    {
+      "role": "Red ranks",
+      "foreground": "#B4232C",
+      "background": "#F7F4EB",
+      "ratio": 5.93,
+      "foreground_sample_count": 7711,
+      "background_sample_count": 182266
+    },
+    {
+      "role": "Table text and legal arrows",
+      "foreground": "#F7F4EB",
+      "background": "#165443",
+      "ratio": 8.01,
+      "foreground_sample_count": 182266,
+      "background_sample_count": 353552
+    },
+    {
+      "role": "Undo text",
+      "foreground": "#F7F4EB",
+      "background": "#263B62",
+      "ratio": 10.13,
+      "foreground_sample_count": 182266,
+      "background_sample_count": 8134
+    },
+    {
+      "role": "Disabled Undo text",
+      "foreground": "#F7F4EB",
+      "background": "#204556",
+      "ratio": 9.33,
+      "foreground_sample_count": 182266,
+      "background_sample_count": 18750
+    },
+    {
+      "role": "Selected inner boundary",
+      "foreground": "#103C31",
+      "background": "#F7F4EB",
+      "ratio": 11.15,
+      "foreground_sample_count": 870,
+      "background_sample_count": 182266
+    },
+    {
+      "role": "Selected outer accent against felt",
+      "foreground": "#FFD782",
+      "background": "#165443",
+      "ratio": 6.42,
+      "foreground_sample_count": 2419,
+      "background_sample_count": 353552
+    },
+    {
+      "role": "Gold alone against ivory (supplementary only)",
+      "foreground": "#FFD782",
+      "background": "#F7F4EB",
+      "ratio": 1.25,
+      "foreground_sample_count": 2419,
+      "background_sample_count": 182266
+    }
+  ]
+}
